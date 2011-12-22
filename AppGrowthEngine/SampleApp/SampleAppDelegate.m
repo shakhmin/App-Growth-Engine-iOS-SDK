@@ -10,7 +10,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    [Discoverer activate:@"6dce1e1a-28d3-42f5-b1e5-3264d802b1a1"];
+    [Discoverer activate:@"your-app-secret"];
     
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     self.window.rootViewController = navController;
