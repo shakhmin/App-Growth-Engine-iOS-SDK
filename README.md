@@ -6,9 +6,22 @@ will assist in user authentication during registration and help promote app
 sharing via Hookąs device discovery platform without the need to add or
 implement any middleware solutions to your current environment.
 
+# Create an account and a key for your app
+
 To use the SDK, you first need to register an account and create an application.
 
 <h3><center><a href="http://addressbook.ringfulhealth.com:8081/addressbook/register.jsp">Register</a></center></h3>
+
+# Install the SDK
+
+To install the SDK, copy all files under AppGrowthEngine/SDKClasses to your XCode project. You should also copy over the SBJson library files if your application does not already have them (e.g., if you use the Facebook iOS SDK, you would already have SBJson).
+
+In addition, you need to add the following two iOS SDK frameworks to your project as dependencies:
+
+* AddressBook.framework
+* MessageUI.framework
+
+# Use the SDK
 
 Once you have created an application, you can start the SDK in your application
 delegate with the secret. You can also stop the SDK when you exit the
@@ -27,14 +40,14 @@ application.
 </pre>
 
 The usage of the SDK is illustrated in the sample application. Just open the
-XCode project, fill in the application secret, and run the project in
-simulator. The buttons in the sample demonstrates key actions you can perform
-with the SDK.
+XCode project, fill in the application secret, and run the project (ideally in
+a physical iPhone attached to the dev computer).  The buttons in the sample
+demonstrates key actions you can perform with the SDK.
 
 ![logo](App-Growth-Engine-iOS-SDK/raw/master/screen-shot.png)
 
 
-1. Verify the customer device that runs your app (optional, and iPhone-only)
+## Verify the customer device that runs your app (optional, and iPhone-only)
 
 By calling the fowllowing SDK method, you can create an in-app SMS message box
 for the app user to send an confirmation message so that you can capture their
@@ -65,7 +78,7 @@ order to receive the confirmation results.
 }
 </pre>
 
-2. Get a list of contacts from the user's addressbook that are most likely to install your app.
+## Get a list of contacts from the user's addressbook that are most likely to install your app.
 
 First, you need to execute a discovery call like this. The call returns immediately, and processes the discovery in background.
 

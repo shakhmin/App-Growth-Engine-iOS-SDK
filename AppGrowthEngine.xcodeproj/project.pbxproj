@@ -29,7 +29,6 @@
 		2A2929E014A3C8A2000382A4 /* UIDevice-Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A2929DD14A3C8A2000382A4 /* UIDevice-Hardware.m */; };
 		2A2929E214A3C8F8000382A4 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2929E114A3C8F8000382A4 /* MessageUI.framework */; };
 		2A2929E414A3C917000382A4 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2929E314A3C917000382A4 /* AddressBook.framework */; };
-		2A2929E614A3C920000382A4 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2929E514A3C920000382A4 /* AddressBookUI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,7 +70,6 @@
 		2A2929DD14A3C8A2000382A4 /* UIDevice-Hardware.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIDevice-Hardware.m"; path = "SDKClasses/UIDevice-Hardware.m"; sourceTree = "<group>"; };
 		2A2929E114A3C8F8000382A4 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		2A2929E314A3C917000382A4 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
-		2A2929E514A3C920000382A4 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,7 +82,6 @@
 				2A29299814A3C6D5000382A4 /* CoreGraphics.framework in Frameworks */,
 				2A2929E214A3C8F8000382A4 /* MessageUI.framework in Frameworks */,
 				2A2929E414A3C917000382A4 /* AddressBook.framework in Frameworks */,
-				2A2929E614A3C920000382A4 /* AddressBookUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,7 +108,6 @@
 		2A29299214A3C6D5000382A4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2A2929E514A3C920000382A4 /* AddressBookUI.framework */,
 				2A2929E314A3C917000382A4 /* AddressBook.framework */,
 				2A2929E114A3C8F8000382A4 /* MessageUI.framework */,
 				2A29299314A3C6D5000382A4 /* UIKit.framework */,
@@ -365,6 +361,7 @@
 				2A2929B214A3C6D5000382A4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
