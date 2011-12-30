@@ -386,7 +386,7 @@ static Discoverer *_agent;
     }
     
     _agent = [[Discoverer alloc] init];
-    _agent.server = @"http://addressbook.ringfulhealth.com:8081/addressbook";
+    _agent.server = @"http://age.hookmobile.com";
     _agent.SMSDest = @"3025175025";
     _agent.appSecret = secret;
     
