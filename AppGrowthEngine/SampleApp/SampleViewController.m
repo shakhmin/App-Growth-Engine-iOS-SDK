@@ -16,7 +16,7 @@
 
 - (IBAction) verify: (id)sender {
     verifyButton.enabled = NO;
-    [[Discoverer agent] verifyDevice:nil];
+    [[Discoverer agent] verifyDevice:self forceSms:NO userName:nil];
 }
 
 - (void) verifyComplete {

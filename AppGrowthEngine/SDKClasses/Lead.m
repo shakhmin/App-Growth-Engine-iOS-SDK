@@ -2,7 +2,8 @@
 
 @implementation Lead
 
-@synthesize phone, osType;
+@synthesize phone, osType, invitationCount, lastInvitationSent;
+@synthesize selected;
 
 - (id) init {
 	return self;
