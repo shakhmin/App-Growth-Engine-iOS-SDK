@@ -9,6 +9,8 @@ static Discoverer *_agent;
 @implementation Discoverer
 
 @synthesize server, SMSDest, appSecret, /* runQueryAfterOrder, */ queryStatus, leads;
+@synthesize fbTemplate, emailTemplate, smsTemplate, twitterTemplate;
+@synthesize referralMessage;
 
 - (id) init {
     
@@ -20,12 +22,21 @@ static Discoverer *_agent;
     return self;
 }
 
-- (BOOL) verifyDevice:(UIViewController *)vc {
+- (BOOL) isRegistered{
+    if (installCode == nil || [installCode length] == 0) {
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
+- (BOOL) verifyDevice:(UIViewController *)vc forceSms:(BOOL) force userName:(NSString *) userName {
     if (verifyDeviceConnection != nil) {
         return NO;
     }
     if (vc != nil) {
         viewController = [vc retain];
+        forceVerificationSms = force;
     }
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/createverify", server]];
@@ -35,6 +46,9 @@ static Discoverer *_agent;
     NSMutableData *postBody = [NSMutableData data];
     [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&verifyMessageTemplate=%@", [@"Please send this SMS to confirm your device %installCode%" stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    if (userName != nil) {
+        [postBody appendData:[[NSString stringWithFormat:@"&name=%@", [userName stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
     [req setHTTPBody:postBody];
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:req delegate:self];
     if (connection) {
@@ -97,6 +111,80 @@ static Discoverer *_agent;
     return YES;
 }
 
+- (BOOL) discoverWithoutVzw {
+    if (discoverConnection != nil) {
+        return NO;
+    }
+    
+    NSLog(@"installCode is %@", installCode);
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/neworder", server]];
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
+    [req setHTTPMethod:@"POST"];
+    [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
+    NSMutableData *postBody = [NSMutableData data];
+    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    if (installCode != nil ) {
+        [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    NSString *encodedJsonStr = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)[self getAddressbook], NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8 );
+	[postBody appendData:[[NSString stringWithFormat:@"&addressBook=%@", encodedJsonStr] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&deviceModel=%@", [[UIDevice currentDevice] platformString]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&deviceOs=%@", [[UIDevice currentDevice] systemVersion]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&queryDeviceCarrierExclusions=38"] dataUsingEncoding:NSUTF8StringEncoding]];
+    [req setHTTPBody:postBody];
+    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:req delegate:self];
+    if (connection) {
+		discoverData = [[NSMutableData data] retain];
+        discoverConnection = [connection retain];
+	}
+    // [connection release];
+    
+    return YES;
+}
+
+// contacts must be an array of dictionaries
+// Each dictionary has
+//    phone
+//    firstName
+//    lastName
+- (BOOL) discoverSelected:(NSMutableArray *)contacts {
+    if (discoverConnection != nil) {
+        return NO;
+    }
+    
+    NSLog(@"installCode is %@", installCode);
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/selectupdate", server]];
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
+    [req setHTTPMethod:@"POST"];
+    [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
+    NSMutableData *postBody = [NSMutableData data];
+    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    if (installCode != nil ) {
+        [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    
+    SBJSON *jsonWriter = [[SBJSON new] autorelease];
+    jsonWriter.humanReadable = YES;
+    NSString *jsonStr = [jsonWriter stringWithObject:contacts];
+    NSLog(@"JSON Object --> %@", jsonStr);
+    NSString *encodedJsonStr = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)jsonStr, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8 );
+    
+	[postBody appendData:[[NSString stringWithFormat:@"&addressBook=%@", encodedJsonStr] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&deviceModel=%@", [[UIDevice currentDevice] platformString]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&deviceOs=%@", [[UIDevice currentDevice] systemVersion]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [req setHTTPBody:postBody];
+    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:req delegate:self];
+    if (connection) {
+		discoverData = [[NSMutableData data] retain];
+        discoverConnection = [connection retain];
+	}
+    // [connection release];
+    
+    return YES;
+}
+
 - (BOOL) queryOrder {
     if (queryOrderConnection != nil || orderid == 0) {
         return NO;
@@ -108,12 +196,97 @@ static Discoverer *_agent;
     [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
     NSMutableData *postBody = [NSMutableData data];
     [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&order=%d", orderid] dataUsingEncoding:NSUTF8StringEncoding]];
     [req setHTTPBody:postBody];
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:req delegate:self];
     if (connection) {
 		queryOrderData = [[NSMutableData data] retain];
         queryOrderConnection = [connection retain];
+	}
+    // [connection release];
+    
+    return YES;
+}
+
+- (BOOL) downloadShareTemplates {
+    if (shareTemplateConnection != nil) {
+        return NO;
+    }
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/template", server]];
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
+    [req setHTTPMethod:@"POST"];
+    [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
+    NSMutableData *postBody = [NSMutableData data];
+    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [req setHTTPBody:postBody];
+    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:req delegate:self];
+    if (connection) {
+		shareTemplateData = [[NSMutableData data] retain];
+        shareTemplateConnection = [connection retain];
+	}
+    // [connection release];
+    
+    return YES;
+}
+
+- (BOOL) newReferral:(NSMutableArray *)phones withMessage:(NSString *)message {
+    
+    if (newReferralConnection != nil) {
+        return NO;
+    }
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/newreferral", server]];
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
+    [req setHTTPMethod:@"POST"];
+    [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
+    NSMutableData *postBody = [NSMutableData data];
+    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    for (NSString *phone in phones) {
+        [postBody appendData:[[NSString stringWithFormat:@"&phone=%@", [phone stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    [postBody appendData:[[NSString stringWithFormat:@"&referralTemplate=%@", [message stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[@"&useShortUrl=true" dataUsingEncoding:NSUTF8StringEncoding]];
+    if (![MFMessageComposeViewController canSendText]) {
+        [postBody appendData:[@"&sendNow=true" dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    [req setHTTPBody:postBody];
+    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:req delegate:self];
+    if (connection) {
+		newReferralData = [[NSMutableData data] retain];
+        newReferralConnection = [connection retain];
+	}
+    // [connection release];
+    
+    return YES;
+}
+
+- (BOOL) updateReferral:(BOOL) sent {
+    if (updateReferralConnection != nil) {
+        return NO;
+    }
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/updatereferral", server]];
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
+    [req setHTTPMethod:@"POST"];
+    [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
+    NSMutableData *postBody = [NSMutableData data];
+    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&referralId=%d", referralId] dataUsingEncoding:NSUTF8StringEncoding]];
+    if (sent) {
+        [postBody appendData:[@"&action=sent" dataUsingEncoding:NSUTF8StringEncoding]];
+    } else {
+        [postBody appendData:[@"&action=cancel" dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    [req setHTTPBody:postBody];
+    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:req delegate:self];
+    if (connection) {
+		updateReferralData = [[NSMutableData data] retain];
+        updateReferralConnection = [connection retain];
 	}
     // [connection release];
     
@@ -185,10 +358,47 @@ static Discoverer *_agent;
     return jsonStr;
 }
 
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
-    [viewController dismissModalViewControllerAnimated:YES];
+- (void) createVerificationSms {
+    if (viewController != nil) {
+        if ([MFMessageComposeViewController canSendText]) {
+            NSLog(@"Show SMS confirmation");
+            MFMessageComposeViewController *controller = [[[MFMessageComposeViewController alloc] init] autorelease];
+            controller.body = verifyMessage;
+            controller.recipients = [NSArray arrayWithObjects:SMSDest, nil];
+            controller.messageComposeDelegate = self;
+            [viewController presentModalViewController:controller animated:YES];
+        } else {
+            NSLog(@"Not a SMS device. Fail silently.");
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"HookNotSMSDevice" object:nil];
+        }
+    }
 }
 
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
+    
+    [viewController dismissModalViewControllerAnimated:YES];
+    
+    if (result == MessageComposeResultCancelled) {
+        // the SMS stays. No cancel
+        UIAlertView* alert = [[UIAlertView alloc] init];
+        alert.title = @"Confirmation";
+        alert.message = @"You can only proceed after you send the confirmation SMS";
+        [alert addButtonWithTitle:@"Okay"];
+        // alert.cancelButtonIndex = 0;
+        alert.delegate = self;
+        [alert show];
+        [alert release];
+        
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"HookVerificationSMSSent" object:nil];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if (buttonIndex == 0) {
+		[self createVerificationSms];
+	}
+}
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	NSLog (@"Received response");
@@ -204,6 +414,15 @@ static Discoverer *_agent;
     if (connection == queryOrderConnection) {
         [queryOrderData setLength:0];
     }
+    if (connection == shareTemplateConnection) {
+        [shareTemplateData setLength:0];
+    }
+    if (connection == newReferralConnection) {
+        [newReferralData setLength:0];
+    }
+    if (connection == updateReferralConnection) {
+        [updateReferralData setLength:0];
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
@@ -218,6 +437,15 @@ static Discoverer *_agent;
     }
     if (connection == queryOrderConnection) {
         [queryOrderData appendData:data];
+    }
+    if (connection == shareTemplateConnection) {
+        [shareTemplateData appendData:data];
+    }
+    if (connection == newReferralConnection) {
+        [newReferralData appendData:data];
+    }
+    if (connection == updateReferralConnection) {
+        [updateReferralData appendData:data];
     }
 }
 
@@ -243,6 +471,22 @@ static Discoverer *_agent;
         [queryOrderConnection release];
         queryOrderConnection = nil;
     }
+    if (connection == shareTemplateConnection) {
+        [shareTemplateData release];
+        [shareTemplateConnection release];
+        shareTemplateConnection = nil;
+    }
+    if (connection == newReferralConnection) {
+        [newReferralData release];
+        [newReferralConnection release];
+        newReferralConnection = nil;
+    }
+    if (connection == updateReferralConnection) {
+        [updateReferralData release];
+        [updateReferralConnection release];
+        updateReferralConnection = nil;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"HookNetworkError" object:nil];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -262,19 +506,10 @@ static Discoverer *_agent;
                 [standardUserDefaults setObject:installCode forKey:@"installCode"];
                 [standardUserDefaults synchronize];
             }
+            verifyMessage = [[resp objectForKey:@"verifyMessage"] retain];
         }
         
-        if (viewController != nil) {
-            if ([MFMessageComposeViewController canSendText]) {
-                MFMessageComposeViewController *controller = [[[MFMessageComposeViewController alloc] init] autorelease];
-                controller.body = [resp objectForKey:@"verifyMessage"];
-                controller.recipients = [NSArray arrayWithObjects:SMSDest, nil];
-                controller.messageComposeDelegate = self;
-                [viewController presentModalViewController:controller animated:YES];
-            } else {
-                NSLog(@"Not a SMS device. Fail silently.");
-            }
-        }
+        [self createVerificationSms];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"HookVerifyDeviceComplete" object:[resp objectForKey:@"status"]];
         
@@ -356,8 +591,18 @@ static Discoverer *_agent;
             if (ls != nil) {
                 for (NSDictionary *d in ls) {
                     Lead *lead = [[Lead alloc] init];
-                    lead.phone = (NSString *) [d objectForKey:@"phone"];
-                    lead.osType = (NSString *) [d objectForKey:@"osType"];
+                    lead.phone = [d objectForKey:@"phone"];
+                    lead.osType = [d objectForKey:@"osType"];
+                    lead.invitationCount = [[resp objectForKey:@"invitationCount"] intValue];
+                    
+                    NSString *dateStr = [d objectForKey:@"lastInvitationSent"];
+                    if (dateStr == nil || [@"" isEqualToString:dateStr]) {
+                        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+                        [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss.S"];
+                        lead.lastInvitationSent = [dateFormat dateFromString:dateStr];
+                        [dateFormat release];
+                    }
+                    
                     [leads addObject:lead];
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryOrderComplete" object:nil];
@@ -376,6 +621,56 @@ static Discoverer *_agent;
         [queryOrderConnection release];
         queryOrderConnection = nil;
     }
+    
+    if (connection == shareTemplateConnection) {
+        NSString *dataStr = [[NSString alloc] initWithData:shareTemplateData encoding:NSUTF8StringEncoding];
+        NSLog (@"share template data is %@", dataStr);
+        [shareTemplateData release];
+        
+        SBJSON *jsonReader = [[SBJSON new] autorelease];
+        NSDictionary *resp = [jsonReader objectWithString:dataStr];
+        if ([@"ok" isEqualToString:[resp objectForKey:@"status"]]) {
+            fbTemplate = [[resp objectForKey:@"fb"] retain];
+            twitterTemplate = [[resp objectForKey:@"twitter"] retain];
+            emailTemplate = [[resp objectForKey:@"email"] retain];
+            smsTemplate = [[resp objectForKey:@"sms"] retain];
+        }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"HookDownloadShareTemplatesComplete" object:nil];
+        
+        [shareTemplateConnection release];
+        shareTemplateConnection = nil;
+    }
+    
+    if (connection == newReferralConnection) {
+        NSString *dataStr = [[NSString alloc] initWithData:newReferralData encoding:NSUTF8StringEncoding];
+        NSLog (@"new referral data is %@", dataStr);
+        [newReferralData release];
+        
+        SBJSON *jsonReader = [[SBJSON new] autorelease];
+        NSDictionary *resp = [jsonReader objectWithString:dataStr];
+        if ([[resp objectForKey:@"status"] intValue] == 1000) {
+            referralId = [[resp objectForKey:@"referralId"] intValue];
+            referralMessage = [[resp objectForKey:@"referralMessage"] retain];
+            invitationUrl = [[resp objectForKey:@"url"] retain];
+        }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"HookNewReferralComplete" object:nil];
+        
+        [newReferralConnection release];
+        newReferralConnection = nil;
+    }
+    
+    if (connection == updateReferralConnection) {
+        NSString *dataStr = [[NSString alloc] initWithData:updateReferralData encoding:NSUTF8StringEncoding];
+        NSLog (@"update referral data is %@", dataStr);
+        [updateReferralData release];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"HookUpdateReferralComplete" object:nil];
+        
+        [updateReferralConnection release];
+        updateReferralConnection = nil;
+    }
 }
 
 
@@ -386,7 +681,7 @@ static Discoverer *_agent;
     }
     
     _agent = [[Discoverer alloc] init];
-    _agent.server = @"http://age.hookmobile.com";
+    _agent.server = @"https://age.hookmobile.com";
     _agent.SMSDest = @"3025175025";
     _agent.appSecret = secret;
     
