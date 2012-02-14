@@ -134,6 +134,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showReferralMessage) name:@"HookNewReferralComplete" object:nil];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [entriesView reloadData];
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
