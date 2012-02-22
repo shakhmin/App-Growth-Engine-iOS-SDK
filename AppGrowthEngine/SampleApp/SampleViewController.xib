@@ -45,7 +45,7 @@
 					<object class="IBUIButton" id="871272604">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{34, 208}, {252, 37}}</string>
+						<string key="NSFrame">{{34, 168}, {252, 37}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="743145313"/>
@@ -81,7 +81,7 @@
 					<object class="IBUIButton" id="743145313">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{34, 253}, {252, 37}}</string>
+						<string key="NSFrame">{{34, 213}, {252, 37}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
 						<bool key="IBUIOpaque">NO</bool>
@@ -103,7 +103,7 @@
 					<object class="IBUIButton" id="601897801">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{34, 68}, {252, 37}}</string>
+						<string key="NSFrame">{{34, 28}, {252, 37}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="232926197"/>
@@ -126,7 +126,7 @@
 					<object class="IBUIButton" id="232926197">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{34, 113}, {252, 37}}</string>
+						<string key="NSFrame">{{34, 73}, {252, 37}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="871272604"/>
@@ -140,6 +140,46 @@
 						<string key="IBUINormalTitle">Verification Status</string>
 						<reference key="IBUIHighlightedTitleColor" ref="172024546"/>
 						<reference key="IBUIDisabledTitleColor" ref="155150313"/>
+						<object class="NSColor" key="IBUINormalTitleColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+						</object>
+						<reference key="IBUINormalTitleShadowColor" ref="454709519"/>
+					</object>
+					<object class="IBUIButton" id="271848936">
+						<reference key="NSNextResponder" ref="774585933"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{34, 310}, {114, 37}}</string>
+						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
+						<bool key="IBUIOpaque">NO</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<int key="IBUIContentHorizontalAlignment">0</int>
+						<int key="IBUIContentVerticalAlignment">0</int>
+						<reference key="IBUIFont" ref="292156900"/>
+						<int key="IBUIButtonType">1</int>
+						<string key="IBUINormalTitle">Installs</string>
+						<reference key="IBUIHighlightedTitleColor" ref="172024546"/>
+						<object class="NSColor" key="IBUINormalTitleColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+						</object>
+						<reference key="IBUINormalTitleShadowColor" ref="454709519"/>
+					</object>
+					<object class="IBUIButton" id="129670807">
+						<reference key="NSNextResponder" ref="774585933"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{172, 310}, {114, 37}}</string>
+						<reference key="NSSuperview" ref="774585933"/>
+						<reference key="NSWindow"/>
+						<bool key="IBUIOpaque">NO</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<int key="IBUIContentHorizontalAlignment">0</int>
+						<int key="IBUIContentVerticalAlignment">0</int>
+						<reference key="IBUIFont" ref="292156900"/>
+						<int key="IBUIButtonType">1</int>
+						<string key="IBUINormalTitle">Referrals</string>
+						<reference key="IBUIHighlightedTitleColor" ref="172024546"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
@@ -245,6 +285,40 @@
 					</object>
 					<int key="connectionID">24</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">queryInstallsButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="271848936"/>
+					</object>
+					<int key="connectionID">27</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">queryReferralButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="129670807"/>
+					</object>
+					<int key="connectionID">28</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">queryInstalls:</string>
+						<reference key="source" ref="271848936"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">29</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">queryReferral:</string>
+						<reference key="source" ref="129670807"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">30</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -275,6 +349,8 @@
 							<reference ref="743145313"/>
 							<reference ref="601897801"/>
 							<reference ref="232926197"/>
+							<reference ref="271848936"/>
+							<reference ref="129670807"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -298,6 +374,16 @@
 						<reference key="object" ref="743145313"/>
 						<reference key="parent" ref="774585933"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">25</int>
+						<reference key="object" ref="271848936"/>
+						<reference key="parent" ref="774585933"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">26</int>
+						<reference key="object" ref="129670807"/>
+						<reference key="parent" ref="774585933"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -312,6 +398,8 @@
 					<string>15.IBUIButtonInspectorSelectedStateConfigurationMetadataKey</string>
 					<string>21.IBPluginDependency</string>
 					<string>21.IBUIButtonInspectorSelectedStateConfigurationMetadataKey</string>
+					<string>25.IBPluginDependency</string>
+					<string>26.IBPluginDependency</string>
 					<string>6.IBEditorWindowLastContentRect</string>
 					<string>6.IBPluginDependency</string>
 					<string>8.IBPluginDependency</string>
@@ -327,6 +415,8 @@
 					<real value="3"/>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<real value="0.0"/>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>{{239, 654}, {320, 480}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -345,7 +435,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">24</int>
+			<int key="maxID">30</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -359,11 +449,15 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>discover:</string>
 							<string>query:</string>
+							<string>queryInstalls:</string>
+							<string>queryReferral:</string>
 							<string>verify:</string>
 							<string>verifyStatus:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -376,6 +470,8 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>discover:</string>
 							<string>query:</string>
+							<string>queryInstalls:</string>
+							<string>queryReferral:</string>
 							<string>verify:</string>
 							<string>verifyStatus:</string>
 						</object>
@@ -387,6 +483,14 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">query:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">queryInstalls:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">queryReferral:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
@@ -404,8 +508,12 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>discoverButton</string>
+							<string>installsController</string>
 							<string>leadsController</string>
 							<string>queryButton</string>
+							<string>queryInstallsButton</string>
+							<string>queryReferralButton</string>
+							<string>referralsController</string>
 							<string>verifyButton</string>
 							<string>verifyStatusButton</string>
 						</object>
@@ -413,7 +521,11 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>UIButton</string>
 							<string>UIViewController</string>
+							<string>UIViewController</string>
 							<string>UIButton</string>
+							<string>UIButton</string>
+							<string>UIButton</string>
+							<string>UIViewController</string>
 							<string>UIButton</string>
 							<string>UIButton</string>
 						</object>
@@ -423,8 +535,12 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>discoverButton</string>
+							<string>installsController</string>
 							<string>leadsController</string>
 							<string>queryButton</string>
+							<string>queryInstallsButton</string>
+							<string>queryReferralButton</string>
+							<string>referralsController</string>
 							<string>verifyButton</string>
 							<string>verifyStatusButton</string>
 						</object>
@@ -435,12 +551,28 @@
 								<string key="candidateClassName">UIButton</string>
 							</object>
 							<object class="IBToOneOutletInfo">
+								<string key="name">installsController</string>
+								<string key="candidateClassName">UIViewController</string>
+							</object>
+							<object class="IBToOneOutletInfo">
 								<string key="name">leadsController</string>
 								<string key="candidateClassName">UIViewController</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">queryButton</string>
 								<string key="candidateClassName">UIButton</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">queryInstallsButton</string>
+								<string key="candidateClassName">UIButton</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">queryReferralButton</string>
+								<string key="candidateClassName">UIButton</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">referralsController</string>
+								<string key="candidateClassName">UIViewController</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">verifyButton</string>

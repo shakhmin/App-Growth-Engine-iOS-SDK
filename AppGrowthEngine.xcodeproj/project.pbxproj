@@ -29,6 +29,11 @@
 		2A2929E214A3C8F8000382A4 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2929E114A3C8F8000382A4 /* MessageUI.framework */; };
 		2A2929E414A3C917000382A4 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2929E314A3C917000382A4 /* AddressBook.framework */; };
 		2A4E456C14E303DC0067605C /* Discoverer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A4E456B14E303DC0067605C /* Discoverer.m */; };
+		2A65A74014F4942900B55F33 /* InstallsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A65A73E14F4942900B55F33 /* InstallsController.m */; };
+		2A65A74114F4942900B55F33 /* InstallsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A65A73F14F4942900B55F33 /* InstallsController.xib */; };
+		2A65A76114F4B93200B55F33 /* ReferralRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A65A76014F4B93200B55F33 /* ReferralRecord.m */; };
+		2A65A76514F4C98100B55F33 /* ReferralsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A65A76314F4C98000B55F33 /* ReferralsController.m */; };
+		2A65A76614F4C98100B55F33 /* ReferralsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A65A76414F4C98100B55F33 /* ReferralsController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +75,14 @@
 		2A2929E314A3C917000382A4 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		2A4E456A14E303DC0067605C /* Discoverer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Discoverer.h; path = SDKClasses/Discoverer.h; sourceTree = "<group>"; };
 		2A4E456B14E303DC0067605C /* Discoverer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Discoverer.m; path = SDKClasses/Discoverer.m; sourceTree = "<group>"; };
+		2A65A73D14F4942900B55F33 /* InstallsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InstallsController.h; path = SampleApp/InstallsController.h; sourceTree = "<group>"; };
+		2A65A73E14F4942900B55F33 /* InstallsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InstallsController.m; path = SampleApp/InstallsController.m; sourceTree = "<group>"; };
+		2A65A73F14F4942900B55F33 /* InstallsController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = InstallsController.xib; path = SampleApp/InstallsController.xib; sourceTree = "<group>"; };
+		2A65A75F14F4B93100B55F33 /* ReferralRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReferralRecord.h; path = SDKClasses/ReferralRecord.h; sourceTree = "<group>"; };
+		2A65A76014F4B93200B55F33 /* ReferralRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReferralRecord.m; path = SDKClasses/ReferralRecord.m; sourceTree = "<group>"; };
+		2A65A76214F4C98000B55F33 /* ReferralsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReferralsController.h; path = SampleApp/ReferralsController.h; sourceTree = "<group>"; };
+		2A65A76314F4C98000B55F33 /* ReferralsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReferralsController.m; path = SampleApp/ReferralsController.m; sourceTree = "<group>"; };
+		2A65A76414F4C98100B55F33 /* ReferralsController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ReferralsController.xib; path = SampleApp/ReferralsController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +164,12 @@
 				2A2929BC14A3C837000382A4 /* SampleViewController.h */,
 				2A2929BD14A3C837000382A4 /* SampleViewController.m */,
 				2A2929BE14A3C837000382A4 /* SampleViewController.xib */,
+				2A65A73D14F4942900B55F33 /* InstallsController.h */,
+				2A65A73E14F4942900B55F33 /* InstallsController.m */,
+				2A65A73F14F4942900B55F33 /* InstallsController.xib */,
+				2A65A76214F4C98000B55F33 /* ReferralsController.h */,
+				2A65A76314F4C98000B55F33 /* ReferralsController.m */,
+				2A65A76414F4C98100B55F33 /* ReferralsController.xib */,
 			);
 			name = SampleApp;
 			sourceTree = "<group>";
@@ -184,6 +203,8 @@
 				2A2929DB14A3C8A2000382A4 /* Lead.m */,
 				2A2929DC14A3C8A2000382A4 /* UIDevice-Hardware.h */,
 				2A2929DD14A3C8A2000382A4 /* UIDevice-Hardware.m */,
+				2A65A75F14F4B93100B55F33 /* ReferralRecord.h */,
+				2A65A76014F4B93200B55F33 /* ReferralRecord.m */,
 			);
 			name = SDKClasses;
 			sourceTree = "<group>";
@@ -242,6 +263,8 @@
 				2A2929C014A3C837000382A4 /* LeadsController.xib in Resources */,
 				2A2929C114A3C837000382A4 /* MainWindow.xib in Resources */,
 				2A2929C414A3C837000382A4 /* SampleViewController.xib in Resources */,
+				2A65A74114F4942900B55F33 /* InstallsController.xib in Resources */,
+				2A65A76614F4C98100B55F33 /* ReferralsController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,6 +288,9 @@
 				2A2929DF14A3C8A2000382A4 /* Lead.m in Sources */,
 				2A2929E014A3C8A2000382A4 /* UIDevice-Hardware.m in Sources */,
 				2A4E456C14E303DC0067605C /* Discoverer.m in Sources */,
+				2A65A74014F4942900B55F33 /* InstallsController.m in Sources */,
+				2A65A76114F4B93200B55F33 /* ReferralRecord.m in Sources */,
+				2A65A76514F4C98100B55F33 /* ReferralsController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

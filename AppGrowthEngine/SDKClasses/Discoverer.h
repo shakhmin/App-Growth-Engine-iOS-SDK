@@ -16,6 +16,8 @@
     
     BOOL queryStatus;
     
+    NSString *errorMessage;
+    
     NSMutableData *discoverData;
     NSURLConnection *discoverConnection;
     
@@ -47,6 +49,14 @@
     
     NSMutableData *updateReferralData;
     NSURLConnection *updateReferralConnection;
+    
+    NSMutableData *queryInstallsData;
+    NSURLConnection *queryInstallsConnection;
+    NSMutableArray *installs;
+    
+    NSMutableData *queryReferralData;
+    NSURLConnection *queryReferralConnection;
+    NSMutableArray *referrals;
 }
 
 @property (nonatomic, retain) NSString *server;
@@ -54,7 +64,10 @@
 @property (nonatomic, retain) NSString *appSecret;
 // @property (nonatomic) BOOL runQueryAfterOrder;
 @property (nonatomic) BOOL queryStatus;
+@property (nonatomic, retain) NSString *errorMessage;
 @property (nonatomic, retain) NSMutableArray *leads;
+@property (nonatomic, retain) NSMutableArray *installs;
+@property (nonatomic, retain) NSMutableArray *referrals;
 
 @property (nonatomic, retain) NSString *fbTemplate;
 @property (nonatomic, retain) NSString *emailTemplate;
@@ -77,6 +90,8 @@
 - (BOOL) downloadShareTemplates;
 - (BOOL) newReferral:(NSMutableArray *)phones withMessage:(NSString *)message;
 - (BOOL) updateReferral:(BOOL) sent;
+- (BOOL) queryInstalls:(NSString *)direction;
+- (BOOL) queryReferral;
 
 - (NSString *) getAddressbook;
 - (void) createVerificationSms;

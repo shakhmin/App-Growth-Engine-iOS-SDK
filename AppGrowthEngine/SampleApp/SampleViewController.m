@@ -85,12 +85,78 @@
     
     UIAlertView* alert = [[UIAlertView alloc] init];
 	alert.title = @"Finished";
-	alert.message = @"Hook Mobile server encountered a problem processing your addressbook.";
+	alert.message = [NSString stringWithFormat:@"Hook Mobile server encountered a problem processing your addressbook: %@", [Discoverer agent].errorMessage];
 	[alert addButtonWithTitle:@"Dismiss"];
 	alert.cancelButtonIndex = 0;
 	[alert show];
 	[alert release];
 }
+
+- (IBAction) queryInstalls: (id)sender {
+    UIActionSheet* actionSheet = [[UIActionSheet alloc] init];
+    actionSheet.title = @"Direction of query";
+    actionSheet.delegate = self;
+    [actionSheet addButtonWithTitle:@"Forward"];
+    [actionSheet addButtonWithTitle:@"Backward"];
+    [actionSheet addButtonWithTitle:@"Mutual"];
+    [actionSheet addButtonWithTitle:@"Cancel"];
+    actionSheet.cancelButtonIndex = 3;
+    [actionSheet showInView:self.view];
+    [actionSheet release];
+}
+
+- (void) queryInstallsComplete {
+    queryInstallsButton.enabled = YES;
+    
+    [self.navigationController pushViewController:installsController animated:YES];
+}
+
+- (void) queryInstallsFailed {
+    queryInstallsButton.enabled = YES;
+    
+    UIAlertView* alert = [[UIAlertView alloc] init];
+	alert.title = @"Finished";
+    alert.message = [NSString stringWithFormat:@"Hook Mobile server encountered a problem processing the installs database: %@", [Discoverer agent].errorMessage];
+	[alert addButtonWithTitle:@"Dismiss"];
+	alert.cancelButtonIndex = 0;
+	[alert show];
+	[alert release];
+}
+
+- (IBAction) queryReferral: (id)sender {
+    queryReferralButton.enabled = NO;
+    
+    [[Discoverer agent] queryReferral];
+}
+
+- (void) queryReferralComplete {
+    queryReferralButton.enabled = YES;
+    
+    [self.navigationController pushViewController:referralsController animated:YES];
+}
+
+- (void) queryReferralFailed {
+    queryReferralButton.enabled = YES;
+    
+    UIAlertView* alert = [[UIAlertView alloc] init];
+	alert.title = @"Finished";
+	alert.message = [NSString stringWithFormat:@"Hook Mobile server encountered a problem processing the referrals database: %@", [Discoverer agent].errorMessage];
+	[alert addButtonWithTitle:@"Dismiss"];
+	alert.cancelButtonIndex = 0;
+	[alert show];
+	[alert release];
+}
+
+- (void) notSmsDevice {
+    UIAlertView* alert = [[UIAlertView alloc] init];
+	alert.title = @"Not a SMS Device";
+	alert.message = @"You are running this application on a non-SMS device. The SMS verification functionalities would not work.";
+	[alert addButtonWithTitle:@"Dismiss"];
+	alert.cancelButtonIndex = 0;
+	[alert show];
+	[alert release];
+}
+
 
 /*
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -100,6 +166,22 @@
 	}
 }
 */
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    if (buttonIndex == 0) {
+        [[Discoverer agent] queryInstalls:@"FORWARD"];
+    }
+    if (buttonIndex == 1) {
+        [[Discoverer agent] queryInstalls:@"BACKWARD"];
+    }
+    if (buttonIndex == 1) {
+        [[Discoverer agent] queryInstalls:@"MUTUAL"];
+    }
+    
+    queryInstallsButton.enabled = NO;
+    return;
+}
 
 
 #pragma mark - View lifecycle
@@ -114,6 +196,12 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(verifyComplete) name:@"HookVerifyDeviceComplete" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(verificationStatusYes) name:@"HookDeviceVerified" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(verificationStatusNo) name:@"HookDeviceNotVerified" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(queryInstallsComplete) name:@"HookQueryInstallsComplete" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(queryInstallsFailed) name:@"HookQueryInstallsFailed" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(queryReferralComplete) name:@"HookQueryReferralComplete" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(queryReferralFailed) name:@"HookQueryReferralFailed" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notSmsDevice) name:@"HookNotSMSDevice" object:nil];
 }
 
 

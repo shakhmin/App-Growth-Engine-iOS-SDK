@@ -1,6 +1,7 @@
 #import "Discoverer.h"
 #import "JSON.h"
 #import "Lead.h"
+#import "ReferralRecord.h"
 #import <AddressBook/AddressBook.h>
 #import "UIDevice-Hardware.h"
 
@@ -8,7 +9,7 @@ static Discoverer *_agent;
 
 @implementation Discoverer
 
-@synthesize server, SMSDest, appSecret, /* runQueryAfterOrder, */ queryStatus, leads;
+@synthesize server, SMSDest, appSecret, /* runQueryAfterOrder, */ queryStatus, errorMessage, leads, installs, referrals;
 @synthesize fbTemplate, emailTemplate, smsTemplate, twitterTemplate;
 @synthesize referralMessage;
 
@@ -293,6 +294,53 @@ static Discoverer *_agent;
     return YES;
 }
 
+- (BOOL) queryInstalls:(NSString *)direction {
+    if (queryInstallsConnection != nil) {
+        return NO;
+    }
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/queryinstalls", server]];
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
+    [req setHTTPMethod:@"POST"];
+    [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
+    NSMutableData *postBody = [NSMutableData data];
+    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&reference=%@", [direction stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [req setHTTPBody:postBody];
+    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:req delegate:self];
+    if (connection) {
+		queryInstallsData = [[NSMutableData data] retain];
+        queryInstallsConnection = [connection retain];
+	}
+    // [connection release];
+    
+    return YES;
+}
+
+- (BOOL) queryReferral {
+    if (queryReferralConnection != nil) {
+        return NO;
+    }
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/queryreferral", server]];
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
+    [req setHTTPMethod:@"POST"];
+    [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
+    NSMutableData *postBody = [NSMutableData data];
+    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [req setHTTPBody:postBody];
+    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:req delegate:self];
+    if (connection) {
+		queryReferralData = [[NSMutableData data] retain];
+        queryReferralConnection = [connection retain];
+	}
+    // [connection release];
+    
+    return YES;
+}
+
 
 - (NSString *) getAddressbook {
     ABAddressBookRef ab = ABAddressBookCreate();
@@ -423,6 +471,12 @@ static Discoverer *_agent;
     if (connection == updateReferralConnection) {
         [updateReferralData setLength:0];
     }
+    if (connection == queryInstallsConnection) {
+        [queryInstallsData setLength:0];
+    }
+    if (connection == queryReferralConnection) {
+        [queryReferralData setLength:0];
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
@@ -446,6 +500,12 @@ static Discoverer *_agent;
     }
     if (connection == updateReferralConnection) {
         [updateReferralData appendData:data];
+    }
+    if (connection == queryInstallsConnection) {
+        [queryInstallsData appendData:data];
+    }
+    if (connection == queryReferralConnection) {
+        [queryReferralData appendData:data];
     }
 }
 
@@ -486,6 +546,16 @@ static Discoverer *_agent;
         [updateReferralConnection release];
         updateReferralConnection = nil;
     }
+    if (connection == queryInstallsConnection) {
+        [queryInstallsData release];
+        [queryInstallsConnection release];
+        queryInstallsConnection = nil;
+    }
+    if (connection == queryReferralConnection) {
+        [queryReferralData release];
+        [queryReferralConnection release];
+        queryReferralConnection = nil;
+    }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"HookNetworkError" object:nil];
 }
 
@@ -525,15 +595,12 @@ static Discoverer *_agent;
         SBJSON *jsonReader = [[SBJSON new] autorelease];
         NSDictionary *resp = [jsonReader objectWithString:dataStr];
         if ([[resp objectForKey:@"status"] intValue] == 1000) {
-            NSLog(@"1");
             NSString *verified = [resp objectForKey:@"verified"];
             if ([verified boolValue]) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"HookDeviceVerified" object:nil];
             } else {
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"HookDeviceNotVerified" object:nil];
-                NSLog(@"2");
             }
-            NSLog(@"3");
         }
         
         [verificationConnection release];
@@ -608,6 +675,7 @@ static Discoverer *_agent;
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryOrderComplete" object:nil];
             }
         } else {
+            errorMessage = [[resp objectForKey:@"desc"] retain];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryOrderFailed" object:nil];
         }
         /*
@@ -670,6 +738,70 @@ static Discoverer *_agent;
         
         [updateReferralConnection release];
         updateReferralConnection = nil;
+    }
+    
+    if (connection == queryInstallsConnection) {
+        NSString *dataStr = [[NSString alloc] initWithData:queryInstallsData encoding:NSUTF8StringEncoding];
+        NSLog (@"query installs data is %@", dataStr);
+        [queryInstallsData release];
+        
+        SBJSON *jsonReader = [[SBJSON new] autorelease];
+        NSDictionary *resp = [jsonReader objectWithString:dataStr];
+        int status = [[resp objectForKey:@"status"] intValue];
+        if (status == 1000) {
+            installs = [[NSMutableArray arrayWithCapacity:16] retain];
+            NSArray *ls = [resp objectForKey:@"leads"];
+            if (ls != nil) {
+                for (NSString *p in ls) {
+                    Lead *lead = [[Lead alloc] init];
+                    lead.phone = p;
+                    [installs addObject:lead];
+                }
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryInstallsComplete" object:nil];
+            }
+        } else {
+            errorMessage = [[resp objectForKey:@"desc"] retain];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryInstallsFailed" object:nil];
+        }
+        
+        [queryInstallsConnection release];
+        queryInstallsConnection = nil;
+    }
+    
+    if (connection == queryReferralConnection) {
+        NSString *dataStr = [[NSString alloc] initWithData:queryReferralData encoding:NSUTF8StringEncoding];
+        NSLog (@"query referral data is %@", dataStr);
+        [queryReferralData release];
+        
+        SBJSON *jsonReader = [[SBJSON new] autorelease];
+        NSDictionary *resp = [jsonReader objectWithString:dataStr];
+        int status = [[resp objectForKey:@"status"] intValue];
+        if (status == 1000) {
+            referrals = [[NSMutableArray arrayWithCapacity:16] retain];
+            NSArray *ls = [resp objectForKey:@"referrals"];
+            if (ls != nil) {
+                for (NSDictionary *d in ls) {
+                    ReferralRecord *rec = [[ReferralRecord alloc] init];
+                    rec.totalClickThrough = [[d objectForKey:@"totalClickThrough"] intValue];
+                    rec.totalInvitee = [[d objectForKey:@"totalInvitee"] intValue];
+                    NSString *dateStr = [d objectForKey:@"invitationDate"];
+                    if (dateStr == nil || [@"" isEqualToString:dateStr]) {
+                        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+                        [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss.S"];
+                        rec.invitationDate = [dateFormat dateFromString:dateStr];
+                        [dateFormat release];
+                    }
+                    [referrals addObject:rec];
+                }
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryReferralComplete" object:nil];
+            }
+        } else {
+            errorMessage = [[resp objectForKey:@"desc"] retain];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryReferralFailed" object:nil];
+        }
+        
+        [queryReferralConnection release];
+        queryReferralConnection = nil;
     }
 }
 
