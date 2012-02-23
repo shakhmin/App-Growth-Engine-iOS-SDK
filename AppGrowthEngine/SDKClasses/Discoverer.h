@@ -88,12 +88,14 @@
 - (BOOL) discoverSelected:(NSMutableArray *)phones;
 - (BOOL) queryOrder;
 - (BOOL) downloadShareTemplates;
-- (BOOL) newReferral:(NSMutableArray *)phones withMessage:(NSString *)message;
+- (BOOL) newReferral:(NSMutableArray *)phones withMessage:(NSString *)message useVirtualNumber:(BOOL) sendNow;
 - (BOOL) updateReferral:(BOOL) sent;
 - (BOOL) queryInstalls:(NSString *)direction;
 - (BOOL) queryReferral;
 
 - (NSString *) getAddressbook;
 - (void) createVerificationSms;
+- (NSString *) lookupNameFromPhone:(NSString *)p;
+- (NSString *) formatPhone:(NSString *)p;
 
 @end

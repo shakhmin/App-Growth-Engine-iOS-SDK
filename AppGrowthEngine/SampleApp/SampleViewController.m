@@ -22,6 +22,7 @@
 - (void) verifyComplete {
     verifyButton.enabled = YES;
     verifyStatusButton.enabled = YES;
+    queryInstallsButton.enabled = YES;
 }
 
 - (IBAction) verifyStatus: (id)sender {
@@ -43,7 +44,7 @@
 - (void) verificationStatusNo {
     verifyStatusButton.enabled = YES;
     UIAlertView* alert = [[UIAlertView alloc] init];
-	alert.title = @"Verified";
+	alert.title = @"Not Verified";
 	alert.message = @"Your device has NOT been verified. It might take a few minutes for us to receive and process the verification SMS.";
 	[alert addButtonWithTitle:@"Dismiss"];
     alert.cancelButtonIndex = 0;
@@ -62,7 +63,7 @@
     
     UIAlertView* alert = [[UIAlertView alloc] init];
 	alert.title = @"Finished";
-	alert.message = @"Discover order successfully submitted. Please wait a few minutes to query the recommednations from the API.";
+	alert.message = @"Discover order successfully submitted. Please wait a few minutes to query the recommendations from the API.";
 	[alert addButtonWithTitle:@"Dismiss"];
 	alert.cancelButtonIndex = 0;
 	[alert show];

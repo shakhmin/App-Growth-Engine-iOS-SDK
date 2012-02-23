@@ -4,6 +4,7 @@
 	
 	NSString *phone;
 	NSString *osType;
+    NSString *name;
     
     int invitationCount;
     NSDate *lastInvitationSent;
@@ -14,6 +15,7 @@
 
 @property (nonatomic, retain) NSString *phone;
 @property (nonatomic, retain) NSString *osType;
+@property (nonatomic, retain) NSString *name;
 @property (nonatomic) int invitationCount;
 @property (nonatomic, retain) NSDate *lastInvitationSent;
 

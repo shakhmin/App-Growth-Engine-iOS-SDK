@@ -49,7 +49,7 @@
     }
     
     Lead *lead = (Lead *)[[Discoverer agent].leads objectAtIndex:indexPath.row];
-    cell.textLabel.text = lead.phone;
+    cell.textLabel.text = lead.name;
     cell.detailTextLabel.text = lead.osType;
     if (lead.selected) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
@@ -72,6 +72,24 @@
 }
 
 - (IBAction) refer: (id) sender {
+    if ([MFMessageComposeViewController canSendText]) {
+        UIActionSheet* actionSheet = [[UIActionSheet alloc] init];
+        actionSheet.title = @"Send the referral from";
+        actionSheet.delegate = self;
+        [actionSheet addButtonWithTitle:@"HookMobile virtual number"];
+        [actionSheet addButtonWithTitle:@"The user's phone"];
+        [actionSheet addButtonWithTitle:@"Cancel"];
+        actionSheet.cancelButtonIndex = 2;
+        [actionSheet showInView:self.view];
+        [actionSheet release];
+        
+    } else {
+        sendNow = YES;
+        [self sendReferral];
+    }
+}
+
+- (void) sendReferral {
     phones = [[NSMutableArray arrayWithCapacity:16] retain];
     for (Lead *lead in [Discoverer agent].leads) {
         if (lead.selected) {
@@ -82,7 +100,7 @@
         self.navigationItem.rightBarButtonItem.title = @"Wait ...";
         self.navigationItem.rightBarButtonItem.enabled = NO;
         
-        [[Discoverer agent] newReferral:phones withMessage:@"I thought you might be interested in this app 'AGE SDK', check it out here %link% "];
+        [[Discoverer agent] newReferral:phones withMessage:@"I thought you might be interested in this app 'AGE SDK', check it out here %link% " useVirtualNumber:sendNow];
     } else {
         UIAlertView* alert = [[UIAlertView alloc] init];
         alert.title = @"Please select referral contacts";
@@ -94,12 +112,29 @@
     }
 }
 
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    if (buttonIndex == 0) {
+        sendNow = YES;
+        [self sendReferral];
+    }
+    if (buttonIndex == 1) {
+        sendNow = NO;
+        [self sendReferral];
+    }
+    if (buttonIndex == 2) {
+        // Cancel
+    }
+    
+    return;
+}
+
 
 - (void) showReferralMessage {
     self.navigationItem.rightBarButtonItem.title = @"Referral";
     self.navigationItem.rightBarButtonItem.enabled = YES;
 
-    if ([MFMessageComposeViewController canSendText]) {
+    if (!sendNow && [MFMessageComposeViewController canSendText]) {
         MFMessageComposeViewController *controller = [[[MFMessageComposeViewController alloc] init] autorelease];
         controller.body = [Discoverer agent].referralMessage;
         controller.recipients = phones;

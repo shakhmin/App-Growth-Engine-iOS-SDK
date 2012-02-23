@@ -233,7 +233,7 @@ static Discoverer *_agent;
     return YES;
 }
 
-- (BOOL) newReferral:(NSMutableArray *)phones withMessage:(NSString *)message {
+- (BOOL) newReferral:(NSMutableArray *)phones withMessage:(NSString *)message useVirtualNumber:(BOOL) sendNow {
     
     if (newReferralConnection != nil) {
         return NO;
@@ -251,7 +251,7 @@ static Discoverer *_agent;
     }
     [postBody appendData:[[NSString stringWithFormat:@"&referralTemplate=%@", [message stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[@"&useShortUrl=true" dataUsingEncoding:NSUTF8StringEncoding]];
-    if (![MFMessageComposeViewController canSendText]) {
+    if (sendNow) {
         [postBody appendData:[@"&sendNow=true" dataUsingEncoding:NSUTF8StringEncoding]];
     }
     [req setHTTPBody:postBody];
@@ -420,6 +420,80 @@ static Discoverer *_agent;
             [[NSNotificationCenter defaultCenter] postNotificationName:@"HookNotSMSDevice" object:nil];
         }
     }
+}
+
+- (NSString *) lookupNameFromPhone:(NSString *)p {
+    NSString *name;
+    
+    ABAddressBookRef ab = ABAddressBookCreate();
+    
+    CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(ab);
+    CFIndex nPeople = ABAddressBookGetPersonCount(ab);
+    
+    for (int i = 0; i < nPeople; i++) {
+        ABRecordRef ref = CFArrayGetValueAtIndex(allPeople, i);
+        CFStringRef firstName = ABRecordCopyValue(ref, kABPersonFirstNameProperty);
+        CFStringRef lastName = ABRecordCopyValue(ref, kABPersonLastNameProperty);
+        
+        NSString *firstNameStr = (NSString *) firstName;
+        if (firstNameStr == nil) {
+            firstNameStr = @"";
+        }
+        if (![firstNameStr canBeConvertedToEncoding:NSASCIIStringEncoding]) {
+            firstNameStr = @"NONASCII";
+        }
+        NSString *lastNameStr = (NSString *) lastName;
+        if (lastNameStr == nil) {
+            lastNameStr = @"";
+        }
+        if (![lastNameStr canBeConvertedToEncoding:NSASCIIStringEncoding]) {
+            lastNameStr = @"NONASCII";
+        }
+        
+        ABMultiValueRef ps = ABRecordCopyValue(ref, kABPersonPhoneProperty);
+        CFIndex count = ABMultiValueGetCount (ps);
+        for (int i = 0; i < count; i++) {
+            CFStringRef phone = ABMultiValueCopyValueAtIndex (ps, i);
+            
+            if ([p isEqualToString:[self formatPhone:((NSString *) phone)]]) {
+                name = [NSString stringWithFormat:@"%@ %@", firstNameStr, lastNameStr];
+                break;
+            }
+            
+            if (phone) {
+                CFRelease(phone);
+            }
+        }
+        
+        if (firstName) {
+            CFRelease(firstName);
+        }
+        if (lastName) {
+            CFRelease(lastName);
+        }
+    }
+	if (allPeople) {
+        CFRelease(allPeople);
+    }
+    
+    return name;
+}
+
+- (NSString *) formatPhone:(NSString *)p {
+    p = [p stringByReplacingOccurrencesOfString:@"(" withString:@""];
+    p = [p stringByReplacingOccurrencesOfString:@")" withString:@""];
+    p = [p stringByReplacingOccurrencesOfString:@" " withString:@""];
+    p = [p stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    p = [p stringByReplacingOccurrencesOfString:@"+" withString:@""];
+    
+    int length = [p length];
+    if(length == 10) {
+        p = [NSString stringWithFormat:@"+1%@", p];
+    } else if (length == 11) {
+        p = [NSString stringWithFormat:@"+%@", p];
+    }
+    
+    return p;
 }
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
@@ -596,7 +670,7 @@ static Discoverer *_agent;
         NSDictionary *resp = [jsonReader objectWithString:dataStr];
         if ([[resp objectForKey:@"status"] intValue] == 1000) {
             NSString *verified = [resp objectForKey:@"verified"];
-            if ([verified boolValue]) {
+            if ([verified isEqualToString:@"true"]) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"HookDeviceVerified" object:nil];
             } else {
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"HookDeviceNotVerified" object:nil];
@@ -661,9 +735,11 @@ static Discoverer *_agent;
                     lead.phone = [d objectForKey:@"phone"];
                     lead.osType = [d objectForKey:@"osType"];
                     lead.invitationCount = [[resp objectForKey:@"invitationCount"] intValue];
+                    lead.name = [[Discoverer agent] lookupNameFromPhone:lead.phone];
                     
                     NSString *dateStr = [d objectForKey:@"lastInvitationSent"];
                     if (dateStr == nil || [@"" isEqualToString:dateStr]) {
+                    } else {
                         NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
                         [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss.S"];
                         lead.lastInvitationSent = [dateFormat dateFromString:dateStr];
@@ -755,6 +831,7 @@ static Discoverer *_agent;
                 for (NSString *p in ls) {
                     Lead *lead = [[Lead alloc] init];
                     lead.phone = p;
+                    lead.name = [[Discoverer agent] lookupNameFromPhone:lead.phone];
                     [installs addObject:lead];
                 }
             }
@@ -784,8 +861,9 @@ static Discoverer *_agent;
                     ReferralRecord *rec = [[ReferralRecord alloc] init];
                     rec.totalClickThrough = [[d objectForKey:@"totalClickThrough"] intValue];
                     rec.totalInvitee = [[d objectForKey:@"totalInvitee"] intValue];
-                    NSString *dateStr = [d objectForKey:@"invitationDate"];
+                    NSString *dateStr = [d objectForKey:@"date"];
                     if (dateStr == nil || [@"" isEqualToString:dateStr]) {
+                    } else {
                         NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
                         [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss.S"];
                         rec.invitationDate = [dateFormat dateFromString:dateStr];
@@ -814,7 +892,7 @@ static Discoverer *_agent;
     
     _agent = [[Discoverer alloc] init];
     _agent.server = @"https://age.hookmobile.com";
-    _agent.SMSDest = @"3025175025";
+    _agent.SMSDest = @"3025175040";
     _agent.appSecret = secret;
     
     return;

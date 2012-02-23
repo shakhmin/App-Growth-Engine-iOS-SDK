@@ -47,7 +47,7 @@
     }
     
     Lead *lead = (Lead *)[[Discoverer agent].installs objectAtIndex:indexPath.row];
-    cell.textLabel.text = lead.phone;
+    cell.textLabel.text = lead.name;
     
     return cell;
 }

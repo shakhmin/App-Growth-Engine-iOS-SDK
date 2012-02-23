@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A047E8B14F6D54B005CA7C1 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A047E8A14F6D54B005CA7C1 /* icon@2x.png */; };
+		2A047E8E14F6D553005CA7C1 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A047E8D14F6D553005CA7C1 /* icon.png */; };
 		2A29299414A3C6D5000382A4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A29299314A3C6D5000382A4 /* UIKit.framework */; };
 		2A29299614A3C6D5000382A4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A29299514A3C6D5000382A4 /* Foundation.framework */; };
 		2A29299814A3C6D5000382A4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A29299714A3C6D5000382A4 /* CoreGraphics.framework */; };
@@ -37,6 +39,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2A047E8A14F6D54B005CA7C1 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+		2A047E8D14F6D553005CA7C1 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		2A29298F14A3C6D5000382A4 /* AppGrowthEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppGrowthEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A29299314A3C6D5000382A4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2A29299514A3C6D5000382A4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -155,6 +159,8 @@
 		2A2929B314A3C7E8000382A4 /* SampleApp */ = {
 			isa = PBXGroup;
 			children = (
+				2A047E8A14F6D54B005CA7C1 /* icon@2x.png */,
+				2A047E8D14F6D553005CA7C1 /* icon.png */,
 				2A2929B614A3C837000382A4 /* LeadsController.h */,
 				2A2929B714A3C837000382A4 /* LeadsController.m */,
 				2A2929B814A3C837000382A4 /* LeadsController.xib */,
@@ -265,6 +271,8 @@
 				2A2929C414A3C837000382A4 /* SampleViewController.xib in Resources */,
 				2A65A74114F4942900B55F33 /* InstallsController.xib in Resources */,
 				2A65A76614F4C98100B55F33 /* ReferralsController.xib in Resources */,
+				2A047E8B14F6D54B005CA7C1 /* icon@2x.png in Resources */,
+				2A047E8E14F6D553005CA7C1 /* icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -337,8 +345,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "AD3005AD-84F5-41B4-858D-3336DE3A0B60";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "AD3005AD-84F5-41B4-858D-3336DE3A0B60";
+				PROVISIONING_PROFILE = "476925A7-39D8-4F8B-BE1C-380EA620D36D";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "476925A7-39D8-4F8B-BE1C-380EA620D36D";
 				SDKROOT = iphoneos;
 			};
 			name = Release;
