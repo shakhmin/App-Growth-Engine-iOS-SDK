@@ -182,6 +182,51 @@ installation statistics for you.
 }
 </pre>
 
+The AGE API also allows you to track all referrals you have sent from any device, and get the referrals' click throughs. This makes it possible for you to track referral performance of individual devices, and potentially reward the users who generate the most referral click throughs.
+
+<pre>
+[[Discoverer agent] queryReferral];
+</pre>
+
+Once the referral data is retrieved from the AGE server, the SDK generates a notification event <code>HookQueryReferralComplete</code>. The referral data is stored in the <code>[Discoverer agent].referrals</code> array with each <code>ReferralRecord</code> element in the array representing a referral.
+
+<pre>
+@interface ReferralRecord : NSObject {
+    
+    int totalClickThrough;
+    int totalInvitee;
+    NSDate *invitationDate;
+    
+}
+</pre>
+
+## Track friends who install the same app
+
+The AGE platform allows you to find friends who also install the same app from your addressbook. To query for friends installs in your addressbook, you must call the <code>discover</code> method first. And then, you can call the <code>queryInstalls</code>. This method takes a string parameter that indicates how the searching and matching of addressbook should be done.
+
+* <code>FORWARD</code> - Find contacts within your address book who has the same app.
+
+* <code>BACKWARD</code> - Find other app users who has your phone number in their
+address book.  When to use this? When the app wants to suggest a long lost
+friend who has your contact, but not vice versa.
+
+* <code>MUTUAL</code> - Find contacts within your address book who has the same app and
+who also has your contact in his/her address book.  This query may be useful
+for engaging a friend to play in multi-player game who already plays the
+game.
+
+Below is an example
+
+<pre>
+[[Discoverer agent] queryInstalls:@"FORWARD"];
+</pre>
+
+Once the SDK receives the friends who has the same app, it generates a <code>HookQueryInstallsComplete</code> notification and saves the results in an array of <code>Lead</code> objects in <code>[Discoverer agent].installs</code>.
+
+
+
+
+
 
 
 
