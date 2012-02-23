@@ -655,7 +655,7 @@ static Discoverer *_agent;
         if (status == 1000 || status == 500) {
             leads = [[NSMutableArray arrayWithCapacity:16] retain];
             NSArray *ls = [resp objectForKey:@"leads"];
-            if (ls != nil) {
+            if (ls != nil && [ls count] > 0) {
                 for (NSDictionary *d in ls) {
                     Lead *lead = [[Lead alloc] init];
                     lead.phone = [d objectForKey:@"phone"];
@@ -672,8 +672,8 @@ static Discoverer *_agent;
                     
                     [leads addObject:lead];
                 }
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryOrderComplete" object:nil];
             }
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryOrderComplete" object:nil];
         } else {
             errorMessage = [[resp objectForKey:@"desc"] retain];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryOrderFailed" object:nil];
@@ -751,14 +751,14 @@ static Discoverer *_agent;
         if (status == 1000) {
             installs = [[NSMutableArray arrayWithCapacity:16] retain];
             NSArray *ls = [resp objectForKey:@"leads"];
-            if (ls != nil) {
+            if (ls != nil && [ls count] > 0) {
                 for (NSString *p in ls) {
                     Lead *lead = [[Lead alloc] init];
                     lead.phone = p;
                     [installs addObject:lead];
                 }
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryInstallsComplete" object:nil];
             }
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryInstallsComplete" object:nil];
         } else {
             errorMessage = [[resp objectForKey:@"desc"] retain];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryInstallsFailed" object:nil];
@@ -779,7 +779,7 @@ static Discoverer *_agent;
         if (status == 1000) {
             referrals = [[NSMutableArray arrayWithCapacity:16] retain];
             NSArray *ls = [resp objectForKey:@"referrals"];
-            if (ls != nil) {
+            if (ls != nil && [ls count] > 0) {
                 for (NSDictionary *d in ls) {
                     ReferralRecord *rec = [[ReferralRecord alloc] init];
                     rec.totalClickThrough = [[d objectForKey:@"totalClickThrough"] intValue];
@@ -793,8 +793,8 @@ static Discoverer *_agent;
                     }
                     [referrals addObject:rec];
                 }
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryReferralComplete" object:nil];
             }
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryReferralComplete" object:nil];
         } else {
             errorMessage = [[resp objectForKey:@"desc"] retain];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryReferralFailed" object:nil];

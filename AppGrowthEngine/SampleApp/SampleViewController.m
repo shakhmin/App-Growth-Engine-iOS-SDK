@@ -130,6 +130,7 @@
 }
 
 - (void) queryReferralComplete {
+    NSLog(@"referral done");
     queryReferralButton.enabled = YES;
     
     [self.navigationController pushViewController:referralsController animated:YES];
@@ -171,15 +172,17 @@
     
     if (buttonIndex == 0) {
         [[Discoverer agent] queryInstalls:@"FORWARD"];
+        queryInstallsButton.enabled = NO;
     }
     if (buttonIndex == 1) {
         [[Discoverer agent] queryInstalls:@"BACKWARD"];
+        queryInstallsButton.enabled = NO;
     }
-    if (buttonIndex == 1) {
+    if (buttonIndex == 2) {
         [[Discoverer agent] queryInstalls:@"MUTUAL"];
+        queryInstallsButton.enabled = NO;
     }
     
-    queryInstallsButton.enabled = NO;
     return;
 }
 

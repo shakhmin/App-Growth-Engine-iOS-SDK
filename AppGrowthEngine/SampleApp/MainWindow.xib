@@ -216,6 +216,7 @@
 					<string>16.IBPluginDependency</string>
 					<string>18.CustomClassName</string>
 					<string>18.IBPluginDependency</string>
+					<string>20.CustomClassName</string>
 					<string>20.IBPluginDependency</string>
 					<string>3.CustomClassName</string>
 					<string>3.IBPluginDependency</string>
@@ -233,6 +234,7 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>InstallsController</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+					<string>ReferralsController</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>SampleAppDelegate</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -305,6 +307,25 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
+					<string key="className">ReferralsController</string>
+					<string key="superclassName">UIViewController</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">entriesView</string>
+						<string key="NS.object.0">UITableView</string>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">entriesView</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">entriesView</string>
+							<string key="candidateClassName">UITableView</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/ReferralsController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">SampleAppDelegate</string>
 					<string key="superclassName">NSObject</string>
 					<object class="NSMutableDictionary" key="outlets">
@@ -354,11 +375,13 @@
 							<string>discover:</string>
 							<string>query:</string>
 							<string>queryInstalls:</string>
+							<string>queryReferral:</string>
 							<string>verify:</string>
 							<string>verifyStatus:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -373,6 +396,7 @@
 							<string>discover:</string>
 							<string>query:</string>
 							<string>queryInstalls:</string>
+							<string>queryReferral:</string>
 							<string>verify:</string>
 							<string>verifyStatus:</string>
 						</object>
@@ -388,6 +412,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">queryInstalls:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">queryReferral:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
