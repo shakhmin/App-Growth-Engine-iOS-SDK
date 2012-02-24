@@ -44,7 +44,7 @@ XCode project, fill in the application secret in the <code>SampleAppDelegate</co
 a physical iPhone attached to the dev computer).  The buttons in the sample
 demonstrates key actions you can perform with the SDK.
 
-![home screen](App-Growth-Engine-iOS-SDK/raw/master/screen1.png)
+![home screen](App-Growth-Engine-iOS-SDK/raw/master/screen1.png "home screen")
 
 
 ## Verify the customer device that runs your app (optional, and iPhone-only)
@@ -83,7 +83,7 @@ order to receive the confirmation results.
 
 ## Get a list of contacts from the user's addressbook that are most likely to install your app.
 
-![A list of recommended invites](App-Growth-Engine-iOS-SDK/raw/master/screen2.png)
+![A list of recommended invites](App-Growth-Engine-iOS-SDK/raw/master/screen2.png "A list of recommended invites")
 
 First, you need to execute a discovery call like this. The call returns immediately, and processes the discovery in background.
 
@@ -142,7 +142,7 @@ The <code>phones</code> parameter is an <code>NSArray</code> that contains a lis
 referrals to. It is typically a list selected from the leads generated from the last section of this document. The <code>withMessage</code>
 parameter takes a message template with <code>%link%</code> referring to customized referral URL from the AGE platform. The <code>useVirtualNumber</code> option specifies whether AGE should send out the referrals via its own virtual number. If not, the application itself is responsible for letting the user send out the referrals via their own device.
 
-![Options to send out referrals](App-Growth-Engine-iOS-SDK/raw/master/screen3.png)
+![Options to send out referrals](App-Growth-Engine-iOS-SDK/raw/master/screen3.png "Options to send out referrals")
 
 
 Once the AGE server returns, the SDK raises the <code>HookNewReferralComplete</code> notification, and you can retrieve the referral
@@ -230,9 +230,9 @@ Below is an example
 
 Once the SDK receives the friends who has the same app, it generates a <code>HookQueryInstallsComplete</code> notification and saves the results in an array of <code>Lead</code> objects in <code>[Discoverer agent].installs</code>.
 
-![Track users in your addressbook who have installed the same app](App-Growth-Engine-iOS-SDK/raw/master/screen4.png)
+![Track users in your addressbook who have installed the same app](App-Growth-Engine-iOS-SDK/raw/master/screen4.png "Track users in your addressbook who have installed the same app")
 
-![Show users in your addressbook who have installed the same app](App-Growth-Engine-iOS-SDK/raw/master/screen5.png)
+![Show users in your addressbook who have installed the same app](App-Growth-Engine-iOS-SDK/raw/master/screen5.png "Show users in your addressbook who have installed the same app")
 
 
 
