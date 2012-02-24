@@ -44,7 +44,7 @@ XCode project, fill in the application secret in the <code>SampleAppDelegate</co
 a physical iPhone attached to the dev computer).  The buttons in the sample
 demonstrates key actions you can perform with the SDK.
 
-![logo](App-Growth-Engine-iOS-SDK/raw/master/screen-shot.png)
+![home screen](App-Growth-Engine-iOS-SDK/raw/master/screen1.png)
 
 
 ## Verify the customer device that runs your app (optional, and iPhone-only)
@@ -82,6 +82,8 @@ order to receive the confirmation results.
 </pre>
 
 ## Get a list of contacts from the user's addressbook that are most likely to install your app.
+
+![A list of recommended invites](App-Growth-Engine-iOS-SDK/raw/master/screen2.png)
 
 First, you need to execute a discovery call like this. The call returns immediately, and processes the discovery in background.
 
@@ -122,7 +124,7 @@ which contains phone numbers and device types.
 </pre>
 
 Now, you can prompt your user to send personal invites to their friends in
-[[Discoverer agent].leads to maximize the chance of referral success!
+<code>[[Discoverer agent].leads</code> to maximize the chance of referral success!
 
 ## Track your referrals
 
@@ -131,12 +133,17 @@ in invite messages. The <code>newReferral</code> method creates a referral messa
 
 <pre>
 [[Discoverer agent] newReferral:phones 
-    withMessage:@"I thought you might be interested in this app 'AGE SDK', check it out here %link% "];
+    withMessage:@"I thought you might be interested in this app 'AGE SDK', check it out here %link% "
+    useVirtualNumber:YES
+];
 </pre>
 
 The <code>phones</code> parameter is an <code>NSArray</code> that contains a list of phone numbers you wish to send
 referrals to. It is typically a list selected from the leads generated from the last section of this document. The <code>withMessage</code>
-parameter takes a message template with <code>%link%</code> referring to customized referral URL from the AGE platform.
+parameter takes a message template with <code>%link%</code> referring to customized referral URL from the AGE platform. The <code>useVirtualNumber</code> option specifies whether AGE should send out the referrals via its own virtual number. If not, the application itself is responsible for letting the user send out the referrals via their own device.
+
+![Options to send out referrals](App-Growth-Engine-iOS-SDK/raw/master/screen3.png)
+
 
 Once the AGE server returns, the SDK raises the <code>HookNewReferralComplete</code> notification, and you can retrieve the referral
 message from <code>[Discoverer agent].referralMessage</code>. Then, you can prompt the user of your app to send that referral message via SMS.
@@ -223,7 +230,9 @@ Below is an example
 
 Once the SDK receives the friends who has the same app, it generates a <code>HookQueryInstallsComplete</code> notification and saves the results in an array of <code>Lead</code> objects in <code>[Discoverer agent].installs</code>.
 
+![Track users in your addressbook who have installed the same app](App-Growth-Engine-iOS-SDK/raw/master/screen4.png)
 
+![Show users in your addressbook who have installed the same app](App-Growth-Engine-iOS-SDK/raw/master/screen5.png)
 
 
 
