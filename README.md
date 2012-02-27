@@ -1,9 +1,9 @@
 # App Growth Engine for iOS
 
 Hook Mobile has developed a unique offering for Mobile app developers ­ App
-Growth Engine SDK.  The SDK supports both iOS and Android mobile.  The SDK
+Growth Engine SDK.  The SDK supports both iOS and Android(comming soon).  The SDK
 will assist in user authentication during registration and help promote app
-sharing via Hookąs device discovery platform without the need to add or
+sharing via Hook's device discovery platform without the need to add or
 implement any middleware solutions to your current environment.
 
 # Create an account and a key for your app
