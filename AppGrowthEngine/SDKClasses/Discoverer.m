@@ -436,20 +436,19 @@ static Discoverer *_agent;
         ABRecordRef ref = CFArrayGetValueAtIndex(allPeople, i);
         CFStringRef firstName = ABRecordCopyValue(ref, kABPersonFirstNameProperty);
         CFStringRef lastName = ABRecordCopyValue(ref, kABPersonLastNameProperty);
+        CFStringRef suffix = ABRecordCopyValue(ref, kABPersonSuffixProperty);
         
         NSString *firstNameStr = (NSString *) firstName;
         if (firstNameStr == nil) {
             firstNameStr = @"";
         }
-        if (![firstNameStr canBeConvertedToEncoding:NSASCIIStringEncoding]) {
-            firstNameStr = @"NONASCII";
-        }
         NSString *lastNameStr = (NSString *) lastName;
         if (lastNameStr == nil) {
             lastNameStr = @"";
         }
-        if (![lastNameStr canBeConvertedToEncoding:NSASCIIStringEncoding]) {
-            lastNameStr = @"NONASCII";
+        NSString *suffixStr = (NSString *) suffix;
+        if (suffixStr == nil) {
+            suffixStr = @"";
         }
         
         ABMultiValueRef ps = ABRecordCopyValue(ref, kABPersonPhoneProperty);
@@ -458,7 +457,7 @@ static Discoverer *_agent;
             CFStringRef phone = ABMultiValueCopyValueAtIndex (ps, i);
             
             if ([p isEqualToString:[self formatPhone:((NSString *) phone)]]) {
-                name = [NSString stringWithFormat:@"%@ %@", firstNameStr, lastNameStr];
+                name = [NSString stringWithFormat:@"%@ %@ %@", firstNameStr, lastNameStr, suffixStr];
                 break;
             }
             
