@@ -728,7 +728,7 @@ static Discoverer *_agent;
         } else {
             queryStatus = NO;
         }
-        if (status == 1000 || status == 500) {
+        if (status == 1000 || status == 1500) {
             leads = [[NSMutableArray arrayWithCapacity:16] retain];
             NSArray *ls = [resp objectForKey:@"leads"];
             if (ls != nil && [ls count] > 0) {
