@@ -10,7 +10,7 @@ implement any middleware solutions to your current environment.
 
 To use the SDK, you first need to register an account and create an application.
 
-<h3><center><a href="http://addressbook.ringfulhealth.com:8081/addressbook/register.jsp">Register</a></center></h3>
+<h3><center><a href="http://hookmobile.com/signup.html">Register</a></center></h3>
 
 # Install the SDK
 
