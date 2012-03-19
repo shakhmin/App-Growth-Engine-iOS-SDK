@@ -91,12 +91,12 @@ First, you need to execute a discovery call like this. The call returns immediat
 [[Discoverer agent] discover];
 </pre>
 
-It takes Hook Mobile anywhere from 10 minutes to several hours to determine the
+It takes Hook Mobile up to a couple of minutes to determine the
 devices for each of the phone numbers, and come up with an optimized list. If
 you have a server side callback registered with your application in Hook
 Mobile's developer portal, you will receive a callback when the data is ready.
 But if you would prefer to have everything self-contained in the app, you can
-wait for 10 minutes and issue the following call. Again, the call returns
+wait a minute and issue the following call. Again, the call returns
 immediately, and you should listen for the <code>HookQueryOrderComplete</code> event. When
 the <code>HookQueryOrderComplete</code> event is received, you can query a list of Leads,
 which contains phone numbers and device types.
