@@ -9,7 +9,7 @@ static Discoverer *_agent;
 
 @implementation Discoverer
 
-@synthesize server, SMSDest, appSecret, /* runQueryAfterOrder, */ queryStatus, errorMessage, leads, installs, referrals;
+@synthesize server, SMSDest, appKey, /* runQueryAfterOrder, */ queryStatus, errorMessage, leads, installs, referrals;
 @synthesize fbTemplate, emailTemplate, smsTemplate, twitterTemplate;
 @synthesize referralMessage;
 
@@ -40,12 +40,12 @@ static Discoverer *_agent;
         forceVerificationSms = force;
     }
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/createverify", server]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/newverify", server]];
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
     [req setHTTPMethod:@"POST"];
     [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
     NSMutableData *postBody = [NSMutableData data];
-    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"appKey=%@", [appKey stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&deviceModel=%@", [[UIDevice currentDevice] platformString]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&deviceOs=%@", [[UIDevice currentDevice] systemVersion]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&verifyMessageTemplate=%@", [@"Please send this SMS to confirm your device %installCode%" stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -58,6 +58,7 @@ static Discoverer *_agent;
 		verifyDeviceData = [[NSMutableData data] retain];
         verifyDeviceConnection = [connection retain];
 	}
+    
     return YES;
 }
 
@@ -71,7 +72,7 @@ static Discoverer *_agent;
     [req setHTTPMethod:@"POST"];
     [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
     NSMutableData *postBody = [NSMutableData data];
-    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"appKey=%@", [appKey stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [req setHTTPBody:postBody];
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:req delegate:self];
@@ -90,12 +91,12 @@ static Discoverer *_agent;
     
     NSLog(@"installCode is %@", installCode);
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/neworder", server]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/newleads", server]];
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
     [req setHTTPMethod:@"POST"];
     [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
     NSMutableData *postBody = [NSMutableData data];
-    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"appKey=%@", [appKey stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     if (installCode != nil ) {
         [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     }
@@ -121,12 +122,12 @@ static Discoverer *_agent;
     
     NSLog(@"installCode is %@", installCode);
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/neworder", server]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/newleads", server]];
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
     [req setHTTPMethod:@"POST"];
     [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
     NSMutableData *postBody = [NSMutableData data];
-    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"appKey=%@", [appKey stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     if (installCode != nil ) {
         [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     }
@@ -163,7 +164,7 @@ static Discoverer *_agent;
     [req setHTTPMethod:@"POST"];
     [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
     NSMutableData *postBody = [NSMutableData data];
-    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"appKey=%@", [appKey stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     if (installCode != nil ) {
         [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     }
@@ -193,12 +194,12 @@ static Discoverer *_agent;
         return NO;
     }
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/queryorder", server]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/queryleads", server]];
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
     [req setHTTPMethod:@"POST"];
     [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
     NSMutableData *postBody = [NSMutableData data];
-    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"appKey=%@", [appKey stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&order=%d", orderid] dataUsingEncoding:NSUTF8StringEncoding]];
     [req setHTTPBody:postBody];
@@ -222,7 +223,7 @@ static Discoverer *_agent;
     [req setHTTPMethod:@"POST"];
     [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
     NSMutableData *postBody = [NSMutableData data];
-    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"appKey=%@", [appKey stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [req setHTTPBody:postBody];
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:req delegate:self];
@@ -246,7 +247,7 @@ static Discoverer *_agent;
     [req setHTTPMethod:@"POST"];
     [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
     NSMutableData *postBody = [NSMutableData data];
-    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"appKey=%@", [appKey stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     for (NSString *phone in phones) {
         NSString *encodedPhone = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)phone, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8 );
@@ -278,7 +279,7 @@ static Discoverer *_agent;
     [req setHTTPMethod:@"POST"];
     [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
     NSMutableData *postBody = [NSMutableData data];
-    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"appKey=%@", [appKey stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&referralId=%d", referralId] dataUsingEncoding:NSUTF8StringEncoding]];
     if (sent) {
@@ -307,7 +308,7 @@ static Discoverer *_agent;
     [req setHTTPMethod:@"POST"];
     [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
     NSMutableData *postBody = [NSMutableData data];
-    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"appKey=%@", [appKey stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&reference=%@", [direction stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [req setHTTPBody:postBody];
@@ -331,7 +332,7 @@ static Discoverer *_agent;
     [req setHTTPMethod:@"POST"];
     [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
     NSMutableData *postBody = [NSMutableData data];
-    [postBody appendData:[[NSString stringWithFormat:@"secret=%@", [appSecret stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"appKey=%@", [appKey stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [req setHTTPBody:postBody];
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:req delegate:self];
@@ -887,7 +888,7 @@ static Discoverer *_agent;
 
 
 
-+ (void) activate:(NSString *)secret {
++ (void) activate:(NSString *)ak {
     if (_agent) {
         return;
     }
@@ -895,7 +896,7 @@ static Discoverer *_agent;
     _agent = [[Discoverer alloc] init];
     _agent.server = @"https://age.hookmobile.com";
     _agent.SMSDest = @"3025175040";
-    _agent.appSecret = secret;
+    _agent.appKey = ak;
     
     return;
 }

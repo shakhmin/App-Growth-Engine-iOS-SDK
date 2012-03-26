@@ -6,7 +6,7 @@
     NSString *server;
     NSString *SMSDest;
     
-    NSString *appSecret;
+    NSString *appKey;
     // BOOL runQueryAfterOrder;
     
     // NSString *cudid;
@@ -61,7 +61,7 @@
 
 @property (nonatomic, retain) NSString *server;
 @property (nonatomic, retain) NSString *SMSDest;
-@property (nonatomic, retain) NSString *appSecret;
+@property (nonatomic, retain) NSString *appKey;
 // @property (nonatomic) BOOL runQueryAfterOrder;
 @property (nonatomic) BOOL queryStatus;
 @property (nonatomic, retain) NSString *errorMessage;
@@ -77,7 +77,7 @@
 @property (nonatomic, retain) NSString *referralMessage;
 
 + (Discoverer *) agent;
-+ (void) activate:(NSString *)secret;
++ (void) activate:(NSString *)ak;
 + (void) retire;
 
 - (BOOL) isRegistered;
