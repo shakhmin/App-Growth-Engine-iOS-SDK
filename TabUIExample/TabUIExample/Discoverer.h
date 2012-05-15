@@ -59,8 +59,6 @@
     NSMutableArray *referrals;
 }
 
-@property (nonatomic, retain) NSString *installCode;
-
 @property (nonatomic, retain) NSString *server;
 @property (nonatomic, retain) NSString *SMSDest;
 @property (nonatomic, retain) NSString *appKey;

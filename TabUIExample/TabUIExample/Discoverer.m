@@ -12,7 +12,6 @@ static Discoverer *_agent;
 @synthesize server, SMSDest, appKey, /* runQueryAfterOrder, */ queryStatus, errorMessage, leads, installs, referrals;
 @synthesize fbTemplate, emailTemplate, smsTemplate, twitterTemplate;
 @synthesize referralMessage;
-@synthesize installCode;
 
 - (id) init {
     
