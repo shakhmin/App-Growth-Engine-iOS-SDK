@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <MessageUI/MessageUI.h>
 
-@interface Discoverer : NSObject <MFMessageComposeViewControllerDelegate> {
+@interface HKMDiscoverer : NSObject <MFMessageComposeViewControllerDelegate> {
     
     NSString *server;
     NSString *SMSDest;
@@ -11,8 +11,6 @@
     
     // NSString *cudid;
     NSString *installCode;
-    
-    int orderid;
     
     BOOL queryStatus;
     
@@ -78,7 +76,7 @@
 
 @property (nonatomic, retain) NSString *referralMessage;
 
-+ (Discoverer *) agent;
++ (HKMDiscoverer *) agent;
 + (void) activate:(NSString *)ak;
 + (void) retire;
 
@@ -88,9 +86,9 @@
 - (BOOL) discover;
 - (BOOL) discoverWithoutVzw;
 - (BOOL) discoverSelected:(NSMutableArray *)phones;
-- (BOOL) queryOrder;
+- (BOOL) queryLeads;
 - (BOOL) downloadShareTemplates;
-- (BOOL) newReferral:(NSMutableArray *)phones withMessage:(NSString *)message useVirtualNumber:(BOOL) sendNow;
+- (BOOL) newReferral:(NSArray *)phones withMessage:(NSString *)message useVirtualNumber:(BOOL) sendNow;
 - (BOOL) updateReferral:(BOOL) sent;
 - (BOOL) queryInstalls:(NSString *)direction;
 - (BOOL) queryReferral;
@@ -99,5 +97,7 @@
 - (void) createVerificationSms;
 - (NSString *) lookupNameFromPhone:(NSString *)p;
 - (NSString *) formatPhone:(NSString *)p;
+
+- (BOOL) checkNewAddresses:(NSString *)ab;
 
 @end

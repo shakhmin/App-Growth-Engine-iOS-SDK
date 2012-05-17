@@ -1,6 +1,6 @@
-#import "ReferralRecord.h"
+#import "HKMReferralRecord.h"
 
-@implementation ReferralRecord
+@implementation HKMReferralRecord
 
 @synthesize totalClickThrough, totalInvitee, invitationDate;
 

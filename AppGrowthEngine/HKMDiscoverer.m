@@ -1,13 +1,13 @@
-#import "Discoverer.h"
-#import "JSON.h"
-#import "Lead.h"
-#import "ReferralRecord.h"
+#import "HKMDiscoverer.h"
+#import "HKMJSON.h"
+#import "HKMLead.h"
+#import "HKMReferralRecord.h"
 #import <AddressBook/AddressBook.h>
-#import "UIDevice-Hardware.h"
+#import "UIDevice-HKMHardware.h"
 
-static Discoverer *_agent;
+static HKMDiscoverer *_agent;
 
-@implementation Discoverer
+@implementation HKMDiscoverer
 
 @synthesize server, SMSDest, appKey, /* runQueryAfterOrder, */ queryStatus, errorMessage, leads, installs, referrals;
 @synthesize fbTemplate, emailTemplate, smsTemplate, twitterTemplate;
@@ -92,6 +92,12 @@ static Discoverer *_agent;
     
     NSLog(@"installCode is %@", installCode);
     
+    NSString *ab = [self getAddressbook];
+    if (![self checkNewAddresses:ab]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"HookDiscoverNoChange" object:nil];
+        return YES;
+    } 
+    
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/newleads", server]];
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
     [req setHTTPMethod:@"POST"];
@@ -101,7 +107,7 @@ static Discoverer *_agent;
     if (installCode != nil ) {
         [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     }
-    NSString *encodedJsonStr = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)[self getAddressbook], NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8 );
+    NSString *encodedJsonStr = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)ab, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8 );
 	[postBody appendData:[[NSString stringWithFormat:@"&addressBook=%@", encodedJsonStr] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&deviceModel=%@", [[UIDevice currentDevice] platformString]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&deviceOs=%@", [[UIDevice currentDevice] systemVersion]] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -123,6 +129,12 @@ static Discoverer *_agent;
     
     NSLog(@"installCode is %@", installCode);
     
+    NSString *ab = [self getAddressbook];
+    if (![self checkNewAddresses:ab]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"HookDiscoverNoChange" object:nil];
+        return YES;
+    }
+    
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/newleads", server]];
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
     [req setHTTPMethod:@"POST"];
@@ -132,7 +144,7 @@ static Discoverer *_agent;
     if (installCode != nil ) {
         [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     }
-    NSString *encodedJsonStr = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)[self getAddressbook], NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8 );
+    NSString *encodedJsonStr = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)ab, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8 );
 	[postBody appendData:[[NSString stringWithFormat:@"&addressBook=%@", encodedJsonStr] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&deviceModel=%@", [[UIDevice currentDevice] platformString]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&deviceOs=%@", [[UIDevice currentDevice] systemVersion]] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -170,7 +182,7 @@ static Discoverer *_agent;
         [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     }
     
-    SBJSON *jsonWriter = [[SBJSON new] autorelease];
+    HKMSBJSON *jsonWriter = [[HKMSBJSON new] autorelease];
     jsonWriter.humanReadable = YES;
     NSString *jsonStr = [jsonWriter stringWithObject:contacts];
     NSLog(@"JSON Object --> %@", jsonStr);
@@ -190,8 +202,8 @@ static Discoverer *_agent;
     return YES;
 }
 
-- (BOOL) queryOrder {
-    if (queryOrderConnection != nil || orderid == 0) {
+- (BOOL) queryLeads {
+    if (queryOrderConnection != nil) {
         return NO;
     }
     
@@ -202,7 +214,6 @@ static Discoverer *_agent;
     NSMutableData *postBody = [NSMutableData data];
     [postBody appendData:[[NSString stringWithFormat:@"appKey=%@", [appKey stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
-    [postBody appendData:[[NSString stringWithFormat:@"&order=%d", orderid] dataUsingEncoding:NSUTF8StringEncoding]];
     [req setHTTPBody:postBody];
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:req delegate:self];
     if (connection) {
@@ -237,7 +248,7 @@ static Discoverer *_agent;
     return YES;
 }
 
-- (BOOL) newReferral:(NSMutableArray *)phones withMessage:(NSString *)message useVirtualNumber:(BOOL) sendNow {
+- (BOOL) newReferral:(NSArray *)phones withMessage:(NSString *)message useVirtualNumber:(BOOL) sendNow {
     
     if (newReferralConnection != nil) {
         return NO;
@@ -403,7 +414,7 @@ static Discoverer *_agent;
     }
     
     // create json for phone and name based on phones
-    SBJSON *jsonWriter = [[SBJSON new] autorelease];
+    HKMSBJSON *jsonWriter = [[HKMSBJSON new] autorelease];
     jsonWriter.humanReadable = YES;
     NSString *jsonStr = [jsonWriter stringWithObject:phones];
     NSLog(@"JSON Object --> %@", jsonStr);
@@ -498,6 +509,21 @@ static Discoverer *_agent;
     }
     
     return p;
+}
+
+- (BOOL) checkNewAddresses:(NSString *)ab {
+    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+    if (standardUserDefaults) {
+        NSString *saved = [standardUserDefaults objectForKey:@"HOOKADDRESSBOOK"];
+        if (saved == nil || ![saved isEqualToString:ab]) {
+            [standardUserDefaults setObject:ab forKey:@"HOOKADDRESSBOOK"];
+            [standardUserDefaults synchronize];
+            return YES;
+        } else {
+            return NO;
+        }
+    }
+    return YES;
 }
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
@@ -645,7 +671,7 @@ static Discoverer *_agent;
         NSLog (@"verifyDevice data is %@", dataStr);
         [verifyDeviceData release];
         
-        SBJSON *jsonReader = [[SBJSON new] autorelease];
+        HKMSBJSON *jsonReader = [[HKMSBJSON new] autorelease];
         NSDictionary *resp = [jsonReader objectWithString:dataStr];
         if ([[resp objectForKey:@"status"] intValue] == 1000) {
             NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
@@ -670,7 +696,7 @@ static Discoverer *_agent;
         NSLog (@"verification data is %@", dataStr);
         [verificationData release];
         
-        SBJSON *jsonReader = [[SBJSON new] autorelease];
+        HKMSBJSON *jsonReader = [[HKMSBJSON new] autorelease];
         NSDictionary *resp = [jsonReader objectWithString:dataStr];
         if ([[resp objectForKey:@"status"] intValue] == 1000) {
             NSString *verified = [resp objectForKey:@"verified"];
@@ -690,7 +716,7 @@ static Discoverer *_agent;
         NSLog (@"discover data is %@", dataStr);
         [discoverData release];
         
-        SBJSON *jsonReader = [[SBJSON new] autorelease];
+        HKMSBJSON *jsonReader = [[HKMSBJSON new] autorelease];
         NSDictionary *resp = [jsonReader objectWithString:dataStr];
         if ([[resp objectForKey:@"status"] intValue] == 1000) {
             NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
@@ -699,18 +725,10 @@ static Discoverer *_agent;
                 [standardUserDefaults setObject:installCode forKey:@"installCode"];
                 [standardUserDefaults synchronize];
             }
-            orderid = [[resp objectForKey:@"order"] intValue];
             
             NSLog(@"installCode is %@", installCode);
-            NSLog(@"orderid is %d", orderid);
             
             [[NSNotificationCenter defaultCenter] postNotificationName:@"HookDiscoverComplete" object:nil];
-            /*
-            if (runQueryAfterOrder) {
-                [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(queryOrder) userInfo:nil repeats:NO];
-                // [self queryOrder];
-            }
-            */
         }
         
         [discoverConnection release];
@@ -722,7 +740,7 @@ static Discoverer *_agent;
         NSLog (@"query order data is %@", dataStr);
         [queryOrderData release];
         
-        SBJSON *jsonReader = [[SBJSON new] autorelease];
+        HKMSBJSON *jsonReader = [[HKMSBJSON new] autorelease];
         NSDictionary *resp = [jsonReader objectWithString:dataStr];
         int status = [[resp objectForKey:@"status"] intValue];
         if (status == 1000) {
@@ -735,11 +753,11 @@ static Discoverer *_agent;
             NSArray *ls = [resp objectForKey:@"leads"];
             if (ls != nil && [ls count] > 0) {
                 for (NSDictionary *d in ls) {
-                    Lead *lead = [[Lead alloc] init];
+                    HKMLead *lead = [[HKMLead alloc] init];
                     lead.phone = [d objectForKey:@"phone"];
                     lead.osType = [d objectForKey:@"osType"];
                     lead.invitationCount = [[resp objectForKey:@"invitationCount"] intValue];
-                    lead.name = [[Discoverer agent] lookupNameFromPhone:lead.phone];
+                    lead.name = [[HKMDiscoverer agent] lookupNameFromPhone:lead.phone];
                     
                     NSString *dateStr = [d objectForKey:@"lastInvitationSent"];
                     if (dateStr == nil || [@"" isEqualToString:dateStr]) {
@@ -775,7 +793,7 @@ static Discoverer *_agent;
         NSLog (@"share template data is %@", dataStr);
         [shareTemplateData release];
         
-        SBJSON *jsonReader = [[SBJSON new] autorelease];
+        HKMSBJSON *jsonReader = [[HKMSBJSON new] autorelease];
         NSDictionary *resp = [jsonReader objectWithString:dataStr];
         if ([@"ok" isEqualToString:[resp objectForKey:@"status"]]) {
             fbTemplate = [[resp objectForKey:@"fb"] retain];
@@ -795,7 +813,7 @@ static Discoverer *_agent;
         NSLog (@"new referral data is %@", dataStr);
         [newReferralData release];
         
-        SBJSON *jsonReader = [[SBJSON new] autorelease];
+        HKMSBJSON *jsonReader = [[HKMSBJSON new] autorelease];
         NSDictionary *resp = [jsonReader objectWithString:dataStr];
         if ([[resp objectForKey:@"status"] intValue] == 1000) {
             referralId = [[resp objectForKey:@"referralId"] intValue];
@@ -825,7 +843,7 @@ static Discoverer *_agent;
         NSLog (@"query installs data is %@", dataStr);
         [queryInstallsData release];
         
-        SBJSON *jsonReader = [[SBJSON new] autorelease];
+        HKMSBJSON *jsonReader = [[HKMSBJSON new] autorelease];
         NSDictionary *resp = [jsonReader objectWithString:dataStr];
         int status = [[resp objectForKey:@"status"] intValue];
         if (status == 1000) {
@@ -833,9 +851,9 @@ static Discoverer *_agent;
             NSArray *ls = [resp objectForKey:@"leads"];
             if (ls != nil && [ls count] > 0) {
                 for (NSString *p in ls) {
-                    Lead *lead = [[Lead alloc] init];
+                    HKMLead *lead = [[HKMLead alloc] init];
                     lead.phone = p;
-                    lead.name = [[Discoverer agent] lookupNameFromPhone:lead.phone];
+                    lead.name = [[HKMDiscoverer agent] lookupNameFromPhone:lead.phone];
                     [installs addObject:lead];
                 }
             }
@@ -854,7 +872,7 @@ static Discoverer *_agent;
         NSLog (@"query referral data is %@", dataStr);
         [queryReferralData release];
         
-        SBJSON *jsonReader = [[SBJSON new] autorelease];
+        HKMSBJSON *jsonReader = [[HKMSBJSON new] autorelease];
         NSDictionary *resp = [jsonReader objectWithString:dataStr];
         int status = [[resp objectForKey:@"status"] intValue];
         if (status == 1000) {
@@ -862,7 +880,7 @@ static Discoverer *_agent;
             NSArray *ls = [resp objectForKey:@"referrals"];
             if (ls != nil && [ls count] > 0) {
                 for (NSDictionary *d in ls) {
-                    ReferralRecord *rec = [[ReferralRecord alloc] init];
+                    HKMReferralRecord *rec = [[HKMReferralRecord alloc] init];
                     rec.totalClickThrough = [[d objectForKey:@"totalClickThrough"] intValue];
                     rec.totalInvitee = [[d objectForKey:@"totalInvitee"] intValue];
                     NSString *dateStr = [d objectForKey:@"date"];
@@ -894,7 +912,7 @@ static Discoverer *_agent;
         return;
     }
     
-    _agent = [[Discoverer alloc] init];
+    _agent = [[HKMDiscoverer alloc] init];
     _agent.server = @"https://age.hookmobile.com";
     _agent.SMSDest = @"3025175040";
     _agent.appKey = ak;
@@ -908,7 +926,7 @@ static Discoverer *_agent;
     _agent = nil;
 }
 
-+ (Discoverer *) agent {
++ (HKMDiscoverer *) agent {
     if (_agent == nil) {
         [NSException raise:@"InstanceNotExists"
                     format:@"Attempted to access instance before initializaion. Please call activate: first."];

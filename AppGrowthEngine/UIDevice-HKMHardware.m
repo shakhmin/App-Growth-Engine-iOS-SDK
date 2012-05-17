@@ -11,9 +11,9 @@
 #include <net/if.h>
 #include <net/if_dl.h>
 
-#import "UIDevice-Hardware.h"
+#import "UIDevice-HKMHardware.h"
 
-@implementation UIDevice (Hardware)
+@implementation UIDevice (HKMHardware)
 /*
  Platforms
  

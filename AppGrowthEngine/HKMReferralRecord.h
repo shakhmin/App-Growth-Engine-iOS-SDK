@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface ReferralRecord : NSObject {
+@interface HKMReferralRecord : NSObject {
     
     int totalClickThrough;
     int totalInvitee;

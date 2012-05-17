@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface Lead : NSObject {
+@interface HKMLead : NSObject {
 	
 	NSString *phone;
 	NSString *osType;

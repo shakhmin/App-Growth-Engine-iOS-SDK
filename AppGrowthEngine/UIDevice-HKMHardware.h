@@ -67,7 +67,7 @@ typedef enum {
 
 } UIDevicePlatform;
 
-@interface UIDevice (Hardware)
+@interface UIDevice (HKMHardware)
 - (NSString *) platform;
 - (NSString *) hwmodel;
 - (NSUInteger) platformType;

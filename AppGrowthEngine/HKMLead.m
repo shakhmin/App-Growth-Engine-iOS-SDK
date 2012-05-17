@@ -1,6 +1,6 @@
-#import "Lead.h"
+#import "HKMLead.h"
 
-@implementation Lead
+@implementation HKMLead
 
 @synthesize phone, osType, name, invitationCount, lastInvitationSent;
 @synthesize selected;
