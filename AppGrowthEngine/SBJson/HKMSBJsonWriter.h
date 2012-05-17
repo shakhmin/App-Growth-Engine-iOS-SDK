@@ -28,14 +28,14 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "SBJsonBase.h"
+#import "HKMSBJsonBase.h"
 
 /**
  @brief Options for the writer class.
  
  This exists so the SBJSON facade can implement the options in the writer without having to re-declare them.
  */
-@protocol SBJsonWriter
+@protocol HKMSBJsonWriter
 
 /**
  @brief Whether we are generating human-readable (multiline) JSON.
@@ -91,7 +91,7 @@
  way you would expect.
  
  */
-@interface SBJsonWriter : SBJsonBase <SBJsonWriter> {
+@interface HKMSBJsonWriter : HKMSBJsonBase <HKMSBJsonWriter> {
 
 @private
     BOOL sortKeys, humanReadable;
@@ -100,7 +100,7 @@
 @end
 
 // don't use - exists for backwards compatibility. Will be removed in 2.3.
-@interface SBJsonWriter (Private)
+@interface HKMSBJsonWriter (Private)
 - (NSString*)stringWithFragment:(id)value;
 @end
 
@@ -123,7 +123,7 @@
  @endcode
  
  */
-@interface NSObject (SBProxyForJson)
+@interface NSObject (HKMSBProxyForJson)
 - (id)proxyForJson;
 @end
 

@@ -27,15 +27,15 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SBJSON.h"
+#import "HKMSBJSON.h"
 
-@implementation SBJSON
+@implementation HKMSBJSON
 
 - (id)init {
     self = [super init];
     if (self) {
-        jsonWriter = [SBJsonWriter new];
-        jsonParser = [SBJsonParser new];
+        jsonWriter = [HKMSBJsonWriter new];
+        jsonParser = [HKMSBJsonParser new];
         [self setMaxDepth:512];
 
     }

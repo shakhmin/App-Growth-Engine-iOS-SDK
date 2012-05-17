@@ -28,14 +28,14 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "SBJsonBase.h"
+#import "HKMSBJsonBase.h"
 
 /**
   @brief Options for the parser class.
  
  This exists so the SBJSON facade can implement the options in the parser without having to re-declare them.
  */
-@protocol SBJsonParser
+@protocol HKMSBJsonParser
 
 /**
  @brief Return the object represented by the given string.
@@ -71,7 +71,7 @@
  as we can thus avoid any loss of precision. (JSON allows ridiculously large numbers.)
  
  */
-@interface SBJsonParser : SBJsonBase <SBJsonParser> {
+@interface HKMSBJsonParser : HKMSBJsonBase <HKMSBJsonParser> {
     
 @private
     const char *c;
@@ -80,7 +80,7 @@
 @end
 
 // don't use - exists for backwards compatibility with 2.1.x only. Will be removed in 2.3.
-@interface SBJsonParser (Private)
+@interface HKMSBJsonParser (Private)
 - (id)fragmentWithString:(id)repr;
 @end
 

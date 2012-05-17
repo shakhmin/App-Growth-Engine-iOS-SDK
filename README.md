@@ -30,12 +30,12 @@ application.
 <pre>
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    [Discoverer activate:@"your-app-secret"];
+    [HKMDiscoverer activate:@"your-app-secret"];
     // ... ...    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
-    [Discoverer retire];
+    [HKMDiscoverer retire];
 }
 </pre>
 
@@ -54,7 +54,7 @@ for the app user to send an confirmation message so that you can capture their
 phone number. 
 
 <pre>
-[[Discoverer agent] verifyDevice:myViewController forceSms:NO userName:@"John Doe"];
+[[HKMDiscoverer agent] verifyDevice:myViewController forceSms:NO userName:@"John Doe"];
 </pre>
 
 The SMS message screen is displayed as a modal view controller on top of the
@@ -70,7 +70,7 @@ listen for HookDeviceVerified or HookDeviceVerified in NSNotificationCenter in
 order to receive the confirmation results.
 
 <pre>
-[[Discoverer agent] queryVerifiedStatus];
+[[HKMDiscoverer agent] queryVerifiedStatus];
 
 ... ...
 
@@ -88,7 +88,7 @@ order to receive the confirmation results.
 First, you need to execute a discovery call like this. The call returns immediately, and processes the discovery in background.
 
 <pre>
-[[Discoverer agent] discover];
+[[HKMDiscoverer agent] discover];
 </pre>
 
 It takes Hook Mobile up to a couple of minutes to determine the
@@ -102,7 +102,7 @@ the <code>HookQueryOrderComplete</code> event is received, you can query a list 
 which contains phone numbers and device types.
 
 <pre>
-[[Discoverer agent] queryOrder];
+[[HKMDiscoverer agent] queryLeads];
 
 - (void)viewDidLoad {
     ... ...
@@ -117,14 +117,14 @@ which contains phone numbers and device types.
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Leads"];
     ... ...
-    cell.textLabel.text = ((Lead *)[[Discoverer agent].leads objectAtIndex:indexPath.row]).phone;
-    cell.detailTextLabel.text = ((Lead *)[[Discoverer agent].leads objectAtIndex:indexPath.row]).osType;
+    cell.textLabel.text = ((Lead *)[[HKMDiscoverer agent].leads objectAtIndex:indexPath.row]).phone;
+    cell.detailTextLabel.text = ((Lead *)[[HKMDiscoverer agent].leads objectAtIndex:indexPath.row]).osType;
     return cell;
 }
 </pre>
 
 Now, you can prompt your user to send personal invites to their friends in
-<code>[[Discoverer agent].leads</code> to maximize the chance of referral success!
+<code>[[HKMDiscoverer agent].leads</code> to maximize the chance of referral success!
 
 ## Track your referrals
 
@@ -132,7 +132,7 @@ The AGE platform enables you to track the performance of your referrals via cust
 in invite messages. The <code>newReferral</code> method creates a referral message with the custom URL.
 
 <pre>
-[[Discoverer agent] newReferral:phones 
+[[HKMDiscoverer agent] newReferral:phones 
     withMessage:@"I thought you might be interested in this app 'AGE SDK', check it out here %link% "
     useVirtualNumber:YES
 ];
@@ -180,9 +180,9 @@ installation statistics for you.
     [self dismissModalViewControllerAnimated:YES];
     
     if (result == MessageComposeResultCancelled) {
-        [[Discoverer agent] updateReferral:NO];
+        [[HKMDiscoverer agent] updateReferral:NO];
     } else {
-        [[Discoverer agent] updateReferral:YES];
+        [[HKMDiscoverer agent] updateReferral:YES];
     }
     
     [self.navigationController popViewControllerAnimated:YES];
@@ -192,13 +192,13 @@ installation statistics for you.
 The AGE API also allows you to track all referrals you have sent from any device, and get the referrals' click throughs. This makes it possible for you to track referral performance of individual devices, and potentially reward the users who generate the most referral click throughs.
 
 <pre>
-[[Discoverer agent] queryReferral];
+[[HKMDiscoverer agent] queryReferral];
 </pre>
 
-Once the referral data is retrieved from the AGE server, the SDK generates a notification event <code>HookQueryReferralComplete</code>. The referral data is stored in the <code>[Discoverer agent].referrals</code> array with each <code>ReferralRecord</code> element in the array representing a referral.
+Once the referral data is retrieved from the AGE server, the SDK generates a notification event <code>HookQueryReferralComplete</code>. The referral data is stored in the <code>[HKMDiscoverer agent].referrals</code> array with each <code>HKMReferralRecord</code> element in the array representing a referral.
 
 <pre>
-@interface ReferralRecord : NSObject {
+@interface HKMReferralRecord : NSObject {
     
     int totalClickThrough;
     int totalInvitee;
@@ -225,7 +225,7 @@ game.
 Below is an example
 
 <pre>
-[[Discoverer agent] queryInstalls:@"FORWARD"];
+[[HKMDiscoverer agent] queryInstalls:@"FORWARD"];
 </pre>
 
 Once the SDK receives the friends who has the same app, it generates a <code>HookQueryInstallsComplete</code> notification and saves the results in an array of <code>Lead</code> objects in <code>[Discoverer agent].installs</code>.
@@ -234,8 +234,40 @@ Once the SDK receives the friends who has the same app, it generates a <code>Hoo
 
 ![Show users in your addressbook who have installed the same app](App-Growth-Engine-iOS-SDK/raw/master/screen5.png "Show users in your addressbook who have installed the same app")
 
+# A list of important interface methods
 
+Important SDK methods are defined in the <code>HKMDiscoverer</code> class. The follow two static methods are used to start and stop the SDK.
 
+<pre>
++ (void) activate:(NSString *)ak;
++ (void) retire;
+</pre>
 
+The next two methods register the current device with the Hook Mobile AGE server to verify its phone number via SMS, and then query the status of device registration.
 
+<pre>
+- (BOOL) verifyDevice:(UIViewController *)vc forceSms:(BOOL) force userName:(NSString *) userName;
+- (BOOL) queryVerifiedStatus;
+</pre>
+
+The <code>discover</code> method is used to upload an addressbook and start the process of generating analytics. Then, the <code>queryLeads</code> queries for the lead identified from the address book. The leads are saved in the <code>leads</code> array in the <code>HKMDiscoverer</code> object.
+
+<pre>
+- (BOOL) discover;
+- (BOOL) queryLeads;
+</pre>
+
+The <code>newReferral</code> method creates a referral message for the selected contacts from addressbook. You can have Hook server send out those referrals messages immediately, or AGE could return the complete referral message in the <code>referralMessage</code> property of the <code>HKMDiscoverer</code> object, and you can send this message from the user's phone itself. The <code>updateReferral</code> method updates an outcome of a referral, and the <code>queryReferral</code> method queries the click-through status of all referrals in the <code>referrals</code> array in the <code>HKMDiscoverer</code> object.
+
+<pre>
+- (BOOL) newReferral:(NSArray *)phones withMessage:(NSString *)message useVirtualNumber:(BOOL) sendNow;
+- (BOOL) updateReferral:(BOOL) sent;
+- (BOOL) queryReferral;
+</pre>
+
+The <code>queryInstalls</code> methods queries for friends who also has the app. Its results are saved in the <code>installs</code> array in the <code>HKMDiscoverer</code> object.
+
+<pre>
+- (BOOL) queryInstalls:(NSString *)direction;
+</pre>
 

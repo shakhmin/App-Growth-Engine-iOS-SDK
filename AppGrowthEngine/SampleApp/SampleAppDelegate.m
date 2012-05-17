@@ -1,7 +1,7 @@
 #import "SampleAppDelegate.h"
 #import "SampleViewController.h"
 
-#import "Discoverer.h"
+#import "HKMDiscoverer.h"
 
 @implementation SampleAppDelegate
 
@@ -10,7 +10,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    [Discoverer activate:@"your-app-secret"];
+    [HKMDiscoverer activate:@"your-app-key"];
     
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     self.window.rootViewController = navController;
@@ -50,7 +50,7 @@
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
-    [Discoverer retire];
+    [HKMDiscoverer retire];
 }
 
 - (void)dealloc {

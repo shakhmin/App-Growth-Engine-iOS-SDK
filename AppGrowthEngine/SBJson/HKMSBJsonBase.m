@@ -27,11 +27,11 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SBJsonBase.h"
+#import "HKMSBJsonBase.h"
 NSString * SBJSONErrorDomain = @"org.brautaset.JSON.ErrorDomain";
 
 
-@implementation SBJsonBase
+@implementation HKMSBJsonBase
 
 @synthesize errorTrace;
 @synthesize maxDepth;

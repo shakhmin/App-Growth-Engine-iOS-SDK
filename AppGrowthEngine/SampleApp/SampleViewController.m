@@ -1,5 +1,5 @@
 #import "SampleViewController.h"
-#import "Discoverer.h"
+#import "HKMDiscoverer.h"
 
 @implementation SampleViewController
 
@@ -16,7 +16,7 @@
 
 - (IBAction) verify: (id)sender {
     verifyButton.enabled = NO;
-    [[Discoverer agent] verifyDevice:self forceSms:NO userName:nil];
+    [[HKMDiscoverer agent] verifyDevice:self forceSms:NO userName:nil];
 }
 
 - (void) verifyComplete {
@@ -27,7 +27,7 @@
 
 - (IBAction) verifyStatus: (id)sender {
     verifyStatusButton.enabled = NO;
-    [[Discoverer agent] queryVerifiedStatus];
+    [[HKMDiscoverer agent] queryVerifiedStatus];
 }
 
 - (void) verificationStatusYes {
@@ -54,7 +54,7 @@
 
 - (IBAction) discover: (id)sender {
     discoverButton.enabled = NO;
-    [[Discoverer agent] discover];
+    [[HKMDiscoverer agent] discover];
 }
 
 - (void) discoverComplete {
@@ -72,7 +72,7 @@
 
 - (IBAction) query: (id)sender {
     queryButton.enabled = NO;
-    [[Discoverer agent] queryOrder];
+    [[HKMDiscoverer agent] queryLeads];
 }
 
 - (void) queryComplete {
@@ -86,7 +86,7 @@
     
     UIAlertView* alert = [[UIAlertView alloc] init];
 	alert.title = @"Finished";
-	alert.message = [NSString stringWithFormat:@"Hook Mobile server encountered a problem processing your addressbook: %@", [Discoverer agent].errorMessage];
+	alert.message = [NSString stringWithFormat:@"Hook Mobile server encountered a problem processing your addressbook: %@", [HKMDiscoverer agent].errorMessage];
 	[alert addButtonWithTitle:@"Dismiss"];
 	alert.cancelButtonIndex = 0;
 	[alert show];
@@ -117,7 +117,7 @@
     
     UIAlertView* alert = [[UIAlertView alloc] init];
 	alert.title = @"Finished";
-    alert.message = [NSString stringWithFormat:@"Hook Mobile server encountered a problem processing the installs database: %@", [Discoverer agent].errorMessage];
+    alert.message = [NSString stringWithFormat:@"Hook Mobile server encountered a problem processing the installs database: %@", [HKMDiscoverer agent].errorMessage];
 	[alert addButtonWithTitle:@"Dismiss"];
 	alert.cancelButtonIndex = 0;
 	[alert show];
@@ -127,7 +127,7 @@
 - (IBAction) queryReferral: (id)sender {
     queryReferralButton.enabled = NO;
     
-    [[Discoverer agent] queryReferral];
+    [[HKMDiscoverer agent] queryReferral];
 }
 
 - (void) queryReferralComplete {
@@ -142,7 +142,7 @@
     
     UIAlertView* alert = [[UIAlertView alloc] init];
 	alert.title = @"Finished";
-	alert.message = [NSString stringWithFormat:@"Hook Mobile server encountered a problem processing the referrals database: %@", [Discoverer agent].errorMessage];
+	alert.message = [NSString stringWithFormat:@"Hook Mobile server encountered a problem processing the referrals database: %@", [HKMDiscoverer agent].errorMessage];
 	[alert addButtonWithTitle:@"Dismiss"];
 	alert.cancelButtonIndex = 0;
 	[alert show];
@@ -160,27 +160,18 @@
 }
 
 
-/*
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-	if (buttonIndex == 1) {
-		[[Discoverer agent] queryOrder];
-        // NSLog(@"Number of Leads is %d", [[Discoverer agent].leads count]);
-	}
-}
-*/
-
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     
     if (buttonIndex == 0) {
-        [[Discoverer agent] queryInstalls:@"FORWARD"];
+        [[HKMDiscoverer agent] queryInstalls:@"FORWARD"];
         queryInstallsButton.enabled = NO;
     }
     if (buttonIndex == 1) {
-        [[Discoverer agent] queryInstalls:@"BACKWARD"];
+        [[HKMDiscoverer agent] queryInstalls:@"BACKWARD"];
         queryInstallsButton.enabled = NO;
     }
     if (buttonIndex == 2) {
-        [[Discoverer agent] queryInstalls:@"MUTUAL"];
+        [[HKMDiscoverer agent] queryInstalls:@"MUTUAL"];
         queryInstallsButton.enabled = NO;
     }
     

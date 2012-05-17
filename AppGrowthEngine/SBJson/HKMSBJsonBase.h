@@ -52,7 +52,7 @@ enum {
 
  This class contains the common error-handling code and option between the parser/writer.
  */
-@interface SBJsonBase : NSObject {
+@interface HKMSBJsonBase : NSObject {
     NSMutableArray *errorTrace;
 
 @protected

@@ -1,6 +1,6 @@
 #import "LeadsController.h"
-#import "Discoverer.h"
-#import "Lead.h"
+#import "HKMDiscoverer.h"
+#import "HKMLead.h"
 
 #define BARBUTTON(TITLE, STYLE, SELECTOR) [[[UIBarButtonItem alloc] initWithTitle:TITLE style:STYLE target:self action:SELECTOR] autorelease]
 
@@ -33,8 +33,8 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if ([Discoverer agent].leads != nil) {
-        return [[Discoverer agent].leads count];
+    if ([HKMDiscoverer agent].leads != nil) {
+        return [[HKMDiscoverer agent].leads count];
     } else {
         return 0;
     }
@@ -48,7 +48,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
-    Lead *lead = (Lead *)[[Discoverer agent].leads objectAtIndex:indexPath.row];
+    HKMLead *lead = (HKMLead *)[[HKMDiscoverer agent].leads objectAtIndex:indexPath.row];
     cell.textLabel.text = lead.name;
     cell.detailTextLabel.text = lead.osType;
     if (lead.selected) {
@@ -62,7 +62,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    Lead *lead = [[Discoverer agent].leads objectAtIndex:indexPath.row];
+    HKMLead *lead = [[HKMDiscoverer agent].leads objectAtIndex:indexPath.row];
     if (lead.selected) {
         lead.selected = NO;
     } else {
@@ -91,7 +91,7 @@
 
 - (void) sendReferral {
     phones = [[NSMutableArray arrayWithCapacity:16] retain];
-    for (Lead *lead in [Discoverer agent].leads) {
+    for (HKMLead *lead in [HKMDiscoverer agent].leads) {
         if (lead.selected) {
             [phones addObject:lead.phone];
         }
@@ -100,7 +100,7 @@
         self.navigationItem.rightBarButtonItem.title = @"Wait ...";
         self.navigationItem.rightBarButtonItem.enabled = NO;
         
-        [[Discoverer agent] newReferral:phones withMessage:@"I thought you might be interested in this app 'AGE SDK', check it out here %link% " useVirtualNumber:sendNow];
+        [[HKMDiscoverer agent] newReferral:phones withMessage:@"I thought you might be interested in this app 'AGE SDK', check it out here %link% " useVirtualNumber:sendNow];
     } else {
         UIAlertView* alert = [[UIAlertView alloc] init];
         alert.title = @"Please select referral contacts";
@@ -136,7 +136,7 @@
 
     if (!sendNow && [MFMessageComposeViewController canSendText]) {
         MFMessageComposeViewController *controller = [[[MFMessageComposeViewController alloc] init] autorelease];
-        controller.body = [Discoverer agent].referralMessage;
+        controller.body = [HKMDiscoverer agent].referralMessage;
         controller.recipients = phones;
         controller.messageComposeDelegate = self;
         [self presentModalViewController:controller animated:YES];
@@ -150,9 +150,9 @@
     [self dismissModalViewControllerAnimated:YES];
     
     if (result == MessageComposeResultCancelled) {
-        [[Discoverer agent] updateReferral:NO];
+        [[HKMDiscoverer agent] updateReferral:NO];
     } else {
-        [[Discoverer agent] updateReferral:YES];
+        [[HKMDiscoverer agent] updateReferral:YES];
     }
     
     [self.navigationController popViewControllerAnimated:YES];

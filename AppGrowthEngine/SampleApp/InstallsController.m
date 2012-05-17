@@ -1,6 +1,6 @@
 #import "InstallsController.h"
-#import "Discoverer.h"
-#import "Lead.h"
+#import "HKMDiscoverer.h"
+#import "HKMLead.h"
 
 @implementation InstallsController
 
@@ -31,8 +31,8 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if ([Discoverer agent].installs != nil) {
-        return [[Discoverer agent].installs count];
+    if ([HKMDiscoverer agent].installs != nil) {
+        return [[HKMDiscoverer agent].installs count];
     } else {
         return 0;
     }
@@ -46,7 +46,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
-    Lead *lead = (Lead *)[[Discoverer agent].installs objectAtIndex:indexPath.row];
+    HKMLead *lead = (HKMLead *)[[HKMDiscoverer agent].installs objectAtIndex:indexPath.row];
     cell.textLabel.text = lead.name;
     
     return cell;

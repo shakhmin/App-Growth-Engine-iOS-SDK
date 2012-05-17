@@ -1,6 +1,6 @@
 #import "ReferralsController.h"
-#import "ReferralRecord.h"
-#import "Discoverer.h"
+#import "HKMReferralRecord.h"
+#import "HKMDiscoverer.h"
 
 @implementation ReferralsController
 
@@ -31,8 +31,8 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if ([Discoverer agent].referrals != nil) {
-        return [[Discoverer agent].referrals count];
+    if ([HKMDiscoverer agent].referrals != nil) {
+        return [[HKMDiscoverer agent].referrals count];
     } else {
         return 0;
     }
@@ -46,7 +46,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
-    ReferralRecord *rec = (ReferralRecord *)[[Discoverer agent].referrals objectAtIndex:indexPath.row];
+    HKMReferralRecord *rec = (HKMReferralRecord *)[[HKMDiscoverer agent].referrals objectAtIndex:indexPath.row];
     
     NSLog (@"Invite date %@", [rec.invitationDate description]);
     
