@@ -98,7 +98,7 @@ static HKMDiscoverer *_agent;
         return YES;
     } 
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/newleads", server]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/discover", server]];
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
     [req setHTTPMethod:@"POST"];
     [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
@@ -135,7 +135,7 @@ static HKMDiscoverer *_agent;
         return YES;
     }
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/newleads", server]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/discover", server]];
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
     [req setHTTPMethod:@"POST"];
     [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
@@ -531,15 +531,19 @@ static HKMDiscoverer *_agent;
     [viewController dismissModalViewControllerAnimated:YES];
     
     if (result == MessageComposeResultCancelled) {
-        // the SMS stays. No cancel
-        UIAlertView* alert = [[UIAlertView alloc] init];
-        alert.title = @"Confirmation";
-        alert.message = @"You can only proceed after you send the confirmation SMS";
-        [alert addButtonWithTitle:@"Okay"];
-        // alert.cancelButtonIndex = 0;
-        alert.delegate = self;
-        [alert show];
-        [alert release];
+        if (forceVerificationSms) {
+            // the SMS stays. No cancel
+            UIAlertView* alert = [[UIAlertView alloc] init];
+            alert.title = @"Confirmation";
+            alert.message = @"You can only proceed after you send the confirmation SMS";
+            [alert addButtonWithTitle:@"Okay"];
+            // alert.cancelButtonIndex = 0;
+            alert.delegate = self;
+            [alert show];
+            [alert release];
+        } else {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"HookVerificationSMSNotSent" object:nil];
+        }
         
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"HookVerificationSMSSent" object:nil];
