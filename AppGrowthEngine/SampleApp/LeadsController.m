@@ -100,7 +100,7 @@
         self.navigationItem.rightBarButtonItem.title = @"Wait ...";
         self.navigationItem.rightBarButtonItem.enabled = NO;
         
-        [[HKMDiscoverer agent] newReferral:phones withMessage:@"I thought you might be interested in this app 'AGE SDK', check it out here %link% " useVirtualNumber:sendNow];
+        [[HKMDiscoverer agent] newReferral:phones withName:nil useVirtualNumber:sendNow];
     } else {
         UIAlertView* alert = [[UIAlertView alloc] init];
         alert.title = @"Please select referral contacts";

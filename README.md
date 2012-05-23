@@ -257,10 +257,10 @@ The <code>discover</code> method is used to upload an addressbook and start the 
 - (BOOL) queryLeads;
 </pre>
 
-The <code>newReferral</code> method creates a referral message for the selected contacts from addressbook. You can have Hook server send out those referrals messages immediately, or AGE could return the complete referral message in the <code>referralMessage</code> property of the <code>HKMDiscoverer</code> object, and you can send this message from the user's phone itself. The <code>updateReferral</code> method updates an outcome of a referral, and the <code>queryReferral</code> method queries the click-through status of all referrals in the <code>referrals</code> array in the <code>HKMDiscoverer</code> object.
+The <code>newReferral</code> method creates a referral message for the selected contacts from addressbook. You can have Hook server send out those referrals messages immediately, or AGE could return the complete referral message in the <code>referralMessage</code> property of the <code>HKMDiscoverer</code> object, and you can send this message from the user's phone itself. The <code>name</code> parameter is optional -- it allows you to pass in the user's name if you know it. The <code>updateReferral</code> method updates an outcome of a referral, and the <code>queryReferral</code> method queries the click-through status of all referrals in the <code>referrals</code> array in the <code>HKMDiscoverer</code> object.
 
 <pre>
-- (BOOL) newReferral:(NSArray *)phones withMessage:(NSString *)message useVirtualNumber:(BOOL) sendNow;
+- (BOOL) newReferral:(NSArray *)phones withName:(NSString *)name useVirtualNumber:(BOOL) sendNow;
 - (BOOL) updateReferral:(BOOL) sent;
 - (BOOL) queryReferral;
 </pre>

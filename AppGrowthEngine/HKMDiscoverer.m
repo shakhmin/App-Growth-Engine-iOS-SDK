@@ -248,7 +248,7 @@ static HKMDiscoverer *_agent;
     return YES;
 }
 
-- (BOOL) newReferral:(NSArray *)phones withMessage:(NSString *)message useVirtualNumber:(BOOL) sendNow {
+- (BOOL) newReferral:(NSArray *)phones withName:(NSString *)name useVirtualNumber:(BOOL) sendNow {
     
     if (newReferralConnection != nil) {
         return NO;
@@ -265,7 +265,9 @@ static HKMDiscoverer *_agent;
         NSString *encodedPhone = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)phone, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8 );
         [postBody appendData:[[NSString stringWithFormat:@"&phone=%@", encodedPhone] dataUsingEncoding:NSUTF8StringEncoding]];
     }
-    [postBody appendData:[[NSString stringWithFormat:@"&referralTemplate=%@", [message stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    if (name != nil) {
+        [postBody appendData:[[NSString stringWithFormat:@"&name=%@", [name stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    }
     [postBody appendData:[@"&useShortUrl=true" dataUsingEncoding:NSUTF8StringEncoding]];
     if (sendNow) {
         [postBody appendData:[@"&sendNow=true" dataUsingEncoding:NSUTF8StringEncoding]];

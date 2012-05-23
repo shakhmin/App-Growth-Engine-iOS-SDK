@@ -32,11 +32,11 @@
 		2A37346F1564BF4F00A2B517 /* HKMLead.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A3734691564BF4F00A2B517 /* HKMLead.m */; };
 		2A3734701564BF4F00A2B517 /* UIDevice-HKMHardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37346B1564BF4F00A2B517 /* UIDevice-HKMHardware.m */; };
 		2A3734711564BF4F00A2B517 /* HKMReferralRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37346D1564BF4F00A2B517 /* HKMReferralRecord.m */; };
+		2A4387BE156C9A8300D75BB9 /* HKMDiscoverer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A4387BD156C9A8300D75BB9 /* HKMDiscoverer.m */; };
 		2A65A74014F4942900B55F33 /* InstallsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A65A73E14F4942900B55F33 /* InstallsController.m */; };
 		2A65A74114F4942900B55F33 /* InstallsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A65A73F14F4942900B55F33 /* InstallsController.xib */; };
 		2A65A76514F4C98100B55F33 /* ReferralsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A65A76314F4C98000B55F33 /* ReferralsController.m */; };
 		2A65A76614F4C98100B55F33 /* ReferralsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A65A76414F4C98100B55F33 /* ReferralsController.xib */; };
-		2AFF4EB21565D95D00BEE20B /* HKMDiscoverer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF4EB11565D95D00BEE20B /* HKMDiscoverer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -81,14 +81,14 @@
 		2A37346B1564BF4F00A2B517 /* UIDevice-HKMHardware.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice-HKMHardware.m"; sourceTree = "<group>"; };
 		2A37346C1564BF4F00A2B517 /* HKMReferralRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKMReferralRecord.h; sourceTree = "<group>"; };
 		2A37346D1564BF4F00A2B517 /* HKMReferralRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HKMReferralRecord.m; sourceTree = "<group>"; };
+		2A4387BC156C9A8300D75BB9 /* HKMDiscoverer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKMDiscoverer.h; sourceTree = "<group>"; };
+		2A4387BD156C9A8300D75BB9 /* HKMDiscoverer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HKMDiscoverer.m; sourceTree = "<group>"; };
 		2A65A73D14F4942900B55F33 /* InstallsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InstallsController.h; path = SampleApp/InstallsController.h; sourceTree = "<group>"; };
 		2A65A73E14F4942900B55F33 /* InstallsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InstallsController.m; path = SampleApp/InstallsController.m; sourceTree = "<group>"; };
 		2A65A73F14F4942900B55F33 /* InstallsController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = InstallsController.xib; path = SampleApp/InstallsController.xib; sourceTree = "<group>"; };
 		2A65A76214F4C98000B55F33 /* ReferralsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReferralsController.h; path = SampleApp/ReferralsController.h; sourceTree = "<group>"; };
 		2A65A76314F4C98000B55F33 /* ReferralsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReferralsController.m; path = SampleApp/ReferralsController.m; sourceTree = "<group>"; };
 		2A65A76414F4C98100B55F33 /* ReferralsController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ReferralsController.xib; path = SampleApp/ReferralsController.xib; sourceTree = "<group>"; };
-		2AFF4EB01565D95D00BEE20B /* HKMDiscoverer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKMDiscoverer.h; sourceTree = "<group>"; };
-		2AFF4EB11565D95D00BEE20B /* HKMDiscoverer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HKMDiscoverer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,8 +206,8 @@
 		2A2929B514A3C802000382A4 /* SDKClasses */ = {
 			isa = PBXGroup;
 			children = (
-				2AFF4EB01565D95D00BEE20B /* HKMDiscoverer.h */,
-				2AFF4EB11565D95D00BEE20B /* HKMDiscoverer.m */,
+				2A4387BC156C9A8300D75BB9 /* HKMDiscoverer.h */,
+				2A4387BD156C9A8300D75BB9 /* HKMDiscoverer.m */,
 				2A3734681564BF4F00A2B517 /* HKMLead.h */,
 				2A3734691564BF4F00A2B517 /* HKMLead.m */,
 				2A37346A1564BF4F00A2B517 /* UIDevice-HKMHardware.h */,
@@ -302,7 +302,7 @@
 				2A37346F1564BF4F00A2B517 /* HKMLead.m in Sources */,
 				2A3734701564BF4F00A2B517 /* UIDevice-HKMHardware.m in Sources */,
 				2A3734711564BF4F00A2B517 /* HKMReferralRecord.m in Sources */,
-				2AFF4EB21565D95D00BEE20B /* HKMDiscoverer.m in Sources */,
+				2A4387BE156C9A8300D75BB9 /* HKMDiscoverer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

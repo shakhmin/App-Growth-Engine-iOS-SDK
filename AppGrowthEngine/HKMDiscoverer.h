@@ -88,7 +88,7 @@
 - (BOOL) discoverSelected:(NSMutableArray *)phones;
 - (BOOL) queryLeads;
 - (BOOL) downloadShareTemplates;
-- (BOOL) newReferral:(NSArray *)phones withMessage:(NSString *)message useVirtualNumber:(BOOL) sendNow;
+- (BOOL) newReferral:(NSArray *)phones withName:(NSString *)name useVirtualNumber:(BOOL) sendNow;
 - (BOOL) updateReferral:(BOOL) sent;
 - (BOOL) queryInstalls:(NSString *)direction;
 - (BOOL) queryReferral;

@@ -10,7 +10,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    [HKMDiscoverer activate:@"your-app-key"];
+    [HKMDiscoverer activate:@"your-appkey"];
     
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     self.window.rootViewController = navController;
