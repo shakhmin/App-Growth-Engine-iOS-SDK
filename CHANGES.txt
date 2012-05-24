@@ -1,0 +1,14 @@
+1.0.1
+ * Update service endpoints.
+   
+1.0.0
+ * AGE iOS SDK created. Services include:
+   - Device verification.
+   - Smart invitation.
+   - Referrals tracking.
+   - Installs query.
+
+
+
+
+
