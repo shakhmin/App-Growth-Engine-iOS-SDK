@@ -1,7 +1,7 @@
 # App Growth Engine for iOS
 
 Hook Mobile has developed a unique offering for Mobile app developers: App
-Growth Engine SDK.  The SDK supports both iOS and Android (comming soon). The SDK
+Growth Engine SDK.  The SDK supports both iOS and Android. The SDK
 will assist in user authentication during registration and help promote app
 sharing via Hook's device discovery platform without the need to add or
 implement any middleware solutions to your current environment.
@@ -253,7 +253,7 @@ The next two methods register the current device with the Hook Mobile AGE server
 The <code>discover</code> method is used to upload an addressbook and start the process of generating analytics. Then, the <code>queryLeads</code> queries for the lead identified from the address book. The leads are saved in the <code>leads</code> array in the <code>HKMDiscoverer</code> object.
 
 <pre>
-- (BOOL) discover;
+- (BOOL) discover: (int) limit;
 - (BOOL) queryLeads;
 </pre>
 

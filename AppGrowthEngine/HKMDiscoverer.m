@@ -85,14 +85,14 @@ static HKMDiscoverer *_agent;
 }
 
 
-- (BOOL) discover {
+- (BOOL) discover:(int) limit {
     if (discoverConnection != nil) {
         return NO;
     }
     
     NSLog(@"installCode is %@", installCode);
     
-    NSString *ab = [self getAddressbook];
+    NSString *ab = [self getAddressbook:limit];
     if (![self checkNewAddresses:ab]) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"HookDiscoverNoChange" object:nil];
         return YES;
@@ -129,7 +129,7 @@ static HKMDiscoverer *_agent;
     
     NSLog(@"installCode is %@", installCode);
     
-    NSString *ab = [self getAddressbook];
+    NSString *ab = [self getAddressbook:0];
     if (![self checkNewAddresses:ab]) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"HookDiscoverNoChange" object:nil];
         return YES;
@@ -360,14 +360,19 @@ static HKMDiscoverer *_agent;
 }
 
 
-- (NSString *) getAddressbook {
+- (NSString *) getAddressbook:(int) limit {
     ABAddressBookRef ab = ABAddressBookCreate();
     
     CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(ab);
     CFIndex nPeople = ABAddressBookGetPersonCount(ab);
+    if (limit > 0 && nPeople > limit) {
+        nPeople = limit;
+    }
+    NSLog(@"ab limit is %d", limit);
     
     NSMutableArray *phones = [[NSMutableArray alloc] init];
     for (int i = 0; i < nPeople; i++) {
+        NSLog(@"ab iter is %d", i);
         ABRecordRef ref = CFArrayGetValueAtIndex(allPeople, i);
         CFStringRef firstName = ABRecordCopyValue(ref, kABPersonFirstNameProperty);
         CFStringRef lastName = ABRecordCopyValue(ref, kABPersonLastNameProperty);
@@ -425,8 +430,9 @@ static HKMDiscoverer *_agent;
 }
 
 - (void) createVerificationSms {
+    NSString *platform = [[UIDevice currentDevice] platformString];
     if (viewController != nil) {
-        if ([MFMessageComposeViewController canSendText]) {
+        if ([MFMessageComposeViewController canSendText] && [platform hasPrefix:@"iPhone"]) {
             NSLog(@"Show SMS confirmation");
             MFMessageComposeViewController *controller = [[[MFMessageComposeViewController alloc] init] autorelease];
             controller.body = verifyMessage;

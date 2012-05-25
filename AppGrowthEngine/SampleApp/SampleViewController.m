@@ -54,7 +54,7 @@
 
 - (IBAction) discover: (id)sender {
     discoverButton.enabled = NO;
-    [[HKMDiscoverer agent] discover];
+    [[HKMDiscoverer agent] discover:0];
 }
 
 - (void) discoverComplete {

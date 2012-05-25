@@ -83,7 +83,7 @@
 - (BOOL) isRegistered;
 - (BOOL) verifyDevice:(UIViewController *)vc forceSms:(BOOL) force userName:(NSString *) userName;
 - (BOOL) queryVerifiedStatus;
-- (BOOL) discover;
+- (BOOL) discover:(int) limit;
 - (BOOL) discoverWithoutVzw;
 - (BOOL) discoverSelected:(NSMutableArray *)phones;
 - (BOOL) queryLeads;
@@ -93,7 +93,7 @@
 - (BOOL) queryInstalls:(NSString *)direction;
 - (BOOL) queryReferral;
 
-- (NSString *) getAddressbook;
+- (NSString *) getAddressbook:(int) limit;
 - (void) createVerificationSms;
 - (NSString *) lookupNameFromPhone:(NSString *)p;
 - (NSString *) formatPhone:(NSString *)p;
