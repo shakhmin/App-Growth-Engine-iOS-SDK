@@ -6,7 +6,7 @@ This open source Java library allows you to integrate AGE into your iOS applicat
 
 # Getting Started
 
-See our <a href="http://hookmobile.com/ios-tutorial.html">iOS SDK Getting Started Guide</a>
+See our <a href="http://hookmobile.com/ios-tutorial.html" target="_blank">iOS SDK Getting Started Guide</a>
 
 
 # Sample Application
