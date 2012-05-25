@@ -1,5 +1,7 @@
 1.0.1
  * Update service endpoints.
+ * Update newReferral method to support name parameter.
+ * Update discover method to add limit for the number of contacts.
    
 1.0.0
  * AGE iOS SDK created. Services include:
