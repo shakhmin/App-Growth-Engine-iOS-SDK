@@ -368,11 +368,9 @@ static HKMDiscoverer *_agent;
     if (limit > 0 && nPeople > limit) {
         nPeople = limit;
     }
-    NSLog(@"ab limit is %d", limit);
     
     NSMutableArray *phones = [[NSMutableArray alloc] init];
     for (int i = 0; i < nPeople; i++) {
-        NSLog(@"ab iter is %d", i);
         ABRecordRef ref = CFArrayGetValueAtIndex(allPeople, i);
         CFStringRef firstName = ABRecordCopyValue(ref, kABPersonFirstNameProperty);
         CFStringRef lastName = ABRecordCopyValue(ref, kABPersonLastNameProperty);
