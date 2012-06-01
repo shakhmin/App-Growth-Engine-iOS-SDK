@@ -11,5 +11,5 @@ See our <a href="http://hookmobile.com/ios-tutorial.html" target="_blank">iOS SD
 
 # Sample Application
 
-This library inlucdes a sample application to guide you in development.
+This library includes a sample application to guide you in development.
 
