@@ -1,7 +1,7 @@
 # App Growth Engine for iOS v1.0.1
 
 Hook Mobile has developed a unique offering for mobile app developers: App Growth Engine (AGE) SDK.
-This open source Java library allows you to integrate AGE into your iOS application.
+This open source library allows you to integrate AGE into your iOS application.
 
 
 # Getting Started
