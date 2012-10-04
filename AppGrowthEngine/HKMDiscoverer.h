@@ -1,6 +1,8 @@
 #import <Foundation/Foundation.h>
 #import <MessageUI/MessageUI.h>
 
+#define SDKVERSION @"IOS/1.1"
+
 @interface HKMDiscoverer : NSObject <MFMessageComposeViewControllerDelegate> {
     
     NSString *server;
@@ -18,6 +20,7 @@
     
     NSMutableData *discoverData;
     NSURLConnection *discoverConnection;
+    NSString *addressbook;
     
     NSMutableData *queryOrderData;
     NSURLConnection *queryOrderConnection;
@@ -26,7 +29,8 @@
     NSMutableData *verifyDeviceData;
     NSURLConnection *verifyDeviceConnection;
     UIViewController *viewController;
-    BOOL forceVerificationSms;
+    BOOL forceVerificationSms; // The verification SMS box cannot be dismissed
+    BOOL skipVerificationSms;  // Skip the verification SMS box altogether
     NSString *verifyMessage;
     
     NSMutableData *verificationData;
@@ -55,6 +59,12 @@
     NSMutableData *queryReferralData;
     NSURLConnection *queryReferralConnection;
     NSMutableArray *referrals;
+    
+    NSMutableData *newInstallData;
+    NSURLConnection *newInstallConnection;
+    
+    // Need to restore full screen after the SMS verification screen is displayed
+    BOOL fullScreen;
 }
 
 @property (nonatomic, retain) NSString *installCode;
@@ -76,6 +86,9 @@
 
 @property (nonatomic, retain) NSString *referralMessage;
 
+// Not commonly used
+@property (nonatomic) BOOL skipVerificationSms;
+
 + (HKMDiscoverer *) agent;
 + (void) activate:(NSString *)ak;
 + (void) retire;
@@ -93,11 +106,20 @@
 - (BOOL) queryInstalls:(NSString *)direction;
 - (BOOL) queryReferral;
 
+- (BOOL) newInstall;
+
 - (NSString *) getAddressbook:(int) limit;
+- (NSString *) getAddressbookHash:(int) limit;
 - (void) createVerificationSms;
 - (NSString *) lookupNameFromPhone:(NSString *)p;
 - (NSString *) formatPhone:(NSString *)p;
 
 - (BOOL) checkNewAddresses:(NSString *)ab;
+- (NSString *) cachedAddresses;
+
+- (NSString *) getMacAddress;
+- (int) murmurHash:(NSString *)s;
+
+unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed );
 
 @end

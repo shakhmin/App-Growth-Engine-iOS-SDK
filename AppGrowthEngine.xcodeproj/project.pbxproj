@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2A1CF63D15047C880033D1FC /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A1CF63C15047C880033D1FC /* Default.png */; };
-		2A1CF64015047CFF0033D1FC /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A1CF63F15047CFF0033D1FC /* icon.png */; };
-		2A1CF64215047D060033D1FC /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A1CF64115047D060033D1FC /* icon@2x.png */; };
+		2A0EFE54160A665500679B4E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0EFE53160A665500679B4E /* QuartzCore.framework */; };
+		2A0EFE5A160A667800679B4E /* HKMSVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2A0EFE57160A667800679B4E /* HKMSVProgressHUD.bundle */; };
+		2A0EFE5B160A667800679B4E /* HKMSVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A0EFE59160A667800679B4E /* HKMSVProgressHUD.m */; };
 		2A29299414A3C6D5000382A4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A29299314A3C6D5000382A4 /* UIKit.framework */; };
 		2A29299614A3C6D5000382A4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A29299514A3C6D5000382A4 /* Foundation.framework */; };
 		2A29299814A3C6D5000382A4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A29299714A3C6D5000382A4 /* CoreGraphics.framework */; };
@@ -29,20 +29,27 @@
 		2A2929D714A3C86F000382A4 /* HKMSBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A2929D114A3C86F000382A4 /* HKMSBJsonWriter.m */; };
 		2A2929E214A3C8F8000382A4 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2929E114A3C8F8000382A4 /* MessageUI.framework */; };
 		2A2929E414A3C917000382A4 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A2929E314A3C917000382A4 /* AddressBook.framework */; };
-		2A37346F1564BF4F00A2B517 /* HKMLead.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A3734691564BF4F00A2B517 /* HKMLead.m */; };
-		2A3734701564BF4F00A2B517 /* UIDevice-HKMHardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37346B1564BF4F00A2B517 /* UIDevice-HKMHardware.m */; };
-		2A3734711564BF4F00A2B517 /* HKMReferralRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37346D1564BF4F00A2B517 /* HKMReferralRecord.m */; };
 		2A65A74014F4942900B55F33 /* InstallsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A65A73E14F4942900B55F33 /* InstallsController.m */; };
 		2A65A74114F4942900B55F33 /* InstallsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A65A73F14F4942900B55F33 /* InstallsController.xib */; };
 		2A65A76514F4C98100B55F33 /* ReferralsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A65A76314F4C98000B55F33 /* ReferralsController.m */; };
 		2A65A76614F4C98100B55F33 /* ReferralsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2A65A76414F4C98100B55F33 /* ReferralsController.xib */; };
-		2A9DDD05156F37E800846DC3 /* HKMDiscoverer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9DDD04156F37E800846DC3 /* HKMDiscoverer.m */; };
+		2A6BBA4215D22C6D00F0F356 /* UIDevice-HKMHardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BBA4115D22C6D00F0F356 /* UIDevice-HKMHardware.m */; };
+		2A6BBA4615D22CFB00F0F356 /* HKMOpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A6BBA4515D22CFB00F0F356 /* HKMOpenUDID.m */; };
+		2A96C00615FD360A00AFCCC7 /* HKMDiscoverer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A96C00115FD360A00AFCCC7 /* HKMDiscoverer.m */; };
+		2A96C00715FD360A00AFCCC7 /* HKMLead.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A96C00315FD360A00AFCCC7 /* HKMLead.m */; };
+		2A96C00815FD360A00AFCCC7 /* HKMReferralRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A96C00515FD360A00AFCCC7 /* HKMReferralRecord.m */; };
+		2AC4EC621606E32A00CF1927 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AC4EC601606E32A00CF1927 /* Default.png */; };
+		2AC4EC631606E32A00CF1927 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AC4EC611606E32A00CF1927 /* Default@2x.png */; };
+		2AC7AAE015DAFBB20071C00E /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AC7AADE15DAFBB20071C00E /* icon.png */; };
+		2AC7AAE115DAFBB20071C00E /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AC7AADF15DAFBB20071C00E /* icon@2x.png */; };
+		2AFFA4EB160FCDA6005BFB30 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AFFA4EA160FCDA6005BFB30 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2A1CF63C15047C880033D1FC /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		2A1CF63F15047CFF0033D1FC /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
-		2A1CF64115047D060033D1FC /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+		2A0EFE53160A665500679B4E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		2A0EFE57160A667800679B4E /* HKMSVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HKMSVProgressHUD.bundle; sourceTree = "<group>"; };
+		2A0EFE58160A667800679B4E /* HKMSVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKMSVProgressHUD.h; sourceTree = "<group>"; };
+		2A0EFE59160A667800679B4E /* HKMSVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HKMSVProgressHUD.m; sourceTree = "<group>"; };
 		2A29298F14A3C6D5000382A4 /* AppGrowthEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppGrowthEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A29299314A3C6D5000382A4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2A29299514A3C6D5000382A4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -75,20 +82,27 @@
 		2A2929D114A3C86F000382A4 /* HKMSBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HKMSBJsonWriter.m; path = SBJson/HKMSBJsonWriter.m; sourceTree = "<group>"; };
 		2A2929E114A3C8F8000382A4 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		2A2929E314A3C917000382A4 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
-		2A3734681564BF4F00A2B517 /* HKMLead.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKMLead.h; sourceTree = "<group>"; };
-		2A3734691564BF4F00A2B517 /* HKMLead.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HKMLead.m; sourceTree = "<group>"; };
-		2A37346A1564BF4F00A2B517 /* UIDevice-HKMHardware.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice-HKMHardware.h"; sourceTree = "<group>"; };
-		2A37346B1564BF4F00A2B517 /* UIDevice-HKMHardware.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice-HKMHardware.m"; sourceTree = "<group>"; };
-		2A37346C1564BF4F00A2B517 /* HKMReferralRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKMReferralRecord.h; sourceTree = "<group>"; };
-		2A37346D1564BF4F00A2B517 /* HKMReferralRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HKMReferralRecord.m; sourceTree = "<group>"; };
 		2A65A73D14F4942900B55F33 /* InstallsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InstallsController.h; path = SampleApp/InstallsController.h; sourceTree = "<group>"; };
 		2A65A73E14F4942900B55F33 /* InstallsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InstallsController.m; path = SampleApp/InstallsController.m; sourceTree = "<group>"; };
 		2A65A73F14F4942900B55F33 /* InstallsController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = InstallsController.xib; path = SampleApp/InstallsController.xib; sourceTree = "<group>"; };
 		2A65A76214F4C98000B55F33 /* ReferralsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReferralsController.h; path = SampleApp/ReferralsController.h; sourceTree = "<group>"; };
 		2A65A76314F4C98000B55F33 /* ReferralsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReferralsController.m; path = SampleApp/ReferralsController.m; sourceTree = "<group>"; };
 		2A65A76414F4C98100B55F33 /* ReferralsController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ReferralsController.xib; path = SampleApp/ReferralsController.xib; sourceTree = "<group>"; };
-		2A9DDD03156F37E800846DC3 /* HKMDiscoverer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKMDiscoverer.h; sourceTree = "<group>"; };
-		2A9DDD04156F37E800846DC3 /* HKMDiscoverer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HKMDiscoverer.m; sourceTree = "<group>"; };
+		2A6BBA4015D22C6D00F0F356 /* UIDevice-HKMHardware.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIDevice-HKMHardware.h"; path = "UIDeviceExtension/UIDevice-HKMHardware.h"; sourceTree = "<group>"; };
+		2A6BBA4115D22C6D00F0F356 /* UIDevice-HKMHardware.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIDevice-HKMHardware.m"; path = "UIDeviceExtension/UIDevice-HKMHardware.m"; sourceTree = "<group>"; };
+		2A6BBA4415D22CFB00F0F356 /* HKMOpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HKMOpenUDID.h; path = OpenUDID/HKMOpenUDID.h; sourceTree = "<group>"; };
+		2A6BBA4515D22CFB00F0F356 /* HKMOpenUDID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HKMOpenUDID.m; path = OpenUDID/HKMOpenUDID.m; sourceTree = "<group>"; };
+		2A96C00015FD360A00AFCCC7 /* HKMDiscoverer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKMDiscoverer.h; sourceTree = "<group>"; };
+		2A96C00115FD360A00AFCCC7 /* HKMDiscoverer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HKMDiscoverer.m; sourceTree = "<group>"; };
+		2A96C00215FD360A00AFCCC7 /* HKMLead.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKMLead.h; sourceTree = "<group>"; };
+		2A96C00315FD360A00AFCCC7 /* HKMLead.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HKMLead.m; sourceTree = "<group>"; };
+		2A96C00415FD360A00AFCCC7 /* HKMReferralRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKMReferralRecord.h; sourceTree = "<group>"; };
+		2A96C00515FD360A00AFCCC7 /* HKMReferralRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HKMReferralRecord.m; sourceTree = "<group>"; };
+		2AC4EC601606E32A00CF1927 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		2AC4EC611606E32A00CF1927 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		2AC7AADE15DAFBB20071C00E /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		2AC7AADF15DAFBB20071C00E /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
+		2AFFA4EA160FCDA6005BFB30 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,12 +115,23 @@
 				2A29299814A3C6D5000382A4 /* CoreGraphics.framework in Frameworks */,
 				2A2929E214A3C8F8000382A4 /* MessageUI.framework in Frameworks */,
 				2A2929E414A3C917000382A4 /* AddressBook.framework in Frameworks */,
+				2A0EFE54160A665500679B4E /* QuartzCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2A0EFE56160A666200679B4E /* SVProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				2A0EFE57160A667800679B4E /* HKMSVProgressHUD.bundle */,
+				2A0EFE58160A667800679B4E /* HKMSVProgressHUD.h */,
+				2A0EFE59160A667800679B4E /* HKMSVProgressHUD.m */,
+			);
+			name = SVProgressHUD;
+			sourceTree = "<group>";
+		};
 		2A29298414A3C6D5000382A4 = {
 			isa = PBXGroup;
 			children = (
@@ -127,6 +152,7 @@
 		2A29299214A3C6D5000382A4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2A0EFE53160A665500679B4E /* QuartzCore.framework */,
 				2A2929E314A3C917000382A4 /* AddressBook.framework */,
 				2A2929E114A3C8F8000382A4 /* MessageUI.framework */,
 				2A29299314A3C6D5000382A4 /* UIKit.framework */,
@@ -139,6 +165,9 @@
 		2A29299914A3C6D5000382A4 /* AppGrowthEngine */ = {
 			isa = PBXGroup;
 			children = (
+				2A0EFE56160A666200679B4E /* SVProgressHUD */,
+				2A6BBA4315D22CE800F0F356 /* OpenUDID */,
+				2A6BBA3E15D22C3300F0F356 /* UIDeviceExtension */,
 				2A2929B514A3C802000382A4 /* SDKClasses */,
 				2A2929B414A3C7F8000382A4 /* SBJson */,
 				2A2929B314A3C7E8000382A4 /* SampleApp */,
@@ -161,9 +190,11 @@
 		2A2929B314A3C7E8000382A4 /* SampleApp */ = {
 			isa = PBXGroup;
 			children = (
-				2A1CF63F15047CFF0033D1FC /* icon.png */,
-				2A1CF64115047D060033D1FC /* icon@2x.png */,
-				2A1CF63C15047C880033D1FC /* Default.png */,
+				2AFFA4EA160FCDA6005BFB30 /* Default-568h@2x.png */,
+				2AC4EC601606E32A00CF1927 /* Default.png */,
+				2AC4EC611606E32A00CF1927 /* Default@2x.png */,
+				2AC7AADE15DAFBB20071C00E /* icon.png */,
+				2AC7AADF15DAFBB20071C00E /* icon@2x.png */,
 				2A2929B614A3C837000382A4 /* LeadsController.h */,
 				2A2929B714A3C837000382A4 /* LeadsController.m */,
 				2A2929B814A3C837000382A4 /* LeadsController.xib */,
@@ -206,16 +237,32 @@
 		2A2929B514A3C802000382A4 /* SDKClasses */ = {
 			isa = PBXGroup;
 			children = (
-				2A9DDD03156F37E800846DC3 /* HKMDiscoverer.h */,
-				2A9DDD04156F37E800846DC3 /* HKMDiscoverer.m */,
-				2A3734681564BF4F00A2B517 /* HKMLead.h */,
-				2A3734691564BF4F00A2B517 /* HKMLead.m */,
-				2A37346A1564BF4F00A2B517 /* UIDevice-HKMHardware.h */,
-				2A37346B1564BF4F00A2B517 /* UIDevice-HKMHardware.m */,
-				2A37346C1564BF4F00A2B517 /* HKMReferralRecord.h */,
-				2A37346D1564BF4F00A2B517 /* HKMReferralRecord.m */,
+				2A96C00015FD360A00AFCCC7 /* HKMDiscoverer.h */,
+				2A96C00115FD360A00AFCCC7 /* HKMDiscoverer.m */,
+				2A96C00215FD360A00AFCCC7 /* HKMLead.h */,
+				2A96C00315FD360A00AFCCC7 /* HKMLead.m */,
+				2A96C00415FD360A00AFCCC7 /* HKMReferralRecord.h */,
+				2A96C00515FD360A00AFCCC7 /* HKMReferralRecord.m */,
 			);
 			name = SDKClasses;
+			sourceTree = "<group>";
+		};
+		2A6BBA3E15D22C3300F0F356 /* UIDeviceExtension */ = {
+			isa = PBXGroup;
+			children = (
+				2A6BBA4015D22C6D00F0F356 /* UIDevice-HKMHardware.h */,
+				2A6BBA4115D22C6D00F0F356 /* UIDevice-HKMHardware.m */,
+			);
+			name = UIDeviceExtension;
+			sourceTree = "<group>";
+		};
+		2A6BBA4315D22CE800F0F356 /* OpenUDID */ = {
+			isa = PBXGroup;
+			children = (
+				2A6BBA4415D22CFB00F0F356 /* HKMOpenUDID.h */,
+				2A6BBA4515D22CFB00F0F356 /* HKMOpenUDID.m */,
+			);
+			name = OpenUDID;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -274,9 +321,12 @@
 				2A2929C414A3C837000382A4 /* SampleViewController.xib in Resources */,
 				2A65A74114F4942900B55F33 /* InstallsController.xib in Resources */,
 				2A65A76614F4C98100B55F33 /* ReferralsController.xib in Resources */,
-				2A1CF63D15047C880033D1FC /* Default.png in Resources */,
-				2A1CF64015047CFF0033D1FC /* icon.png in Resources */,
-				2A1CF64215047D060033D1FC /* icon@2x.png in Resources */,
+				2AC7AAE015DAFBB20071C00E /* icon.png in Resources */,
+				2AC7AAE115DAFBB20071C00E /* icon@2x.png in Resources */,
+				2AC4EC621606E32A00CF1927 /* Default.png in Resources */,
+				2AC4EC631606E32A00CF1927 /* Default@2x.png in Resources */,
+				2A0EFE5A160A667800679B4E /* HKMSVProgressHUD.bundle in Resources */,
+				2AFFA4EB160FCDA6005BFB30 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,10 +349,12 @@
 				2A2929D714A3C86F000382A4 /* HKMSBJsonWriter.m in Sources */,
 				2A65A74014F4942900B55F33 /* InstallsController.m in Sources */,
 				2A65A76514F4C98100B55F33 /* ReferralsController.m in Sources */,
-				2A37346F1564BF4F00A2B517 /* HKMLead.m in Sources */,
-				2A3734701564BF4F00A2B517 /* UIDevice-HKMHardware.m in Sources */,
-				2A3734711564BF4F00A2B517 /* HKMReferralRecord.m in Sources */,
-				2A9DDD05156F37E800846DC3 /* HKMDiscoverer.m in Sources */,
+				2A6BBA4215D22C6D00F0F356 /* UIDevice-HKMHardware.m in Sources */,
+				2A6BBA4615D22CFB00F0F356 /* HKMOpenUDID.m in Sources */,
+				2A96C00615FD360A00AFCCC7 /* HKMDiscoverer.m in Sources */,
+				2A96C00715FD360A00AFCCC7 /* HKMLead.m in Sources */,
+				2A96C00815FD360A00AFCCC7 /* HKMReferralRecord.m in Sources */,
+				2A0EFE5B160A667800679B4E /* HKMSVProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,16 +393,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: kirk tsai (72W9JL24F3)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: kirk tsai (72W9JL24F3)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Hook Mobile, Inc";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hook Mobile, Inc";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "476925A7-39D8-4F8B-BE1C-380EA620D36D";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "476925A7-39D8-4F8B-BE1C-380EA620D36D";
+				PROVISIONING_PROFILE = "42D38F2A-63ED-4C3D-994E-38FE16C44225";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "42D38F2A-63ED-4C3D-994E-38FE16C44225";
 				SDKROOT = iphoneos;
 			};
 			name = Release;

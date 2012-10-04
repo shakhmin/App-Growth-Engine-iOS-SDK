@@ -1,5 +1,7 @@
 #import "SampleViewController.h"
 #import "HKMDiscoverer.h"
+#import "HKMSVProgressHUD.h"
+#import <AddressBook/AddressBook.h>
 
 @implementation SampleViewController
 
@@ -15,23 +17,29 @@
 }
 
 - (IBAction) verify: (id)sender {
-    verifyButton.enabled = NO;
+    // verifyButton.enabled = NO;
+    [HKMSVProgressHUD showWithStatus:@"Verifying ..."];
     [[HKMDiscoverer agent] verifyDevice:self forceSms:NO userName:nil];
 }
 
 - (void) verifyComplete {
-    verifyButton.enabled = YES;
+    // verifyButton.enabled = YES;
     verifyStatusButton.enabled = YES;
     queryInstallsButton.enabled = YES;
+    
+    [HKMSVProgressHUD dismiss];
 }
 
 - (IBAction) verifyStatus: (id)sender {
-    verifyStatusButton.enabled = NO;
+    // verifyStatusButton.enabled = NO;
+    [HKMSVProgressHUD showWithStatus:@"Querying status ..."];
     [[HKMDiscoverer agent] queryVerifiedStatus];
 }
 
 - (void) verificationStatusYes {
-    verifyStatusButton.enabled = YES;
+    // verifyStatusButton.enabled = YES;
+    [HKMSVProgressHUD dismiss];
+    
     UIAlertView* alert = [[UIAlertView alloc] init];
 	alert.title = @"Verified";
 	alert.message = @"Your device has been verified.";
@@ -42,7 +50,9 @@
 }
 
 - (void) verificationStatusNo {
-    verifyStatusButton.enabled = YES;
+    // verifyStatusButton.enabled = YES;
+    [HKMSVProgressHUD dismiss];
+    
     UIAlertView* alert = [[UIAlertView alloc] init];
 	alert.title = @"Not Verified";
 	alert.message = @"Your device has NOT been verified. It might take a few minutes for us to receive and process the verification SMS.";
@@ -53,13 +63,42 @@
 }
 
 - (IBAction) discover: (id)sender {
-    discoverButton.enabled = NO;
-    [[HKMDiscoverer agent] discover:0];
+    ABAddressBookRef ab = ABAddressBookCreate();
+    if (ABAddressBookRequestAccessWithCompletion != NULL) {
+        ABAddressBookRequestAccessWithCompletion(ab, ^(bool granted, CFErrorRef error) {
+            if (granted) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ([[HKMDiscoverer agent] discover:0]) {
+                        [HKMSVProgressHUD showWithStatus:@"Discovering ..."];
+                    
+                    }
+                });
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    UIAlertView* alert = [[UIAlertView alloc] init];
+                    alert.title = @"Not Authorized";
+                    alert.message = @"You denied access to your addressbook. Please go to Settings / Privacy / Contacts and enable access for this app.";
+                    [alert addButtonWithTitle:@"Dismiss"];
+                    alert.cancelButtonIndex = 0;
+                    [alert show];
+                    [alert release];
+                });
+            }
+        });
+    } else {
+        // iOS 5
+        if ([[HKMDiscoverer agent] discover:0]) {
+            [HKMSVProgressHUD showWithStatus:@"Discovering ..."];
+        }
+    }
 }
 
+
 - (void) discoverComplete {
-    discoverButton.enabled = YES;
+    NSLog(@"discoverComplete");
+    // discoverButton.enabled = YES;
     queryButton.enabled = YES;
+    [HKMSVProgressHUD dismiss];
     
     UIAlertView* alert = [[UIAlertView alloc] init];
 	alert.title = @"Finished";
@@ -70,19 +109,53 @@
 	[alert release];
 }
 
-- (IBAction) query: (id)sender {
+- (void) discoverFailed {
+    NSLog(@"discoverFailed");
+    // discoverButton.enabled = YES;
     queryButton.enabled = NO;
+    [HKMSVProgressHUD dismiss];
+    
+    UIAlertView* alert = [[UIAlertView alloc] init];
+	alert.title = @"Error";
+	alert.message = @"Discover has failed. Do you have contacts in your address book?";
+	[alert addButtonWithTitle:@"Dismiss"];
+	alert.cancelButtonIndex = 0;
+	[alert show];
+	[alert release];
+}
+
+- (void) discoverNoChange {
+    NSLog(@"discoverNoChange");
+    // discoverButton.enabled = YES;
+    queryButton.enabled = YES;
+    [HKMSVProgressHUD dismiss];
+    
+    UIAlertView* alert = [[UIAlertView alloc] init];
+	alert.title = @"No Change";
+	alert.message = @"The addressbook has not changed since last discovery. You can still get the recommended contacts. Or, you can delete the app and start over.";
+	[alert addButtonWithTitle:@"Dismiss"];
+	alert.cancelButtonIndex = 0;
+	[alert show];
+	[alert release];
+}
+
+- (IBAction) query: (id)sender {
+    // queryButton.enabled = NO;
+    [HKMSVProgressHUD showWithStatus:@"Querying ..."];
     [[HKMDiscoverer agent] queryLeads];
 }
 
 - (void) queryComplete {
-    queryButton.enabled = YES;
+    // queryButton.enabled = YES;
+    [HKMSVProgressHUD dismiss];
     
+    self.title = @"Back";
     [self.navigationController pushViewController:leadsController animated:YES];
 }
 
 - (void) queryFailed {
-    queryButton.enabled = YES;
+    // queryButton.enabled = YES;
+    [HKMSVProgressHUD dismiss];
     
     UIAlertView* alert = [[UIAlertView alloc] init];
 	alert.title = @"Finished";
@@ -107,13 +180,15 @@
 }
 
 - (void) queryInstallsComplete {
-    queryInstallsButton.enabled = YES;
+    // queryInstallsButton.enabled = YES;
+    [HKMSVProgressHUD dismiss];
     
     [self.navigationController pushViewController:installsController animated:YES];
 }
 
 - (void) queryInstallsFailed {
-    queryInstallsButton.enabled = YES;
+    // queryInstallsButton.enabled = YES;
+    [HKMSVProgressHUD dismiss];
     
     UIAlertView* alert = [[UIAlertView alloc] init];
 	alert.title = @"Finished";
@@ -125,20 +200,23 @@
 }
 
 - (IBAction) queryReferral: (id)sender {
-    queryReferralButton.enabled = NO;
+    // queryReferralButton.enabled = NO;
+    [HKMSVProgressHUD showWithStatus:@"Querying ..."];
     
     [[HKMDiscoverer agent] queryReferral];
 }
 
 - (void) queryReferralComplete {
     NSLog(@"referral done");
-    queryReferralButton.enabled = YES;
+    // queryReferralButton.enabled = YES;
+    [HKMSVProgressHUD dismiss];
     
     [self.navigationController pushViewController:referralsController animated:YES];
 }
 
 - (void) queryReferralFailed {
-    queryReferralButton.enabled = YES;
+    // queryReferralButton.enabled = YES;
+    [HKMSVProgressHUD dismiss];
     
     UIAlertView* alert = [[UIAlertView alloc] init];
 	alert.title = @"Finished";
@@ -150,6 +228,8 @@
 }
 
 - (void) notSmsDevice {
+    [HKMSVProgressHUD dismiss];
+    
     UIAlertView* alert = [[UIAlertView alloc] init];
 	alert.title = @"Not a SMS Device";
 	alert.message = @"You are running this application on a non-SMS device. The SMS verification functionalities would not work.";
@@ -164,15 +244,18 @@
     
     if (buttonIndex == 0) {
         [[HKMDiscoverer agent] queryInstalls:@"FORWARD"];
-        queryInstallsButton.enabled = NO;
+        // queryInstallsButton.enabled = NO;
+        [HKMSVProgressHUD showWithStatus:@"Querying ..."];
     }
     if (buttonIndex == 1) {
         [[HKMDiscoverer agent] queryInstalls:@"BACKWARD"];
-        queryInstallsButton.enabled = NO;
+        // queryInstallsButton.enabled = NO;
+        [HKMSVProgressHUD showWithStatus:@"Querying ..."];
     }
     if (buttonIndex == 2) {
         [[HKMDiscoverer agent] queryInstalls:@"MUTUAL"];
-        queryInstallsButton.enabled = NO;
+        // queryInstallsButton.enabled = NO;
+        [HKMSVProgressHUD showWithStatus:@"Querying ..."];
     }
     
     return;
@@ -183,9 +266,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"Hook SDK Sample";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(discoverComplete) name:@"HookDiscoverComplete" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(discoverFailed) name:@"HookDiscoverFailed" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(discoverNoChange) name:@"HookDiscoverNoChange" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(queryComplete) name:@"HookQueryOrderComplete" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(queryFailed) name:@"HookQueryOrderFailed" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(verifyComplete) name:@"HookVerifyDeviceComplete" object:nil];
@@ -197,6 +281,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(queryReferralFailed) name:@"HookQueryReferralFailed" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notSmsDevice) name:@"HookNotSMSDevice" object:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.title = @"Hook SDK Sample";
 }
 
 
