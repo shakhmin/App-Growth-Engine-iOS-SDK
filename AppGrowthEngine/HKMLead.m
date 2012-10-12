@@ -2,7 +2,7 @@
 
 @implementation HKMLead
 
-@synthesize phone, osType, name, invitationCount, lastInvitationSent;
+@synthesize phone, osType, name, invitationCount, lastInvitationSent, image;
 @synthesize selected;
 
 - (id) init {
