@@ -28,10 +28,17 @@ static HKMDiscoverer *_agent;
 		installCode = [[standardUserDefaults objectForKey:@"installCode"] retain];
     }
     
+    contactsDictionary = [[NSMutableDictionary dictionary] retain];
+    
     // default
     skipVerificationSms = NO;
-    
     return self;
+}
+
+- (void) dealloc 
+{
+    NSLog(@"HKMDiscover - dealloc invoked");
+    [contactsDictionary release];
 }
 
 - (BOOL) isRegistered{
@@ -114,9 +121,16 @@ static HKMDiscoverer *_agent;
     }
     
     if (![self checkNewAddresses:ab]) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"HookDiscoverNoChange" object:nil];
+        if ([contactsDictionary count] == 0)
+            [self buildAddressBookDictionary];
+        
+        NSLog(@"%@", [NSNotificationCenter defaultCenter]);
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_DISCOVER_NO_CHANGE object:nil];
         return YES;
     } 
+    
+    // build dictionary for quick lookup by phone
+    [self buildAddressBookDictionaryAsync];
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/discover", server]];
     NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
@@ -160,7 +174,7 @@ static HKMDiscoverer *_agent;
     }
     
     if (![self checkNewAddresses:ab]) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"HookDiscoverNoChange" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_DISCOVER_NO_CHANGE object:nil];
         return YES;
     }
     
@@ -439,6 +453,8 @@ static HKMDiscoverer *_agent;
     
     CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(ab);
     CFIndex nPeople = ABAddressBookGetPersonCount(ab);
+    if (nPeople > MAX_ADDRESSBOOK_UPLOAD_SIZE)
+        nPeople = MAX_ADDRESSBOOK_UPLOAD_SIZE;
     if (limit > 0 && nPeople > limit) {
         nPeople = limit;
     }
@@ -554,12 +570,14 @@ static HKMDiscoverer *_agent;
             [viewController presentModalViewController:controller animated:YES];
         } else {
             NSLog(@"Not a SMS device. Fail silently.");
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"HookNotSMSDevice" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_NOT_SMS_DEVICE object:nil];
         }
     }
 }
 
 - (NSString *) lookupNameFromPhone:(NSString *)p {
+    double start = [[NSDate date] timeIntervalSince1970];
+    
     NSString *name;
     
     ABAddressBookRef ab = ABAddressBookCreate();
@@ -611,8 +629,168 @@ static HKMDiscoverer *_agent;
 	if (allPeople) {
         CFRelease(allPeople);
     }
+    double end = [[NSDate date] timeIntervalSince1970];
+    double difference = end - start;    
     
+    NSLog(@"lookupNameFromPhone - Time elapsed %f", difference);
     return name;
+}
+
+- (void) buildAddressBookDictionaryAsync {
+    /* Operation Queue init (autorelease) */
+    NSOperationQueue *queue = [NSOperationQueue new];
+    
+    /* Create our NSInvocationOperation to call buildAddressBookDictionary, passing in nil */
+    NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
+                                                                            selector:@selector(buildAddressBookDictionary)
+                                                                              object:nil];
+    
+    /* Add the operation to the queue */
+    [queue addOperation:operation];
+    [operation release];
+}
+
+- (void) buildAddressBookDictionary {
+    double start = [[NSDate date] timeIntervalSince1970];
+    
+    [contactsDictionary removeAllObjects];
+    ABAddressBookRef ab = ABAddressBookCreate();
+    
+    CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(ab);
+    CFIndex nPeople = ABAddressBookGetPersonCount(ab);
+    
+    for (int i = 0; i < nPeople; i++) {
+        ABRecordRef ref = CFArrayGetValueAtIndex(allPeople, i);
+        
+        ABRecordID recordId = ABRecordGetRecordID(ref); // get record id from address book record
+        
+        ABMultiValueRef ps = ABRecordCopyValue(ref, kABPersonPhoneProperty);
+        CFIndex count = ABMultiValueGetCount (ps);
+        for (int i = 0; i < count; i++) {
+            CFStringRef phone = ABMultiValueCopyValueAtIndex (ps, i);
+            [contactsDictionary setObject:[NSNumber numberWithInteger:recordId] forKey:[self formatPhone:((NSString *) phone)]];
+            
+            if (phone) {
+                CFRelease(phone);
+            }
+        }
+    }
+	if (allPeople) {
+        CFRelease(allPeople);
+    }
+    double end = [[NSDate date] timeIntervalSince1970];
+    double difference = end - start;    
+    
+    NSLog(@"buildAddressBookDictionary - Time elapsed %f", difference);
+}
+
+//- (void) buildAddressBookDictionary {
+//    double start = [[NSDate date] timeIntervalSince1970];
+//
+//    [contactsDictionary removeAllObjects];
+//    ABAddressBookRef ab = ABAddressBookCreate();
+//    
+//    CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(ab);
+//    CFIndex nPeople = ABAddressBookGetPersonCount(ab);
+//    
+//    for (int i = 0; i < nPeople; i++) {
+//        ABRecordRef ref = CFArrayGetValueAtIndex(allPeople, i);
+//        CFStringRef firstName = ABRecordCopyValue(ref, kABPersonFirstNameProperty);
+//        CFStringRef lastName = ABRecordCopyValue(ref, kABPersonLastNameProperty);
+//        CFStringRef suffix = ABRecordCopyValue(ref, kABPersonSuffixProperty);
+//        
+//        NSString *firstNameStr = (NSString *) firstName;
+//        if (firstNameStr == nil) {
+//            firstNameStr = @"";
+//        }
+//        NSString *lastNameStr = (NSString *) lastName;
+//        if (lastNameStr == nil) {
+//            lastNameStr = @"";
+//        }
+//        NSString *suffixStr = (NSString *) suffix;
+//        if (suffixStr == nil) {
+//            suffixStr = @"";
+//        }
+//        
+//        ABMultiValueRef ps = ABRecordCopyValue(ref, kABPersonPhoneProperty);
+//        CFIndex count = ABMultiValueGetCount (ps);
+//        for (int i = 0; i < count; i++) {
+//            CFStringRef phone = ABMultiValueCopyValueAtIndex (ps, i);
+//            [contactsDictionary setObject:[NSString stringWithFormat:@"%@ %@ %@", firstNameStr, lastNameStr, suffixStr] forKey:[self formatPhone:((NSString *) phone)]];
+//            
+//            if (phone) {
+//                CFRelease(phone);
+//            }
+//        }
+//        
+//        if (firstName) {
+//            CFRelease(firstName);
+//        }
+//        if (lastName) {
+//            CFRelease(lastName);
+//        }
+//    }
+//	if (allPeople) {
+//        CFRelease(allPeople);
+//    }
+//    double end = [[NSDate date] timeIntervalSince1970];
+//    double difference = end - start;    
+//    
+//    NSLog(@"buildAddressBookDictionary - Time elapsed %f", difference);
+//}
+
+// Update lead with info from address book
+- (void) updateContactDetails:(HKMLead *)intoLead {
+    NSNumber *contactId = [contactsDictionary objectForKey:intoLead.phone]; 
+    if (!contactId) {
+        NSLog(@"updateContactDetails - contact[%@] not found in dictionary", intoLead.phone);
+        return;
+    }
+    
+    // Get contact from Address Book
+    ABAddressBookRef addressBook = ABAddressBookCreate();
+    ABRecordID recordId = (ABRecordID)[contactId intValue];
+    ABRecordRef person = ABAddressBookGetPersonWithRecordID(addressBook, recordId);
+    
+    CFStringRef firstName = ABRecordCopyValue(person, kABPersonFirstNameProperty);
+    CFStringRef lastName = ABRecordCopyValue(person, kABPersonLastNameProperty);
+    CFStringRef suffix = ABRecordCopyValue(person, kABPersonSuffixProperty);
+    
+    NSString *firstNameStr = (NSString *) firstName;
+    if (firstNameStr == nil) {
+        firstNameStr = @"";
+    }
+    NSString *lastNameStr = (NSString *) lastName;
+    if (lastNameStr == nil) {
+        lastNameStr = @"";
+    }
+    NSString *suffixStr = (NSString *) suffix;
+    if (suffixStr == nil) {
+        suffixStr = @"";
+    }
+    
+    if (firstName) {
+        CFRelease(firstName);
+    }
+    if (lastName) {
+        CFRelease(lastName);
+    }
+    if (suffix) {
+        CFRelease(suffix);
+    }
+    
+    NSString *fullName = [NSString stringWithFormat:@"%@ %@ %@", firstNameStr, lastNameStr, suffixStr];
+    intoLead.name = fullName;
+    
+    // Check for contact picture
+    if (person != nil && ABPersonHasImageData(person)) {
+        if ( &ABPersonCopyImageDataWithFormat != nil ) {
+            // iOS >= 4.1
+            intoLead.image = [UIImage imageWithData:(NSData *)ABPersonCopyImageDataWithFormat(person, kABPersonImageFormatThumbnail)];
+        } else 
+            // iOS < 4.1
+            intoLead.image = [UIImage imageWithData:(NSData *)ABPersonCopyImageData(person)];
+    }
 }
 
 - (NSString *) formatPhone:(NSString *)p {
@@ -788,11 +966,11 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
             [alert show];
             [alert release];
         } else {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"HookVerificationSMSNotSent" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_VERIFICATION_SMS_NOT_SENT object:nil];
         }
         
     } else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"HookVerificationSMSSent" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_VERIFICATION_SMS_SENT object:nil];
     }
 }
 
@@ -921,7 +1099,7 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
         [newInstallConnection release];
         newInstallConnection = nil;
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"HookNetworkError" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_NETWORK_ERROR object:nil];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -944,7 +1122,7 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
             verifyMessage = [[resp objectForKey:@"verifyMessage"] retain];
         }
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"HookVerifyDeviceComplete" object:[resp objectForKey:@"status"]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_VERIFY_DEVICE_COMPLETE object:[resp objectForKey:@"status"]];
         
         [self createVerificationSms];
         
@@ -962,9 +1140,9 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
         if ([[resp objectForKey:@"status"] intValue] == 1000) {
             NSString *verified = [resp objectForKey:@"verified"];
             if ([verified isEqualToString:@"true"]) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"HookDeviceVerified" object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_DEVICE_VERIFIED object:nil];
             } else {
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"HookDeviceNotVerified" object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_DEVICE_NOT_VERIFIED object:nil];
             }
         }
         
@@ -992,15 +1170,15 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
             
             NSLog(@"installCode is %@", installCode);
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"HookDiscoverComplete" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_DISCOVER_COMPLETE object:nil];
         } else {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"HookDiscoverFailed" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_DISCOVER_FAILED object:nil];
         }
         
         [discoverConnection release];
         discoverConnection = nil;
     }
-        
+    
     if (connection == queryOrderConnection) {
         NSString *dataStr = [[[NSString alloc] initWithData:queryOrderData encoding:NSUTF8StringEncoding] autorelease];
         NSLog (@"query order data is %@", dataStr);
@@ -1014,7 +1192,7 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
         } else {
             queryStatus = NO;
             if (status == 3502) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"HookAddressbookCacheExpired" object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_ADDRESSBOOK_CACHE_EXPIRED object:nil];
                 return;
             }
         }
@@ -1027,8 +1205,9 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
                     lead.phone = [d objectForKey:@"phone"];
                     lead.osType = [d objectForKey:@"osType"];
                     lead.invitationCount = [[resp objectForKey:@"invitationCount"] intValue];
-                    lead.name = [[HKMDiscoverer agent] lookupNameFromPhone:lead.phone];
-                    
+                    //                    lead.name = [[HKMDiscoverer agent] lookupNameFromPhone:lead.phone];
+                    //                    lead.name = [[HKMDiscoverer agent] lookupNameFromContactDictionary:lead.phone];
+                    [[HKMDiscoverer agent] updateContactDetails:lead];
                     NSString *dateStr = [d objectForKey:@"lastInvitationSent"];
                     if (dateStr == nil || [@"" isEqualToString:dateStr]) {
                     } else {
@@ -1041,18 +1220,18 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
                     [leads addObject:lead];
                 }
             }
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryOrderComplete" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_QUERY_ORDER_COMPLETE object:nil];
         } else {
             errorMessage = [[resp objectForKey:@"desc"] retain];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryOrderFailed" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_QUERY_ORDER_FAILED object:nil];
         }
         /*
-        else if ([[resp objectForKey:@"status"] intValue] == 1234) {
-            // pending. Let's run this again after some delay
-            // [self performSelector:@selector(queryOrder) withObject:nil afterDelay:10.0];
-            [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(queryOrder) userInfo:nil repeats:NO];
-        }
-        */
+         else if ([[resp objectForKey:@"status"] intValue] == 1234) {
+         // pending. Let's run this again after some delay
+         // [self performSelector:@selector(queryOrder) withObject:nil afterDelay:10.0];
+         [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(queryOrder) userInfo:nil repeats:NO];
+         }
+         */
         
         [queryOrderConnection release];
         queryOrderConnection = nil;
@@ -1072,7 +1251,7 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
             smsTemplate = [[resp objectForKey:@"sms"] retain];
         }
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"HookDownloadShareTemplatesComplete" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_DOWNLOAD_SHARE_TEMPLATE_COMPLETE object:nil];
         
         [shareTemplateConnection release];
         shareTemplateConnection = nil;
@@ -1091,7 +1270,7 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
             invitationUrl = [[resp objectForKey:@"url"] retain];
         }
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"HookNewReferralComplete" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_NEW_REFERRAL_COMPLETE object:nil];
         
         [newReferralConnection release];
         newReferralConnection = nil;
@@ -1102,7 +1281,7 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
         NSLog (@"update referral data is %@", dataStr);
         [updateReferralData release];
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"HookUpdateReferralComplete" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_UPDATE_REFERRAL_COMPLETE object:nil];
         
         [updateReferralConnection release];
         updateReferralConnection = nil;
@@ -1127,14 +1306,14 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
                     [installs addObject:lead];
                 }
             }
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryInstallsComplete" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_QUERY_INSTALLS_COMPLETE object:nil];
         } else {
             if (status == 3502) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"HookAddressbookCacheExpired" object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_ADDRESSBOOK_CACHE_EXPIRED object:nil];
                 return;
             }
             errorMessage = [[resp objectForKey:@"desc"] retain];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryInstallsFailed" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_QUERY_INSTALLS_FAILED object:nil];
         }
         
         [queryInstallsConnection release];
@@ -1168,10 +1347,10 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
                     [referrals addObject:rec];
                 }
             }
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryReferralComplete" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_QUERY_REFERRAL_COMPLETE object:nil];
         } else {
             errorMessage = [[resp objectForKey:@"desc"] retain];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"HookQueryReferralFailed" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_QUERY_REFERRAL_FAILED object:nil];
         }
         
         [queryReferralConnection release];
