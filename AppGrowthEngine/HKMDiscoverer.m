@@ -26,6 +26,7 @@ static HKMDiscoverer *_agent;
     NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
 	if (standardUserDefaults) {
 		installCode = [[standardUserDefaults objectForKey:@"installCode"] retain];
+		lastDiscoverDate = [[standardUserDefaults objectForKey:@"lastDiscoverDate"] retain];
     }
     
     contactsDictionary = [[NSMutableDictionary dictionary] retain];
@@ -35,10 +36,11 @@ static HKMDiscoverer *_agent;
     return self;
 }
 
-- (void) dealloc 
+- (void) dealloc
 {
     NSLog(@"HKMDiscover - dealloc invoked");
     [contactsDictionary release];
+    [super dealloc];
 }
 
 - (BOOL) isRegistered{
@@ -64,7 +66,8 @@ static HKMDiscoverer *_agent;
     [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
     NSMutableData *postBody = [NSMutableData data];
     [postBody appendData:[[NSString stringWithFormat:@"appKey=%@", [appKey stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
-    [postBody appendData:[[NSString stringWithFormat:@"&addrHash=%@", [self getAddressbookHash:10]] dataUsingEncoding:NSUTF8StringEncoding]];
+    //    [postBody appendData:[[NSString stringWithFormat:@"&addrHash=%@", [self getAddressbookHash:10]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&deviceInfo=%@", [self getDeviceInfoJson]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&deviceModel=%@", [[UIDevice currentDevice] platformString]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&deviceOs=%@", [[UIDevice currentDevice] systemVersion]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&openUdid=%@", [[HKMOpenUDID value] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -107,6 +110,9 @@ static HKMDiscoverer *_agent;
     return YES;
 }
 
+- (NSDate *) lastDiscoverDate {
+    return lastDiscoverDate;
+}
 
 - (BOOL) discover:(int) limit {
     if (discoverConnection != nil) {
@@ -127,7 +133,7 @@ static HKMDiscoverer *_agent;
         NSLog(@"%@", [NSNotificationCenter defaultCenter]);
         [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_DISCOVER_NO_CHANGE object:nil];
         return YES;
-    } 
+    }
     
     // build dictionary for quick lookup by phone
     [self buildAddressBookDictionaryAsync];
@@ -144,6 +150,7 @@ static HKMDiscoverer *_agent;
     
     NSString *encodedJsonStr = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)ab, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8 );
 	[postBody appendData:[[NSString stringWithFormat:@"&addressBook=%@", encodedJsonStr] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&deviceInfo=%@", [self getDeviceInfoJson]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&deviceModel=%@", [[UIDevice currentDevice] platformString]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&deviceOs=%@", [[UIDevice currentDevice] systemVersion]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&openUdid=%@", [[HKMOpenUDID value] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -189,6 +196,7 @@ static HKMDiscoverer *_agent;
     }
     NSString *encodedJsonStr = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)ab, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8 );
 	[postBody appendData:[[NSString stringWithFormat:@"&addressBook=%@", encodedJsonStr] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&deviceInfo=%@", [self getDeviceInfoJson]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&deviceModel=%@", [[UIDevice currentDevice] platformString]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&deviceOs=%@", [[UIDevice currentDevice] systemVersion]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&openUdid=%@", [[HKMOpenUDID value] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -236,6 +244,7 @@ static HKMDiscoverer *_agent;
     NSString *encodedJsonStr = (NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)jsonStr, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8 );
     
 	[postBody appendData:[[NSString stringWithFormat:@"&addressBook=%@", encodedJsonStr] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&deviceInfo=%@", [self getDeviceInfoJson]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&deviceModel=%@", [[UIDevice currentDevice] platformString]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&deviceOs=%@", [[UIDevice currentDevice] systemVersion]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&openUdid=%@", [[HKMOpenUDID value] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -430,7 +439,8 @@ static HKMDiscoverer *_agent;
     [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
     NSMutableData *postBody = [NSMutableData data];
     [postBody appendData:[[NSString stringWithFormat:@"appKey=%@", [appKey stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
-    [postBody appendData:[[NSString stringWithFormat:@"&addrHash=%@", [self getAddressbookHash:10]] dataUsingEncoding:NSUTF8StringEncoding]];
+    //    [postBody appendData:[[NSString stringWithFormat:@"&addrHash=%@", [self getAddressbookHash:10]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&deviceInfo=%@", [self getDeviceInfoJson]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&openUdid=%@", [[HKMOpenUDID value] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&installToken=%@", [[HKMOpenUDID value] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
     [postBody appendData:[[NSString stringWithFormat:@"&macAddress=%@", [[self getMacAddress] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -444,6 +454,43 @@ static HKMDiscoverer *_agent;
         newInstallConnection = [connection retain];
 	}
     // [connection release];
+    
+    return YES;
+}
+
+- (BOOL) claimReward: (UIViewController *)vc  {
+    if (claimRewardConnection != nil)
+        return NO;
+    if (installCode == nil)
+        return NO;
+    
+    if (vc != nil) {
+        viewController = [vc retain];
+    }
+    
+    NSLog(@"installCode is %@", installCode);
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@/newrewardclaim", server]];
+    NSMutableURLRequest *req = [NSMutableURLRequest requestWithURL:url];
+    [req setHTTPMethod:@"POST"];
+    [req setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
+    
+    NSMutableData *postBody = [NSMutableData data];
+    [postBody appendData:[[NSString stringWithFormat:@"appKey=%@", [appKey stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&installCode=%@", [installCode stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&installToken=%@", [[HKMOpenUDID value] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&deviceInfo=%@", [self getDeviceInfoJson]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&macAddress=%@", [[self getMacAddress] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&deviceModel=%@", [[UIDevice currentDevice] platformString]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&deviceOs=%@", [[UIDevice currentDevice] systemVersion]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&openUdid=%@", [[HKMOpenUDID value] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postBody appendData:[[NSString stringWithFormat:@"&sdkVersion=%@", [SDKVERSION stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] dataUsingEncoding:NSUTF8StringEncoding]];
+    [req setHTTPBody:postBody];
+    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:req delegate:self];
+    if (connection) {
+		claimRewardData = [[NSMutableData data] retain];
+        claimRewardConnection = [connection retain];
+	}
     
     return YES;
 }
@@ -630,7 +677,7 @@ static HKMDiscoverer *_agent;
         CFRelease(allPeople);
     }
     double end = [[NSDate date] timeIntervalSince1970];
-    double difference = end - start;    
+    double difference = end - start;
     
     NSLog(@"lookupNameFromPhone - Time elapsed %f", difference);
     return name;
@@ -679,7 +726,7 @@ static HKMDiscoverer *_agent;
         CFRelease(allPeople);
     }
     double end = [[NSDate date] timeIntervalSince1970];
-    double difference = end - start;    
+    double difference = end - start;
     
     NSLog(@"buildAddressBookDictionary - Time elapsed %f", difference);
 }
@@ -689,16 +736,16 @@ static HKMDiscoverer *_agent;
 //
 //    [contactsDictionary removeAllObjects];
 //    ABAddressBookRef ab = ABAddressBookCreate();
-//    
+//
 //    CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(ab);
 //    CFIndex nPeople = ABAddressBookGetPersonCount(ab);
-//    
+//
 //    for (int i = 0; i < nPeople; i++) {
 //        ABRecordRef ref = CFArrayGetValueAtIndex(allPeople, i);
 //        CFStringRef firstName = ABRecordCopyValue(ref, kABPersonFirstNameProperty);
 //        CFStringRef lastName = ABRecordCopyValue(ref, kABPersonLastNameProperty);
 //        CFStringRef suffix = ABRecordCopyValue(ref, kABPersonSuffixProperty);
-//        
+//
 //        NSString *firstNameStr = (NSString *) firstName;
 //        if (firstNameStr == nil) {
 //            firstNameStr = @"";
@@ -711,18 +758,18 @@ static HKMDiscoverer *_agent;
 //        if (suffixStr == nil) {
 //            suffixStr = @"";
 //        }
-//        
+//
 //        ABMultiValueRef ps = ABRecordCopyValue(ref, kABPersonPhoneProperty);
 //        CFIndex count = ABMultiValueGetCount (ps);
 //        for (int i = 0; i < count; i++) {
 //            CFStringRef phone = ABMultiValueCopyValueAtIndex (ps, i);
 //            [contactsDictionary setObject:[NSString stringWithFormat:@"%@ %@ %@", firstNameStr, lastNameStr, suffixStr] forKey:[self formatPhone:((NSString *) phone)]];
-//            
+//
 //            if (phone) {
 //                CFRelease(phone);
 //            }
 //        }
-//        
+//
 //        if (firstName) {
 //            CFRelease(firstName);
 //        }
@@ -734,14 +781,14 @@ static HKMDiscoverer *_agent;
 //        CFRelease(allPeople);
 //    }
 //    double end = [[NSDate date] timeIntervalSince1970];
-//    double difference = end - start;    
-//    
+//    double difference = end - start;
+//
 //    NSLog(@"buildAddressBookDictionary - Time elapsed %f", difference);
 //}
 
 // Update lead with info from address book
 - (void) updateContactDetails:(HKMLead *)intoLead {
-    NSNumber *contactId = [contactsDictionary objectForKey:intoLead.phone]; 
+    NSNumber *contactId = [contactsDictionary objectForKey:intoLead.phone];
     if (!contactId) {
         NSLog(@"updateContactDetails - contact[%@] not found in dictionary", intoLead.phone);
         return;
@@ -787,7 +834,7 @@ static HKMDiscoverer *_agent;
         if ( &ABPersonCopyImageDataWithFormat != nil ) {
             // iOS >= 4.1
             intoLead.image = [UIImage imageWithData:(NSData *)ABPersonCopyImageDataWithFormat(person, kABPersonImageFormatThumbnail)];
-        } else 
+        } else
             // iOS < 4.1
             intoLead.image = [UIImage imageWithData:(NSData *)ABPersonCopyImageData(person)];
     }
@@ -942,6 +989,24 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
     return h;
 }
 
+- (NSString *)getDeviceInfoJson {
+    NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:16];
+    [dic setObject:@"Apple" forKey:@"manufacturer"];
+    [dic setObject:@"Apple" forKey:@"brand"];
+    [dic setObject:[[UIDevice currentDevice] platformString] forKey:@"product"];
+    [dic setObject:@"ios" forKey:@"os"];
+    [dic setObject:[[UIDevice currentDevice] systemVersion] forKey:@"osVersion"];
+    [dic setObject:[[UIDevice currentDevice] platform] forKey:@"device"];
+    [dic setObject:[[UIDevice currentDevice] hwmodel] forKey:@"model"];
+    
+    // create json for phone and name based on phones
+    HKMSBJSON *jsonWriter = [[HKMSBJSON new] autorelease];
+    jsonWriter.humanReadable = YES;
+    NSString *jsonStr = [jsonWriter stringWithObject:dic];
+    NSLog(@"getDeviceInfoJson --> %@", jsonStr);
+    
+    return jsonStr;
+}
 
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
     
@@ -1012,6 +1077,9 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
     if (connection == newInstallConnection) {
         [newInstallData setLength:0];
     }
+    if (connection == claimRewardConnection) {
+        [claimRewardData setLength:0];
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
@@ -1044,6 +1112,9 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
     }
     if (connection == newInstallConnection) {
         [newInstallData appendData:data];
+    }
+    if (connection == claimRewardConnection) {
+        [claimRewardData appendData:data];
     }
 }
 
@@ -1098,6 +1169,11 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
         [newInstallData release];
         [newInstallConnection release];
         newInstallConnection = nil;
+    }
+    if (connection == claimRewardConnection) {
+        [claimRewardData release];
+        [claimRewardConnection release];
+        claimRewardConnection = nil;
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_NETWORK_ERROR object:nil];
 }
@@ -1159,18 +1235,28 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
         NSDictionary *resp = [jsonReader objectWithString:dataStr];
         if ([[resp objectForKey:@"status"] intValue] == 1000) {
             NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+            NSDate *now = [NSDate date];
             if (standardUserDefaults) {
                 installCode = [[resp objectForKey:@"installCode"] retain];
                 [standardUserDefaults setObject:installCode forKey:@"installCode"];
                 
                 // save the addressbook cache upon success
                 [standardUserDefaults setObject:addressbook forKey:@"HOOKADDRESSBOOK"];
+                
+                // save last discover date
+                [standardUserDefaults setObject:now forKey:@"lastDiscoverDate"];
+                
                 [standardUserDefaults synchronize];
             }
             
             NSLog(@"installCode is %@", installCode);
             
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_DISCOVER_COMPLETE object:nil];
+            
+            // update lastDiscoverDate to current date
+            if (lastDiscoverDate != nil)
+                [lastDiscoverDate release];
+            lastDiscoverDate = [now retain];
         } else {
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_DISCOVER_FAILED object:nil];
         }
@@ -1375,6 +1461,26 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
         [newInstallConnection release];
         newInstallConnection = nil;
     }
+    
+    if (connection == claimRewardConnection) {
+        NSString *dataStr = [[[NSString alloc] initWithData:claimRewardData encoding:NSUTF8StringEncoding] autorelease];
+        NSLog (@"claimReward data is %@", dataStr);
+        [claimRewardData release];
+        
+        HKMSBJSON *jsonReader = [[HKMSBJSON new] autorelease];
+        NSDictionary *resp = [jsonReader objectWithString:dataStr];
+        if ([[resp objectForKey:@"status"] intValue] == 1600) {
+            verifyMessage = [[resp objectForKey:@"verifyMessage"] retain];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_CLAIM_REWARD_PENDING_SMS_VERIFICATION object:[resp objectForKey:@"status"]];
+            [self createVerificationSms];
+        } else if ([[resp objectForKey:@"status"] intValue] == 1000) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIF_HOOK_CLAIM_REWARD_COMPLETE object:[resp objectForKey:@"status"]];
+        }
+        
+        [claimRewardConnection release];
+        claimRewardConnection = nil;
+    }
+    
 }
 
 
@@ -1388,6 +1494,8 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
     _agent.server = @"https://age.hookmobile.com";
     _agent.SMSDest = @"3025175040";
     _agent.appKey = ak;
+    
+    [_agent newInstall];
     
     return;
 }

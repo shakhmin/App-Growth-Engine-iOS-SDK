@@ -2,7 +2,7 @@
 #import <MessageUI/MessageUI.h>
 #import "HKMLead.h"
 
-#define SDKVERSION @"IOS/1.1"
+#define SDKVERSION @"IOS/1.2"
 #define MAX_ADDRESSBOOK_UPLOAD_SIZE 2000
 
 // SMS Verification notification
@@ -34,6 +34,11 @@
 #define NOTIF_HOOK_QUERY_INSTALLS_COMPLETE @"HookQueryInstallsComplete"
 #define NOTIF_HOOK_QUERY_INSTALLS_FAILED @"HookQueryInstallsFailed"
 
+// Claim reward notification
+#define NOTIF_HOOK_CLAIM_REWARD_COMPLETE @"HookClaimRewardComplete"
+#define NOTIF_HOOK_CLAIM_REWARD_PENDING_SMS_VERIFICATION @"HookClaimRewardPendingSmsVerification"
+#define NOTIF_HOOK_CLAIM_REWARD_FAILED @"HookClaimRewardFailed"
+
 // other notifications
 #define NOTIF_HOOK_DOWNLOAD_SHARE_TEMPLATE_COMPLETE @"HookDownloadShareTemplatesComplete"
 #define NOTIF_HOOK_ADDRESSBOOK_CACHE_EXPIRED @"HookAddressbookCacheExpired"
@@ -57,6 +62,7 @@
     NSMutableData *discoverData;
     NSURLConnection *discoverConnection;
     NSString *addressbook;
+    NSDate *lastDiscoverDate;
     
     NSMutableData *queryOrderData;
     NSURLConnection *queryOrderConnection;
@@ -99,6 +105,9 @@
     NSMutableData *newInstallData;
     NSURLConnection *newInstallConnection;
     
+    NSMutableData *claimRewardData;
+    NSURLConnection *claimRewardConnection;
+    
     // Need to restore full screen after the SMS verification screen is displayed
     BOOL fullScreen;
     
@@ -132,9 +141,11 @@
 + (void) activate:(NSString *)ak;
 + (void) retire;
 
+- (BOOL) newInstall;
 - (BOOL) isRegistered;
 - (BOOL) verifyDevice:(UIViewController *)vc forceSms:(BOOL) force userName:(NSString *) userName;
 - (BOOL) queryVerifiedStatus;
+- (NSDate *) lastDiscoverDate;
 - (BOOL) discover:(int) limit;
 - (BOOL) discoverWithoutVzw;
 - (BOOL) discoverSelected:(NSMutableArray *)phones;
@@ -144,8 +155,7 @@
 - (BOOL) updateReferral:(BOOL) sent;
 - (BOOL) queryInstalls:(NSString *)direction;
 - (BOOL) queryReferral;
-
-- (BOOL) newInstall;
+- (BOOL) claimReward: (UIViewController *)vc;
 
 - (NSString *) getAddressbook:(int) limit;
 - (NSString *) getAddressbookHash:(int) limit;
