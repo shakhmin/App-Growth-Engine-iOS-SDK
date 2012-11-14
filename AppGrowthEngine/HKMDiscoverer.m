@@ -996,8 +996,8 @@ unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed ) {
     [dic setObject:[[UIDevice currentDevice] platformString] forKey:@"product"];
     [dic setObject:@"ios" forKey:@"os"];
     [dic setObject:[[UIDevice currentDevice] systemVersion] forKey:@"osVersion"];
-    [dic setObject:[[UIDevice currentDevice] platform] forKey:@"device"];
-    [dic setObject:[[UIDevice currentDevice] hwmodel] forKey:@"model"];
+    [dic setObject:[[UIDevice currentDevice] platform] forKey:@"model"];
+    [dic setObject:[[UIDevice currentDevice] hwmodel] forKey:@"device"];
     
     // create json for phone and name based on phones
     HKMSBJSON *jsonWriter = [[HKMSBJSON new] autorelease];
