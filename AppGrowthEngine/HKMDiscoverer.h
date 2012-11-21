@@ -46,19 +46,23 @@
 
 @interface HKMDiscoverer : NSObject <MFMessageComposeViewControllerDelegate> {
     
-    NSString *server;
-    NSString *SMSDest;
+    NSString *_server;
+    NSString *_SMSDest;
+    NSString *_appKey;
+    NSString *_installCode;
+    BOOL _queryStatus;
+    NSMutableArray *_leads;
+    NSString *_errorMessage;
+    NSMutableArray *_installs;
+    NSMutableArray *_referrals;
+    NSString *_fbTemplate;
+    NSString *_emailTemplate;
+    NSString *_smsTemplate;
+    NSString *_twitterTemplate;
+    NSString *_referralMessage;
+    BOOL _skipVerificationSms;  // Skip the verification SMS box altogether
     
-    NSString *appKey;
-    // BOOL runQueryAfterOrder;
-    
-    // NSString *cudid;
-    NSString *installCode;
-    
-    BOOL queryStatus;
-    
-    NSString *errorMessage;
-    
+   	NSOperationQueue *queue;
     NSMutableData *discoverData;
     NSURLConnection *discoverConnection;
     NSString *addressbook;
@@ -66,13 +70,11 @@
     
     NSMutableData *queryOrderData;
     NSURLConnection *queryOrderConnection;
-    NSMutableArray *leads;
     
     NSMutableData *verifyDeviceData;
     NSURLConnection *verifyDeviceConnection;
     UIViewController *viewController;
     BOOL forceVerificationSms; // The verification SMS box cannot be dismissed
-    BOOL skipVerificationSms;  // Skip the verification SMS box altogether
     NSString *verifyMessage;
     
     NSMutableData *verificationData;
@@ -80,15 +82,10 @@
     
     NSMutableData *shareTemplateData;
     NSURLConnection *shareTemplateConnection;
-    NSString *fbTemplate;
-    NSString *emailTemplate;
-    NSString *smsTemplate;
-    NSString *twitterTemplate;
     
     NSMutableData *newReferralData;
     NSURLConnection *newReferralConnection;
     int referralId;
-    NSString *referralMessage;
     NSString *invitationUrl;
     
     NSMutableData *updateReferralData;
@@ -96,11 +93,9 @@
     
     NSMutableData *queryInstallsData;
     NSURLConnection *queryInstallsConnection;
-    NSMutableArray *installs;
     
     NSMutableData *queryReferralData;
     NSURLConnection *queryReferralConnection;
-    NSMutableArray *referrals;
     
     NSMutableData *newInstallData;
     NSURLConnection *newInstallConnection;
@@ -120,7 +115,6 @@
 @property (nonatomic, retain) NSString *server;
 @property (nonatomic, retain) NSString *SMSDest;
 @property (nonatomic, retain) NSString *appKey;
-// @property (nonatomic) BOOL runQueryAfterOrder;
 @property (nonatomic) BOOL queryStatus;
 @property (nonatomic, retain) NSString *errorMessage;
 @property (nonatomic, retain) NSMutableArray *leads;

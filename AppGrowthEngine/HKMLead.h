@@ -2,15 +2,15 @@
 
 @interface HKMLead : NSObject {
 	
-	NSString *phone;
-	NSString *osType;
-    NSString *name;
-    UIImage *image;
+	NSString *_phone;
+	NSString *_osType;
+    NSString *_name;
+    UIImage *_image;
     
-    int invitationCount;
-    NSDate *lastInvitationSent;
+    int _invitationCount;
+    NSDate *_lastInvitationSent;
     
-    BOOL selected;
+    BOOL _selected;
     
 }
 
@@ -24,5 +24,5 @@
 @property (nonatomic) BOOL selected;
 
 - (id) init;
-
+- (void) dealloc;
 @end;
