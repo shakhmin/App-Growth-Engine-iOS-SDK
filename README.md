@@ -118,14 +118,13 @@ The AGE platform enables you to track the performance of your referrals via cust
 </code></pre>
 
 
-The <code>phones</code> parameter is an <code>NSArray</code> that contains a list of phone numbers you wish to send referrals to. It is typically a list selected from the leads returned by <code></code>[[HKMDiscoverer agent].leads. The <code>withMessage</code> parameter takes a message template with <code>%link%</code> referring to customized referral URL from the AGE platform. The <code>useVirtualNumber</code> option specifies whether AGE should send out the referrals via its own virtual number. If not, the application itself is responsible for letting the user send out the referrals via their own devices.
+The <code>phones</code> parameter is an <code>NSArray</code> that contains a list of phone numbers you wish to send referrals to. It is typically a list selected from the leads returned by <code>[[HKMDiscoverer agent].leads</code>. The <code>withMessage</code> parameter takes a message template with <code>%link%</code> referring to customized referral URL from the AGE platform. The <code>useVirtualNumber</code> option specifies whether AGE should send out the referrals via its own virtual number. If not, the application itself is responsible for letting the user send out the referrals via their own devices.
 
 <img src="http://hookmobile.com/images/screenshot/ios-sample-send.png"/>
 
 Once the AGE server returns, the SDK raises the <code>HookNewReferralComplete</code> notification and you can retrieve the referral message from <code>[HKMDiscoverer agent].referralMessage</code>. Then, you can prompt the user of your app to send that referral message via SMS. NOTE: if your device is not an SMS device (e.g., a WIFI iPad or an iPod Touch), the AGE server will send out the referral message automatically, and hence removing the need for the app to retrieve and send the <code>[HKMDiscoverer agent].referralMessage</code>.
 
-<pre><code>
-- (<FONT COLOR="FF00FF">void</FONT>)viewDidLoad {
+<pre><code>- (<FONT COLOR="FF00FF">void</FONT>)viewDidLoad {
     ... ...
     [[<a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Classes/NSNotificationCenter_Class/Reference/Reference.html">NSNotificationCenter</a> defaultCenter] addObserver:self selector:<FONT COLOR="FF00FF">@selector</Font>(showReferralMessage) name:<FONT COLOR="B22222">@"HookNewReferralComplete"</font> object:<FONT COLOR="FF00FF">nil</font>];
 }
@@ -147,8 +146,7 @@ Once the AGE server returns, the SDK raises the <code>HookNewReferralComplete</c
 
 Optionally, you could also tell AGE that the user have sent the invitation messages. That helps AGE better correlate the installation statistics for you.
 
-<pre><code>
-- (<FONT COLOR="FF00FF">void</FONT>)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
+<pre><code>- (<FONT COLOR="FF00FF">void</FONT>)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
    
     [self dismissModalViewControllerAnimated:<FONT COLOR="FF00FF">YES</font>];
    
@@ -172,8 +170,7 @@ The AGE API also allows you to track all referrals you have sent from any device
 
 Once the referral data is retrieved from the AGE server, the SDK generates a notification event <code>HookQueryReferralComplete</code>. The referral data is stored in the <code>[HKMDiscoverer agent].referrals</code> array with each <code>HKMReferralRecord</code> element in the array representing a referral.
 
-<pre><code>
-<FONT COLOR="FF00FF">@interface</font> HKMReferralRecord : <a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSObject_Class/Reference/Reference.html">NSObject</a> {
+<pre><code><FONT COLOR="FF00FF">@interface</font> HKMReferralRecord : <a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSObject_Class/Reference/Reference.html">NSObject</a> {
    
     <FONT COLOR="FF00FF">int</font> totalClickThrough;
     <FONT COLOR="FF00FF">int</font> totalInvitee;
@@ -194,7 +191,7 @@ The AGE platform allows you to find friends who also install the same app from y
 
 Below is an example:
 
-<code>[[HKMDiscoverer agent] queryInstalls:@"FORWARD"];</code>
+<code>[[HKMDiscoverer agent] queryInstalls:@"FORWARD"];</code><br>
 Once the SDK receives the friends who have the same app, it generates a <code>HookQueryInstallsComplete</code> notification and saves the results in an array of <code>HKMLead</code> objects in <code>[HKMDiscoverer agent].installs</code>.
 
 <img src="http://hookmobile.com/images/screenshot/ios-sample-track.png"/>
