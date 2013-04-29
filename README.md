@@ -196,3 +196,5 @@ Once the SDK receives the friends who have the same app, it generates a <code>Ho
 
 <img src="http://hookmobile.com/images/screenshot/ios-sample-track.png"/>
 <img src="http://hookmobile.com/images/screenshot/ios-sample-installs.png"/>
+
+You can also find this tutorial on our <a href="http://hookmobile.com/ios-tutorial.html">website</a>.
