@@ -163,3 +163,23 @@ Optionally, you could also tell AGE that the user have sent the invitation messa
     [self.navigationController popViewControllerAnimated:YES];
 }
 </code></pre>
+
+# Tracking Referrals and Installs
+
+<h3>Step 1: Track Your Referrals</h3>
+
+The AGE API also allows you to track all referrals you have sent from any device, and get the referrals' click throughs. This makes it possible for you to track referral performance of individual devices, and potentially reward the users who generate the most referral click through.
+
+<code>[[HKMDiscoverer agent] queryReferral];</code>
+
+Once the referral data is retrieved from the AGE server, the SDK generates a notification event <code>HookQueryReferralComplete</code>. The referral data is stored in the <code>[HKMDiscoverer agent].referrals</code> array with each <code>HKMReferralRecord</code> element in the array representing a referral.
+
+<pre><code>
+<FONT COLOR="FF00FF">@interface</font> HKMReferralRecord : <a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSObject_Class/Reference/Reference.html">NSObject</a> {
+   
+    <FONT COLOR="FF00FF">int</font> totalClickThrough;
+    <FONT COLOR="FF00FF">int</font> totalInvitee;
+    <a href=" https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSDate_Class/Reference/Reference.html">NSDate</a> *invitationDate;
+   
+}
+</code></pre>
