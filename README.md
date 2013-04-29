@@ -27,9 +27,7 @@ To install the SDK, copy all files under AppGrowthEngine/SDKClasses to your XCod
 
 Once you have created an application, you can start the SDK in your application delegate with the app key you have registered. You can also stop the SDK when you exit the application.
 
-<pre><code>
-
-- (<FONT COLOR="FF00FF">BOOL</FONT>) application:(UIApplication *)application didFinishLaunchingWithOptions:(<a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Classes/NSDictionary_Class/Reference/Reference.html">NSDictionary</a> *)launchOptions {
+<pre><code>- (<FONT COLOR="FF00FF">BOOL</FONT>) application:(UIApplication *)application didFinishLaunchingWithOptions:(<a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Classes/NSDictionary_Class/Reference/Reference.html">NSDictionary</a> *)launchOptions {
    
     [HKMDiscoverer activate: <FONT COLOR="B22222">@"Your-App-Key"</FONT>];
     // ... ...    
@@ -58,8 +56,7 @@ The SMS message screen is displayed as a modal view controller on top of the <co
 
 Once the user sends out the confirmation, you can query their confirmation status via the following call. Note that the call returns immediately and performs the confirmation in the background. Your application code needs to listen for <code>HookDeviceVerified</code> or <code>HookDeviceNotVerified</code> in <code>NSNotificationCenter</code> in order to receive the confirmation results.
 
-<pre><code>
-[[HKMDiscoverer agent] queryVerifiedStatus];
+<pre><code>[[HKMDiscoverer agent] queryVerifiedStatus];
  
 ... ...
  
