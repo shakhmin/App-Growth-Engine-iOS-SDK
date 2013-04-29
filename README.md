@@ -4,14 +4,14 @@ Hook Mobile has developed a unique and powerful tool for mobile app developers t
 
 
 # Getting Started
-Step 1: Register your iOS App with Hook Mobile
+<h3>Step 1: Register your iOS App with Hook Mobile</h3>
 
 To use the SDK, you first need to <a href="signup.html">create an account</a> and <a href="add-app.html">register your application</a> with Hook Mobile. You will need your app key when setting up your app in Xcode.
 
 <img src="http://hookmobile.com/images/screenshot/create-app.png" alt="Create App" />
 
 
-Step 2: Install the iOS SDK
+<h3>Step 2: Install the iOS SDK</h3>
 
 Before you begin development with the AGE iOS SDK, you will need to install the iOS development tools and download the AGE SDK.
 
@@ -23,7 +23,7 @@ To install the SDK, copy all files under AppGrowthEngine/SDKClasses to your XCod
 * AddressBook.framework
 * MessageUI.framework
 
-Step 3: Use the iOS SDK
+<h3>Step 3: Use the iOS SDK</h3>
 
 Once you have created an application, you can start the SDK in your application delegate with the app key you have registered. You can also stop the SDK when you exit the application.
 
@@ -44,9 +44,31 @@ The usage of the SDK is illustrated in the sample application. Just open the XCo
 
 <img src="http://hookmobile.com/images/screenshot/ios-sample-app.png"/>
 
+# Device Verfication
 
-See our <a href="http://hookmobile.com/ios-tutorial.html" target="_blank">iOS SDK Getting Started Guide</a>
+<h3>Step 1: Send Confirmation Code</h3>
 
+By calling the following SDK method, you can create an in-app SMS message box for the app user to send an confirmation message so that you can capture their phone number.
+
+<code>[[HKMDiscoverer agent] verifyDevice:myViewController forceSms:<FONT COLOR="FF00FF">NO</FONT> userName:<FONT COLOR="B22222">@"John Doe"</FONT>];</code>
+
+The SMS message screen is displayed as a modal view controller on top of the <code>myViewController</code> screen. The <code>forceSms</code> parameter indicates whether the user can cancel the SMS screen without sending the confirmation message. If it is set to <code>YES</code>, the user would have to send out the confirmation. The <code>userName</code> parameter takes the user's name. You can leave this to <code>nil</code> if you have not collected name from your user.
+
+<h3>Step 2: Query Status</h3>
+
+Once the user sends out the confirmation, you can query their confirmation status via the following call. Note that the call returns immediately and performs the confirmation in the background. Your application code needs to listen for <code>HookDeviceVerified</code> or <code>HookDeviceNotVerified</code> in <code>NSNotificationCenter</code> in order to receive the confirmation results.
+
+<pre><code>
+[[HKMDiscoverer agent] queryVerifiedStatus];
+ 
+... ...
+ 
+- (<FONT COLOR="FF00FF">void</FONT>)viewDidLoad {
+    ... ...
+    [[<a href="http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSNotificationCenter_Class/">NSNotificationCenter</a> defaultCenter] addObserver:self selector:<FONT COLOR="FF00FF">@selector</font>(verificationStatusYes) name:<FONT COLOR="B22222">@"HookDeviceVerified"</font> object:<FONT COLOR="FF00FF">nil</font>];
+    [[<a href="http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSNotificationCenter_Class/">NSNotificationCenter</a> defaultCenter] addObserver:self selector:<FONT COLOR="FF00FF">@selector</font>(verificationStatusYes) name:<FONT COLOR="B22222">@"HookDeviceNotVerified"</font> object:<FONT COLOR="FF00FF">nil</font>];
+}
+</code></pre>
 
 # Sample Application
 
