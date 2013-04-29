@@ -107,6 +107,7 @@ It takes Hook Mobile seconds to determine the devices for each of the phone numb
 
 Now, you can prompt your user to send personal invites to their friends in <code>[[HKMDiscoverer agent].leads</code> to maximize the chance of referral success!
 
+
 <h3>Step 3: Send Invitations</h3>
 
 The AGE platform enables you to track the performance of your referrals via customized URLs that you can use in invite messages. The <code>newReferral</code> method creates a referral message with the custom URL.
@@ -183,3 +184,21 @@ Once the referral data is retrieved from the AGE server, the SDK generates a not
    
 }
 </code></pre>
+
+<h3>Step 2: Track Friends Who Install The Same App</h3>
+
+The AGE platform allows you to find friends who also install the same app from your addressbook. To query for friends installs in your addressbook, you must call the <code>discover</code> method first. And then, you can call the <code>queryInstalls</code>. This method takes a string parameter that indicates how the searching and matching of addressbook should be done.
+
+ *<code>FORWARD</code> - Find contacts within your address book who has the same app.
+
+ *<code>BACKWARD</code> - Find other app users who has your phone number in their address book. When to use this? When the app wants to suggest a long lost friend who has your contact, but not vice versa.
+
+ *<code>MUTUAL</code> - Find contacts within your address book who has the same app and who also has your contact in his/her address book. This query may be useful for engaging a friend to play in multi-player game who already plays the game.
+
+Below is an example:
+
+<code>[[HKMDiscoverer agent] queryInstalls:@"FORWARD"];</code>
+Once the SDK receives the friends who have the same app, it generates a <code>HookQueryInstallsComplete</code> notification and saves the results in an array of <code>HKMLead</code> objects in <code>[HKMDiscoverer agent].installs</code>.
+
+<img src="http://hookmobile.com/images/screenshot/ios-sample-track.png"/>
+<img src="http://hookmobile.com/images/screenshot/ios-sample-installs.png"/>
