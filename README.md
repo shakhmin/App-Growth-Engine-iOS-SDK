@@ -97,7 +97,7 @@ It takes Hook Mobile seconds to determine the devices for each of the phone numb
  
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(<a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Classes/NSIndexPath_Class/Reference/Reference.html">NSIndexPath</a> *)indexPath {
    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<FONT COLOR="B22222">@"Leads"</Font];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<FONT COLOR="B22222">@"Leads"</Font>];
     ... ...
     cell.textLabel.text = ((Lead *)[[HKMDiscoverer agent].leads objectAtIndex:indexPath.row]).phone;
     cell.detailTextLabel.text = ((Lead *)[[HKMDiscoverer agent].leads objectAtIndex:indexPath.row]).osType;
@@ -113,8 +113,13 @@ The AGE platform enables you to track the performance of your referrals via cust
 
 <pre><code>
 [[HKMDiscoverer agent] newReferral:phones
-    withMessage:@"I thought you might be interested in this app 'AGE SDK', check it out here %link% "
-    useVirtualNumber:YES
+    withMessage:<FONT COLOR="B22222">@"I thought you might be interested in this app 'AGE SDK', check it out here %link% "</font>
+    useVirtualNumber:<FONT COLOR="FF00FF">YES</font>
 ];
 
 </code></pre>
+
+
+The <code>phones</code> parameter is an <code>NSArray</code> that contains a list of phone numbers you wish to send referrals to. It is typically a list selected from the leads returned by <code></code>[[HKMDiscoverer agent].leads. The <code>withMessage</code> parameter takes a message template with <code>%link%</code> referring to customized referral URL from the AGE platform. The <code>useVirtualNumber</code> option specifies whether AGE should send out the referrals via its own virtual number. If not, the application itself is responsible for letting the user send out the referrals via their own devices.
+
+<img src="http://hookmobile.com/images/screenshot/ios-sample-send.png"/>
