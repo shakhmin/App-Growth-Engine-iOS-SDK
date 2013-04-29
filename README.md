@@ -88,19 +88,33 @@ It takes Hook Mobile seconds to determine the devices for each of the phone numb
  
 - (<FONT COLOR="FF00FF">void</FONT>)viewDidLoad {
     ... ...
-    [[<a href="http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSNotificationCenter_Class/">NSNotificationCenter</a> defaultCenter] addObserver:self selector:<FONT COLOR="FF00FF">@selector</font>(queryComplete) name:<FONT COLOR="B22222">@"HookQueryOrderComplete"</font> object:<FONT COLOR="FF00FF">nil</font>];
+    [[<a href="http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSNotificationCenter_Class/">NSNotificationCenter</a> defaultCenter] addObserver:self selector:<FONT COLOR="FF00FF">@selector</Font>(queryComplete) name:<FONT COLOR="B22222">@"HookQueryOrderComplete"</Font> object:<FONT COLOR="FF00FF">nil</Font>];
 }
  
 - (<FONT COLOR="FF00FF">void</FONT>) queryComplete {
-    [self.navigationController pushViewController:leadsController animated:<FONT COLOR="FF00FF">YES</font>];
+    [self.navigationController pushViewController:leadsController animated:<FONT COLOR="FF00FF">YES</Font>];
 }
  
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(<a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Classes/NSIndexPath_Class/Reference/Reference.html">NSIndexPath</a> *)indexPath {
    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<FONT COLOR="B22222">@"Leads"</font];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<FONT COLOR="B22222">@"Leads"</Font];
     ... ...
     cell.textLabel.text = ((Lead *)[[HKMDiscoverer agent].leads objectAtIndex:indexPath.row]).phone;
     cell.detailTextLabel.text = ((Lead *)[[HKMDiscoverer agent].leads objectAtIndex:indexPath.row]).osType;
-    <FONT COLOR="FF00FF">return</font> cell;
+    <FONT COLOR="FF00FF">return</Font> cell;
 }
+</code></pre>
+
+Now, you can prompt your user to send personal invites to their friends in <code>[[HKMDiscoverer agent].leads</code> to maximize the chance of referral success!
+
+<h3>Step 3: Send Invitations</h3>
+
+The AGE platform enables you to track the performance of your referrals via customized URLs that you can use in invite messages. The <code>newReferral</code> method creates a referral message with the custom URL.
+
+<pre><code>
+[[HKMDiscoverer agent] newReferral:phones
+    withMessage:@"I thought you might be interested in this app 'AGE SDK', check it out here %link% "
+    useVirtualNumber:YES
+];
+
 </code></pre>
