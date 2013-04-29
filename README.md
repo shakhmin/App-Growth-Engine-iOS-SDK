@@ -29,7 +29,7 @@ Once you have created an application, you can start the SDK in your application 
 
 <pre><code>
 
-- (<FONT COLOR="FF00FF">BOOL</FONT>) application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (<FONT COLOR="FF00FF">BOOL</FONT>) application:(UIApplication *)application didFinishLaunchingWithOptions:(<a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Classes/NSDictionary_Class/Reference/Reference.html">NSDictionary</a> *)launchOptions {
    
     [HKMDiscoverer activate: <FONT COLOR="B22222">@"Your-App-Key"</FONT>];
     // ... ...    
@@ -70,6 +70,37 @@ Once the user sends out the confirmation, you can query their confirmation statu
 }
 </code></pre>
 
-# Sample Application
+# Smart Invitation
 
-This library includes a sample application to guide you in development.
+<h3>Step 1: Discover</h3>
+
+To get a list of contacts from user's addressbook that are most likely to install your app, you need to execute a discovery call like this first. The call returns immediately, and processes the discovery in background.
+
+<code>[[HKMDiscoverer agent] discover];</code>
+
+<img src="http://hookmobile.com/images/screenshot/ios-sample-leads.png"/>
+
+<h3>Step 2: Get Recommended Invites</h3>
+It takes Hook Mobile seconds to determine the devices for each of the phone numbers, and come up with an optimized list. Once complete issue the following call. Again, the call returns immediately, and you should listen for the <code>HookQueryOrderComplete</code> event. When the <code>HookQueryOrderComplete</code> event is received, you can query a list of Leads, which contains phone numbers and device types.
+
+<pre><code>
+[[HKMDiscoverer agent] queryLeads];
+ 
+- (<FONT COLOR="FF00FF">void</FONT>)viewDidLoad {
+    ... ...
+    [[<a href="http://developer.apple.com/documentation/Cocoa/Reference/Foundation/Classes/NSNotificationCenter_Class/">NSNotificationCenter</a> defaultCenter] addObserver:self selector:<FONT COLOR="FF00FF">@selector</font>(queryComplete) name:<FONT COLOR="B22222">@"HookQueryOrderComplete"</font> object:<FONT COLOR="FF00FF">nil</font>];
+}
+ 
+- (<FONT COLOR="FF00FF">void</FONT>) queryComplete {
+    [self.navigationController pushViewController:leadsController animated:<FONT COLOR="FF00FF">YES</font>];
+}
+ 
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(<a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Classes/NSIndexPath_Class/Reference/Reference.html">NSIndexPath</a> *)indexPath {
+   
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<FONT COLOR="B22222">@"Leads"</font];
+    ... ...
+    cell.textLabel.text = ((Lead *)[[HKMDiscoverer agent].leads objectAtIndex:indexPath.row]).phone;
+    cell.detailTextLabel.text = ((Lead *)[[HKMDiscoverer agent].leads objectAtIndex:indexPath.row]).osType;
+    <FONT COLOR="FF00FF">return</font> cell;
+}
+</code></pre>
