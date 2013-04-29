@@ -23,6 +23,27 @@ To install the SDK, copy all files under AppGrowthEngine/SDKClasses to your XCod
 * AddressBook.framework
 * MessageUI.framework
 
+Step 3: Use the iOS SDK
+
+Once you have created an application, you can start the SDK in your application delegate with the app key you have registered. You can also stop the SDK when you exit the application.
+
+<pre><code>
+
+- (<FONT COLOR="FF00FF">BOOL</FONT>) application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+   
+    [HKMDiscoverer activate: <FONT COLOR="B22222">@"Your-App-Key"</FONT>];
+    // ... ...    
+}
+ 
+- (<FONT COLOR="FF00FF">void</FONT>) applicationWillTerminate:(UIApplication *)application {
+    [HKMDiscoverer retire];
+}
+</code></pre>
+
+The usage of the SDK is illustrated in the sample application. Just open the XCode project, fill in the app key in the <code>SampleAppDelegate</code> class, and run the project (ideally in a physical iPhone attached to the dev computer). The buttons in the sample demonstrate key actions you can perform with the SDK.
+
+<img src="http://hookmobile.com/images/screenshot/ios-sample-app.png"/>
+
 
 See our <a href="http://hookmobile.com/ios-tutorial.html" target="_blank">iOS SDK Getting Started Guide</a>
 
