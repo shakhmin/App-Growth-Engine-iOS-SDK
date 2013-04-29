@@ -123,3 +123,43 @@ The AGE platform enables you to track the performance of your referrals via cust
 The <code>phones</code> parameter is an <code>NSArray</code> that contains a list of phone numbers you wish to send referrals to. It is typically a list selected from the leads returned by <code></code>[[HKMDiscoverer agent].leads. The <code>withMessage</code> parameter takes a message template with <code>%link%</code> referring to customized referral URL from the AGE platform. The <code>useVirtualNumber</code> option specifies whether AGE should send out the referrals via its own virtual number. If not, the application itself is responsible for letting the user send out the referrals via their own devices.
 
 <img src="http://hookmobile.com/images/screenshot/ios-sample-send.png"/>
+
+Once the AGE server returns, the SDK raises the <code>HookNewReferralComplete</code> notification and you can retrieve the referral message from <code>[HKMDiscoverer agent].referralMessage</code>. Then, you can prompt the user of your app to send that referral message via SMS. NOTE: if your device is not an SMS device (e.g., a WIFI iPad or an iPod Touch), the AGE server will send out the referral message automatically, and hence removing the need for the app to retrieve and send the <code>[HKMDiscoverer agent].referralMessage</code>.
+
+<pre><code>
+- (<FONT COLOR="FF00FF">void</FONT>)viewDidLoad {
+    ... ...
+    [[<a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Classes/NSNotificationCenter_Class/Reference/Reference.html">NSNotificationCenter</a> defaultCenter] addObserver:self selector:<FONT COLOR="FF00FF">@selector</Font>(showReferralMessage) name:<FONT COLOR="B22222">@"HookNewReferralComplete"</font> object:<FONT COLOR="FF00FF">nil</font>];
+}
+ 
+ 
+- (<FONT COLOR="FF00FF">void</FONT>) showReferralMessage {
+    ... ...
+    <FONT COLOR="FF00FF">if</font> ([MFMessageComposeViewController canSendText]) {
+        MFMessageComposeViewController *controller = [[[MFMessageComposeViewController alloc] init] autorelease];
+        controller.body = [HKMDiscoverer agent].referralMessage;
+        controller.recipients = phones;
+        controller.messageComposeDelegate = self;
+        [self presentModalViewController:controller animated:<FONT COLOR="FF00FF">YES</font>];
+    } <FONT COLOR="FF00FF">else</font> {
+        [self.navigationController popViewControllerAnimated:<FONT COLOR="FF00FF">YES</font>];
+    }
+}
+</code></pre>
+
+Optionally, you could also tell AGE that the user have sent the invitation messages. That helps AGE better correlate the installation statistics for you.
+
+<pre><code>
+- (<FONT COLOR="FF00FF">void</FONT>)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
+   
+    [self dismissModalViewControllerAnimated:<FONT COLOR="FF00FF">YES</font>];
+   
+    <FONT COLOR="FF00FF">if</font> (result == MessageComposeResultCancelled) {
+        [[HKMDiscoverer agent] updateReferral:<FONT COLOR="FF00FF">NO</font>];
+    } <FONT COLOR="FF00FF">else</font> {
+        [[HKMDiscoverer agent] updateReferral:<FONT COLOR="FF00FF">YES</font>];
+    }
+   
+    [self.navigationController popViewControllerAnimated:YES];
+}
+</code></pre>
