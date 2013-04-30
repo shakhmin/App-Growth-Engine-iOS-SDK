@@ -1,4 +1,4 @@
-# App Growth Engine for iOS v1.0.1
+# App Growth Engine for iOS v1.4.0
 
 Hook Mobile has developed a unique and powerful tool for mobile app developers to market your app: App Growth Engine (AGE) SDK. This open source library allows you to integrate AGE into your iOS application.
 
@@ -196,5 +196,13 @@ Once the SDK receives the friends who have the same app, it generates a <code>Ho
 
 <img src="http://hookmobile.com/images/screenshot/ios-sample-track.png"/>
 <img src="http://hookmobile.com/images/screenshot/ios-sample-installs.png"/>
+
+<h3>Step 3: Track Event</h3>
+The AGE platform supports tracking of user activities within the app.  The tracking event is sent via HTTP postback to your server endpoint.  The postback specification is available upon request.
+
+Below is an example of <code>trackEventName:Value</code> message that sends an event name value pair:
+
+<code>[[HKMDiscoverer agent] trackEventName:@"testEvent" Value:@"Hello"];</code>
+
 
 You can also find this tutorial on our <a href="http://hookmobile.com/ios-tutorial.html">website</a>.
