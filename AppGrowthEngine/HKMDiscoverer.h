@@ -2,8 +2,11 @@
 #import <MessageUI/MessageUI.h>
 #import "HKMLead.h"
 
-#define SDKVERSION @"IOS/1.2"
-#define MAX_ADDRESSBOOK_UPLOAD_SIZE 2000
+#define SDKVERSION @"IOS/1.4"
+
+#define MAX_ADDRESSBOOK_UPLOAD_SIZE 1000
+#define AGE_SERVER @"https://age.hookmobile.com"
+#define DEFAULT_VIRTUAL_NUMBER @"3025175040"
 
 // SMS Verification notification
 #define NOTIF_HOOK_NOT_SMS_DEVICE @"HookNotSMSDevice"
@@ -39,101 +42,35 @@
 #define NOTIF_HOOK_CLAIM_REWARD_PENDING_SMS_VERIFICATION @"HookClaimRewardPendingSmsVerification"
 #define NOTIF_HOOK_CLAIM_REWARD_FAILED @"HookClaimRewardFailed"
 
+// Query phone number type notification
+#define NOTIF_HOOK_QUERY_PHONE_NUMBER_TYPE_COMPLETE @"HookQueryPhoneNumberTypeComplete"
+#define NOTIF_HOOK_QUERY_PHONE_NUMBER_TYPE_FAILED @"HookQueryPhoneNumberTypeFailed"
+
 // other notifications
 #define NOTIF_HOOK_DOWNLOAD_SHARE_TEMPLATE_COMPLETE @"HookDownloadShareTemplatesComplete"
 #define NOTIF_HOOK_ADDRESSBOOK_CACHE_EXPIRED @"HookAddressbookCacheExpired"
 #define NOTIF_HOOK_NETWORK_ERROR @"HookNetworkError"
 
-@interface HKMDiscoverer : NSObject <MFMessageComposeViewControllerDelegate> {
-    
-    NSString *_server;
-    NSString *_SMSDest;
-    NSString *_appKey;
-    NSString *_installCode;
-    BOOL _queryStatus;
-    NSMutableArray *_leads;
-    NSString *_errorMessage;
-    NSMutableArray *_installs;
-    NSMutableArray *_referrals;
-    NSString *_fbTemplate;
-    NSString *_emailTemplate;
-    NSString *_smsTemplate;
-    NSString *_twitterTemplate;
-    NSString *_referralMessage;
-    BOOL _skipVerificationSms;  // Skip the verification SMS box altogether
-    
-   	NSOperationQueue *queue;
-    NSMutableData *discoverData;
-    NSURLConnection *discoverConnection;
-    NSString *addressbook;
-    NSDate *lastDiscoverDate;
-    
-    NSMutableData *queryOrderData;
-    NSURLConnection *queryOrderConnection;
-    
-    NSMutableData *verifyDeviceData;
-    NSURLConnection *verifyDeviceConnection;
-    UIViewController *viewController;
-    BOOL forceVerificationSms; // The verification SMS box cannot be dismissed
-    NSString *verifyMessage;
-    
-    NSMutableData *verificationData;
-    NSURLConnection *verificationConnection;
-    
-    NSMutableData *shareTemplateData;
-    NSURLConnection *shareTemplateConnection;
-    
-    NSMutableData *newReferralData;
-    NSURLConnection *newReferralConnection;
-    int referralId;
-    NSString *invitationUrl;
-    
-    NSMutableData *updateReferralData;
-    NSURLConnection *updateReferralConnection;
-    
-    NSMutableData *queryInstallsData;
-    NSURLConnection *queryInstallsConnection;
-    
-    NSMutableData *queryReferralData;
-    NSURLConnection *queryReferralConnection;
-    
-    NSMutableData *newInstallData;
-    NSURLConnection *newInstallConnection;
-    
-    NSMutableData *claimRewardData;
-    NSURLConnection *claimRewardConnection;
-    
-    // Need to restore full screen after the SMS verification screen is displayed
-    BOOL fullScreen;
-    
-    NSMutableDictionary *contactsDictionary;
-    
-}
 
-@property (nonatomic, retain) NSString *installCode;
+@interface HKMDiscoverer : NSObject
 
-@property (nonatomic, retain) NSString *server;
-@property (nonatomic, retain) NSString *SMSDest;
-@property (nonatomic, retain) NSString *appKey;
-@property (nonatomic) BOOL queryStatus;
-@property (nonatomic, retain) NSString *errorMessage;
-@property (nonatomic, retain) NSMutableArray *leads;
-@property (nonatomic, retain) NSMutableArray *installs;
-@property (nonatomic, retain) NSMutableArray *referrals;
-
-@property (nonatomic, retain) NSString *fbTemplate;
-@property (nonatomic, retain) NSString *emailTemplate;
-@property (nonatomic, retain) NSString *smsTemplate;
-@property (nonatomic, retain) NSString *twitterTemplate;
-
-@property (nonatomic, retain) NSString *referralMessage;
-
-// Not commonly used
-@property (nonatomic) BOOL skipVerificationSms;
+@property (nonatomic, strong) NSString *installCode;
+@property (nonatomic, strong) NSMutableArray *leads;
+@property (nonatomic, strong) NSString *errorMessage;
+@property (nonatomic, strong) NSMutableArray *installs;
+@property (nonatomic, strong) NSMutableArray *referrals;
+@property (nonatomic, strong) NSString *referralMessage;
+@property (nonatomic, retain) NSString *customParam;
+@property (nonatomic) BOOL contactsLoaded;
+@property (nonatomic, retain) NSMutableArray *phoneNumberTypes;
+@property (nonatomic) int queryPhoneNumberTypeListIndex;
 
 + (HKMDiscoverer *) agent;
 + (void) activate:(NSString *)ak;
++ (void) activateKey:(NSString *)ak customParam:(NSString *) customParam;
 + (void) retire;
++ (BOOL) deviceSmsSupport;
++ (NSString *) deviceOwnerName;
 
 - (BOOL) newInstall;
 - (BOOL) isRegistered;
@@ -141,31 +78,17 @@
 - (BOOL) queryVerifiedStatus;
 - (NSDate *) lastDiscoverDate;
 - (BOOL) discover:(int) limit;
-- (BOOL) discoverWithoutVzw;
-- (BOOL) discoverSelected:(NSMutableArray *)phones;
 - (BOOL) queryLeads;
-- (BOOL) downloadShareTemplates;
+- (BOOL) newReferral:(NSArray *)phones useVirtualNumber:(BOOL) sendNow;
 - (BOOL) newReferral:(NSArray *)phones withName:(NSString *)name useVirtualNumber:(BOOL) sendNow;
 - (BOOL) updateReferral:(BOOL) sent;
 - (BOOL) queryInstalls:(NSString *)direction;
 - (BOOL) queryReferral;
 - (BOOL) claimReward: (UIViewController *)vc;
+- (BOOL) trackEventName: (NSString *)name Value: (NSString *)value;
+- (BOOL) loadAddressBooktoIntoLeads;
+- (BOOL) queryPhoneNumberTypeAtLeadsIndex: (int)index;
+- (BOOL) queryPhoneNumberType: (NSArray *)phones;
 
-- (NSString *) getAddressbook:(int) limit;
-- (NSString *) getAddressbookHash:(int) limit;
-- (void) createVerificationSms;
-- (void) buildAddressBookDictionaryAsync;
-- (void) buildAddressBookDictionary;
-- (void) updateContactDetails:(HKMLead *)intoLead;
-//- (NSString *) lookupNameFromPhone:(NSString *)p;
-- (NSString *) formatPhone:(NSString *)p;
-
-- (BOOL) checkNewAddresses:(NSString *)ab;
-- (NSString *) cachedAddresses;
-
-- (NSString *) getMacAddress;
-- (int) murmurHash:(NSString *)s;
-
-unsigned int MurmurHash2 ( const void * key, int len, unsigned int seed );
 
 @end

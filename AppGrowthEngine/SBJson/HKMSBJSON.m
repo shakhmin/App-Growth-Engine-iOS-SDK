@@ -5,15 +5,15 @@
  modification, are permitted provided that the following conditions are met:
  
  * Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
+ list of conditions and the following disclaimer.
  
  * Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
  
  * Neither the name of the author nor the names of its contributors may be used
-   to endorse or promote products derived from this software without specific
-   prior written permission.
+ to endorse or promote products derived from this software without specific
+ prior written permission.
  
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -37,18 +37,12 @@
         jsonWriter = [HKMSBJsonWriter new];
         jsonParser = [HKMSBJsonParser new];
         [self setMaxDepth:512];
-
+        
     }
     return self;
 }
 
-- (void)dealloc {
-    [jsonWriter release];
-    [jsonParser release];
-    [super dealloc];
-}
-
-#pragma mark Writer 
+#pragma mark Writer
 
 
 - (NSString *)stringWithObject:(id)obj {
@@ -56,7 +50,6 @@
     if (repr)
         return repr;
     
-    [errorTrace release];
     errorTrace = [[jsonWriter errorTrace] mutableCopy];
     return nil;
 }
@@ -69,15 +62,14 @@
  @param allowScalar wether to return json fragments for scalar objects
  @param error used to return an error by reference (pass NULL if this is not desired)
  
-@deprecated Given we bill ourselves as a "strict" JSON library, this method should be removed.
+ @deprecated Given we bill ourselves as a "strict" JSON library, this method should be removed.
  */
 - (NSString*)stringWithObject:(id)value allowScalar:(BOOL)allowScalar error:(NSError**)error {
     
     NSString *json = allowScalar ? [jsonWriter stringWithFragment:value] : [jsonWriter stringWithObject:value];
     if (json)
         return json;
-
-    [errorTrace release];
+    
     errorTrace = [[jsonWriter errorTrace] mutableCopy];
     
     if (error)
@@ -119,8 +111,7 @@
     id obj = [jsonParser objectWithString:repr];
     if (obj)
         return obj;
-
-    [errorTrace release];
+    
     errorTrace = [[jsonParser errorTrace] mutableCopy];
     
     return nil;
@@ -137,14 +128,13 @@
  @deprecated Given we bill ourselves as a "strict" JSON library, this method should be removed.
  */
 - (id)objectWithString:(id)value allowScalar:(BOOL)allowScalar error:(NSError**)error {
-
+    
     id obj = allowScalar ? [jsonParser fragmentWithString:value] : [jsonParser objectWithString:value];
     if (obj)
         return obj;
     
-    [errorTrace release];
     errorTrace = [[jsonParser errorTrace] mutableCopy];
-
+    
     if (error)
         *error = [errorTrace lastObject];
     return nil;
@@ -157,7 +147,7 @@
  @param repr the json string to parse
  @param error used to return an error by reference (pass NULL if this is not desired)
  
- @deprecated Given we bill ourselves as a "strict" JSON library, this method should be removed. 
+ @deprecated Given we bill ourselves as a "strict" JSON library, this method should be removed.
  */
 - (id)fragmentWithString:(NSString*)repr error:(NSError**)error {
     return [self objectWithString:repr
@@ -187,7 +177,7 @@
 }
 
 - (void)setMaxDepth:(NSUInteger)d {
-     jsonWriter.maxDepth = jsonParser.maxDepth = d;
+    jsonWriter.maxDepth = jsonParser.maxDepth = d;
 }
 
 

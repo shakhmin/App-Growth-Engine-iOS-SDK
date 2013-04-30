@@ -5,9 +5,6 @@
 
 @implementation SampleViewController
 
-- (void)dealloc {
-    [super dealloc];
-}
 
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
@@ -46,7 +43,6 @@
 	[alert addButtonWithTitle:@"Dismiss"];
     alert.cancelButtonIndex = 0;
     [alert show];
-	[alert release];
 }
 
 - (void) verificationStatusNo {
@@ -59,7 +55,6 @@
 	[alert addButtonWithTitle:@"Dismiss"];
     alert.cancelButtonIndex = 0;
     [alert show];
-	[alert release];
 }
 
 - (IBAction) discover: (id)sender {
@@ -68,10 +63,8 @@
         ABAddressBookRequestAccessWithCompletion(ab, ^(bool granted, CFErrorRef error) {
             if (granted) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    if ([[HKMDiscoverer agent] discover:0]) {
-                        [HKMSVProgressHUD showWithStatus:@"Discovering ..."];
-                    
-                    }
+                    [HKMSVProgressHUD showWithStatus:@"Discovering ..."];
+                    [[HKMDiscoverer agent] discover:0];
                 });
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -81,7 +74,6 @@
                     [alert addButtonWithTitle:@"Dismiss"];
                     alert.cancelButtonIndex = 0;
                     [alert show];
-                    [alert release];
                 });
             }
         });
@@ -106,7 +98,6 @@
 	[alert addButtonWithTitle:@"Dismiss"];
 	alert.cancelButtonIndex = 0;
 	[alert show];
-	[alert release];
 }
 
 - (void) discoverFailed {
@@ -121,7 +112,6 @@
 	[alert addButtonWithTitle:@"Dismiss"];
 	alert.cancelButtonIndex = 0;
 	[alert show];
-	[alert release];
 }
 
 - (void) discoverNoChange {
@@ -136,7 +126,6 @@
 	[alert addButtonWithTitle:@"Dismiss"];
 	alert.cancelButtonIndex = 0;
 	[alert show];
-	[alert release];
 }
 
 - (IBAction) query: (id)sender {
@@ -163,7 +152,6 @@
 	[alert addButtonWithTitle:@"Dismiss"];
 	alert.cancelButtonIndex = 0;
 	[alert show];
-	[alert release];
 }
 
 - (IBAction) queryInstalls: (id)sender {
@@ -176,7 +164,6 @@
     [actionSheet addButtonWithTitle:@"Cancel"];
     actionSheet.cancelButtonIndex = 3;
     [actionSheet showInView:self.view];
-    [actionSheet release];
 }
 
 - (void) queryInstallsComplete {
@@ -196,7 +183,6 @@
 	[alert addButtonWithTitle:@"Dismiss"];
 	alert.cancelButtonIndex = 0;
 	[alert show];
-	[alert release];
 }
 
 - (IBAction) queryReferral: (id)sender {
@@ -224,7 +210,11 @@
 	[alert addButtonWithTitle:@"Dismiss"];
 	alert.cancelButtonIndex = 0;
 	[alert show];
-	[alert release];
+}
+
+- (IBAction) trackEvent: (id)sender {
+    // send track event message
+    [[HKMDiscoverer agent] trackEventName:@"testEvent" Value:@"Hello"];
 }
 
 - (void) notSmsDevice {
@@ -236,7 +226,6 @@
 	[alert addButtonWithTitle:@"Dismiss"];
 	alert.cancelButtonIndex = 0;
 	[alert show];
-	[alert release];
 }
 
 

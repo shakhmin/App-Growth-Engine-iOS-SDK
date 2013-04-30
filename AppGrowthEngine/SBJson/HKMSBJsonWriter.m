@@ -5,15 +5,15 @@
  modification, are permitted provided that the following conditions are met:
  
  * Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
+ list of conditions and the following disclaimer.
  
  * Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
  
  * Neither the name of the author nor the names of its contributors may be used
-   to endorse or promote products derived from this software without specific
-   prior written permission.
+ to endorse or promote products derived from this software without specific
+ prior written permission.
  
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -45,7 +45,7 @@
 static NSMutableCharacterSet *kEscapeChars;
 
 + (void)initialize {
-	kEscapeChars = [[NSMutableCharacterSet characterSetWithRange: NSMakeRange(0,32)] retain];
+	kEscapeChars = [NSMutableCharacterSet characterSetWithRange: NSMakeRange(0,32)];
 	[kEscapeChars addCharactersInString: @"\"\\"];
 }
 
@@ -80,8 +80,8 @@ static NSMutableCharacterSet *kEscapeChars;
         if (tmp)
             return tmp;
     }
-        
-
+    
+    
     [self clearErrorTrace];
     [self addErrorWithCode:EFRAGMENT description:@"Not valid type for JSON"];
     return nil;
@@ -130,7 +130,7 @@ static NSMutableCharacterSet *kEscapeChars;
     }
     [json appendString:@"["];
     
-    BOOL addComma = NO;    
+    BOOL addComma = NO;
     for (id value in fragment) {
         if (addComma)
             [json appendString:@","];
@@ -193,7 +193,7 @@ static NSMutableCharacterSet *kEscapeChars;
     if ([self humanReadable] && [fragment count])
         [json appendString:[self indent]];
     [json appendString:@"}"];
-    return YES;    
+    return YES;
 }
 
 - (BOOL)appendString:(NSString*)fragment into:(NSMutableString*)json {
@@ -217,7 +217,7 @@ static NSMutableCharacterSet *kEscapeChars;
                 case '\r':  [json appendString:@"\\r"];        break;
                 case '\b':  [json appendString:@"\\b"];        break;
                 case '\f':  [json appendString:@"\\f"];        break;
-                default:    
+                default:
                     if (uc < 0x20) {
                         [json appendFormat:@"\\u%04x", uc];
                     } else {

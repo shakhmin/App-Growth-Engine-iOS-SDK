@@ -11,7 +11,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
 //    [HKMDiscoverer activate:@"your-app-key"];
-    [HKMDiscoverer activate:@"b9ef3007-c9a9-459d-977a-a62125cf6b1e"];
+    [HKMDiscoverer activate:@"4992ca90-fcb9-4250-b0e1-947e611555a0"];
+//    [HKMDiscoverer activate:@"secret"];
     
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     self.window.rootViewController = navController;
@@ -54,10 +55,5 @@
     [HKMDiscoverer retire];
 }
 
-- (void)dealloc {
-    [window release];
-    [viewController release];
-    [super dealloc];
-}
 
 @end

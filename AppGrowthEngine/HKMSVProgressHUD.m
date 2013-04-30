@@ -13,10 +13,10 @@
 @interface HKMSVProgressHUD ()
 
 @property (nonatomic, readwrite) SVProgressHUDMaskType maskType;
-@property (nonatomic, retain) NSTimer *fadeOutTimer;
-@property (nonatomic, retain) UILabel *stringLabel;
-@property (nonatomic, retain) UIImageView *imageView;
-@property (nonatomic, retain) UIActivityIndicatorView *spinnerView;
+@property (nonatomic, strong) NSTimer *fadeOutTimer;
+@property (nonatomic, strong) UILabel *stringLabel;
+@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UIActivityIndicatorView *spinnerView;
 @property (nonatomic, readonly) CGFloat visibleKeyboardHeight;
 
 - (void)showInView:(UIView*)view status:(NSString*)string networkIndicator:(BOOL)show posY:(CGFloat)posY maskType:(SVProgressHUDMaskType)hudMaskType;
@@ -137,11 +137,10 @@ static HKMSVProgressHUD *sharedView = nil;
 - (void)dealloc {
 	
 	if(fadeOutTimer != nil)
-		[fadeOutTimer invalidate], [fadeOutTimer release], fadeOutTimer = nil;
+		[fadeOutTimer invalidate], fadeOutTimer, fadeOutTimer = nil;
 	
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    [super dealloc];
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -166,7 +165,6 @@ static HKMSVProgressHUD *sharedView = nil;
                                  UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin);
         
         [self addSubview:_hudView];
-        [_hudView release];
         
         [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillHideNotification object:nil queue:nil usingBlock:^(NSNotification *notification) {
             NSDictionary* keyboardInfo = [notification userInfo];
@@ -298,7 +296,7 @@ static HKMSVProgressHUD *sharedView = nil;
     }
     
 	if(fadeOutTimer != nil)
-		[fadeOutTimer invalidate], [fadeOutTimer release], fadeOutTimer = nil;
+		[fadeOutTimer invalidate], fadeOutTimer, fadeOutTimer = nil;
 	
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = show;
 	
@@ -363,9 +361,9 @@ static HKMSVProgressHUD *sharedView = nil;
 	[self.spinnerView stopAnimating];
     
 	if(fadeOutTimer != nil)
-		[fadeOutTimer invalidate], [fadeOutTimer release], fadeOutTimer = nil;
+		[fadeOutTimer invalidate], fadeOutTimer, fadeOutTimer = nil;
 	
-	fadeOutTimer = [[NSTimer scheduledTimerWithTimeInterval:seconds target:self selector:@selector(dismiss) userInfo:nil repeats:NO] retain];
+	fadeOutTimer = [NSTimer scheduledTimerWithTimeInterval:seconds target:self selector:@selector(dismiss) userInfo:nil repeats:NO];
 }
 
 - (void)dismiss {
@@ -402,7 +400,6 @@ static HKMSVProgressHUD *sharedView = nil;
 		stringLabel.shadowOffset = CGSizeMake(0, -1);
         stringLabel.numberOfLines = 0;
 		[_hudView addSubview:stringLabel];
-		[stringLabel release];
     }
     
     return stringLabel;
@@ -413,7 +410,6 @@ static HKMSVProgressHUD *sharedView = nil;
     if (imageView == nil) {
         imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 28, 28)];
 		[_hudView addSubview:imageView];
-		[imageView release];
     }
     
     return imageView;
@@ -426,7 +422,6 @@ static HKMSVProgressHUD *sharedView = nil;
 		spinnerView.hidesWhenStopped = YES;
 		spinnerView.bounds = CGRectMake(0, 0, 37, 37);
 		[_hudView addSubview:spinnerView];
-		[spinnerView release];
     }
     
     return spinnerView;
@@ -444,7 +439,7 @@ static HKMSVProgressHUD *sharedView = nil;
     
     // Locate UIKeyboard.  
     UIView *foundKeyboard = nil;
-    for (UIView *possibleKeyboard in [keyboardWindow subviews]) {
+    for (__strong UIView *possibleKeyboard in [keyboardWindow subviews]) {
         
         // iOS 4 sticks the UIKeyboard inside a UIPeripheralHostView.
         if ([[possibleKeyboard description] hasPrefix:@"<UIPeripheralHostView"]) {
@@ -469,7 +464,6 @@ static HKMSVProgressHUD *sharedView = nil;
 	
     if (sharedView.superview == nil) {
         [[NSNotificationCenter defaultCenter] removeObserver:self];
-        [sharedView release];
         sharedView = nil;
     }
 }

@@ -2,7 +2,7 @@
 #import "HKMDiscoverer.h"
 #import "HKMLead.h"
 
-#define BARBUTTON(TITLE, STYLE, SELECTOR) [[[UIBarButtonItem alloc] initWithTitle:TITLE style:STYLE target:self action:SELECTOR] autorelease]
+#define BARBUTTON(TITLE, STYLE, SELECTOR) [[UIBarButtonItem alloc] initWithTitle:TITLE style:STYLE target:self action:SELECTOR]
 
 @implementation LeadsController
 
@@ -15,10 +15,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [super dealloc];
-}
 
 - (void)didReceiveMemoryWarning
 {
@@ -48,6 +44,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
+    NSLog(@"leads.count=%d, indexPath.row=%d", [[HKMDiscoverer agent].leads count], indexPath.row);
     HKMLead *lead = (HKMLead *)[[HKMDiscoverer agent].leads objectAtIndex:indexPath.row];
     cell.textLabel.text = lead.name;
     cell.detailTextLabel.text = lead.osType;
@@ -81,7 +78,6 @@
         [actionSheet addButtonWithTitle:@"Cancel"];
         actionSheet.cancelButtonIndex = 2;
         [actionSheet showInView:self.view];
-        [actionSheet release];
         
     } else {
         sendNow = YES;
@@ -90,7 +86,7 @@
 }
 
 - (void) sendReferral {
-    phones = [[NSMutableArray arrayWithCapacity:16] retain];
+    phones = [NSMutableArray arrayWithCapacity:16];
     for (HKMLead *lead in [HKMDiscoverer agent].leads) {
         if (lead.selected) {
             [phones addObject:lead.phone];
@@ -100,7 +96,7 @@
         self.navigationItem.rightBarButtonItem.title = @"Wait ...";
         self.navigationItem.rightBarButtonItem.enabled = NO;
         
-        [[HKMDiscoverer agent] newReferral:phones withName:nil useVirtualNumber:sendNow];
+        [[HKMDiscoverer agent] newReferral:phones useVirtualNumber:sendNow];
     } else {
         UIAlertView* alert = [[UIAlertView alloc] init];
         alert.title = @"Please select referral contacts";
@@ -108,7 +104,6 @@
         [alert addButtonWithTitle:@"Dismiss"];
         alert.cancelButtonIndex = 0;
         [alert show];
-        [alert release];
     }
 }
 
@@ -135,7 +130,7 @@
     self.navigationItem.rightBarButtonItem.enabled = YES;
 
     if (!sendNow && [MFMessageComposeViewController canSendText]) {
-        MFMessageComposeViewController *controller = [[[MFMessageComposeViewController alloc] init] autorelease];
+        MFMessageComposeViewController *controller = [[MFMessageComposeViewController alloc] init];
         controller.body = [HKMDiscoverer agent].referralMessage;
         controller.recipients = phones;
         controller.messageComposeDelegate = self;

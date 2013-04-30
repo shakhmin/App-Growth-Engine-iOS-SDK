@@ -1,28 +1,17 @@
 #import <Foundation/Foundation.h>
+#import <AddressBook/AddressBook.h>
 
-@interface HKMLead : NSObject {
-	
-	NSString *_phone;
-	NSString *_osType;
-    NSString *_name;
-    UIImage *_image;
-    
-    int _invitationCount;
-    NSDate *_lastInvitationSent;
-    
-    BOOL _selected;
-    
-}
-
-@property (nonatomic, retain) NSString *phone;
-@property (nonatomic, retain) NSString *osType;
-@property (nonatomic, retain) NSString *name;
-@property (nonatomic, retain) UIImage *image;
+@interface HKMLead : NSObject
+@property (strong, nonatomic) NSString *phone;
+@property (strong, nonatomic) NSString *osType;
+@property (strong, nonatomic) NSString *name;
+@property (strong, nonatomic) UIImage *image;
+@property (nonatomic) int addressbookIndex;
 @property (nonatomic) int invitationCount;
-@property (nonatomic, retain) NSDate *lastInvitationSent;
+@property (nonatomic) ABRecordID recordId;
+@property (unsafe_unretained, nonatomic) NSDate *lastInvitationSent;
 
 @property (nonatomic) BOOL selected;
 
 - (id) init;
-- (void) dealloc;
 @end;

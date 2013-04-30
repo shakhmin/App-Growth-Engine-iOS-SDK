@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F253D4B1730298C0084F2CB /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F253D4A1730298C0084F2CB /* CoreTelephony.framework */; };
 		2A0EFE54160A665500679B4E /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A0EFE53160A665500679B4E /* QuartzCore.framework */; };
 		2A0EFE5A160A667800679B4E /* HKMSVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2A0EFE57160A667800679B4E /* HKMSVProgressHUD.bundle */; };
 		2A0EFE5B160A667800679B4E /* HKMSVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A0EFE59160A667800679B4E /* HKMSVProgressHUD.m */; };
@@ -46,6 +47,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1F253D4A1730298C0084F2CB /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		2A0EFE53160A665500679B4E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		2A0EFE57160A667800679B4E /* HKMSVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HKMSVProgressHUD.bundle; sourceTree = "<group>"; };
 		2A0EFE58160A667800679B4E /* HKMSVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKMSVProgressHUD.h; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F253D4B1730298C0084F2CB /* CoreTelephony.framework in Frameworks */,
 				2A29299414A3C6D5000382A4 /* UIKit.framework in Frameworks */,
 				2A29299614A3C6D5000382A4 /* Foundation.framework in Frameworks */,
 				2A29299814A3C6D5000382A4 /* CoreGraphics.framework in Frameworks */,
@@ -152,6 +155,7 @@
 		2A29299214A3C6D5000382A4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F253D4A1730298C0084F2CB /* CoreTelephony.framework */,
 				2A0EFE53160A665500679B4E /* QuartzCore.framework */,
 				2A2929E314A3C917000382A4 /* AddressBook.framework */,
 				2A2929E114A3C8F8000382A4 /* MessageUI.framework */,
@@ -393,16 +397,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Hook Mobile, Inc";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hook Mobile, Inc";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "42D38F2A-63ED-4C3D-994E-38FE16C44225";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "42D38F2A-63ED-4C3D-994E-38FE16C44225";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 			};
 			name = Release;
@@ -411,10 +415,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppGrowthEngine/AppGrowthEngine-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "AppGrowthEngine/AppGrowthEngine-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -425,9 +431,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AppGrowthEngine/AppGrowthEngine-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "AppGrowthEngine/AppGrowthEngine-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALIDATE_PRODUCT = YES;

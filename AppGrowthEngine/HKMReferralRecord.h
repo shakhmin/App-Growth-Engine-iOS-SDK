@@ -11,7 +11,7 @@
 
 @property (nonatomic) int totalClickThrough;
 @property (nonatomic) int totalInvitee;
-@property (nonatomic, retain) NSDate *invitationDate;
+@property (nonatomic, strong) NSDate *invitationDate;
 
 - (id) init;
 

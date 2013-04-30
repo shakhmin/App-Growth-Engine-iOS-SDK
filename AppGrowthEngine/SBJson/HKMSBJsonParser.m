@@ -5,15 +5,15 @@
  modification, are permitted provided that the following conditions are met:
  
  * Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
+ list of conditions and the following disclaimer.
  
  * Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
  
  * Neither the name of the author nor the names of its contributors may be used
-   to endorse or promote products derived from this software without specific
-   prior written permission.
+ to endorse or promote products derived from this software without specific
+ prior written permission.
  
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -64,7 +64,7 @@ static char ctrl[0x22];
     ctrl[1] = '\\';
     for (int i = 1; i < 0x20; i++)
         ctrl[i+1] = i;
-    ctrl[0x21] = 0;    
+    ctrl[0x21] = 0;
 }
 
 /**
@@ -92,13 +92,13 @@ static char ctrl[0x22];
         [self addErrorWithCode:ETRAILGARBAGE description:@"Garbage after JSON"];
         return nil;
     }
-        
+    
     NSAssert1(o, @"Should have a valid object from %@", repr);
-    return o;    
+    return o;
 }
 
 - (id)objectWithString:(NSString *)repr {
-
+    
     id o = [self fragmentWithString:repr];
     if (!o)
         return nil;
@@ -108,7 +108,7 @@ static char ctrl[0x22];
         [self addErrorWithCode:EFRAGMENT description:@"Valid fragment, but not JSON"];
         return nil;
     }
-
+    
     return o;
 }
 
@@ -224,14 +224,14 @@ static char ctrl[0x22];
                 [self addErrorWithCode:ETRAILCOMMA description: @"Trailing comma disallowed in array"];
                 return NO;
             }
-        }        
+        }
     }
     
     [self addErrorWithCode:EEOF description: @"End of input while parsing array"];
     return NO;
 }
 
-- (BOOL)scanRestOfDictionary:(NSMutableDictionary **)o 
+- (BOOL)scanRestOfDictionary:(NSMutableDictionary **)o
 {
     if (maxDepth && ++depth > maxDepth) {
         [self addErrorWithCode:EDEPTH description: @"Nested too deep"];
@@ -247,7 +247,7 @@ static char ctrl[0x22];
         if (*c == '}' && c++) {
             depth--;
             return YES;
-        }    
+        }
         
         if (!(*c == '\"' && c++ && [self scanRestOfString:&k])) {
             [self addErrorWithCode:EPARSE description: @"Object key string expected"];
@@ -276,29 +276,28 @@ static char ctrl[0x22];
                 [self addErrorWithCode:ETRAILCOMMA description: @"Trailing comma disallowed in object"];
                 return NO;
             }
-        }        
+        }
     }
     
     [self addErrorWithCode:EEOF description: @"End of input while parsing object"];
     return NO;
 }
 
-- (BOOL)scanRestOfString:(NSMutableString **)o 
+- (BOOL)scanRestOfString:(NSMutableString **)o
 {
     *o = [NSMutableString stringWithCapacity:16];
     do {
-        // First see if there's a portion we can grab in one go. 
+        // First see if there's a portion we can grab in one go.
         // Doing this caused a massive speedup on the long string.
         size_t len = strcspn(c, ctrl);
         if (len) {
-            // check for 
+            // check for
             id t = [[NSString alloc] initWithBytesNoCopy:(char*)c
                                                   length:len
                                                 encoding:NSUTF8StringEncoding
                                             freeWhenDone:NO];
             if (t) {
                 [*o appendString:t];
-                [t release];
                 c += len;
             }
         }
@@ -319,7 +318,7 @@ static char ctrl[0x22];
                 case 'n':   uc = '\n';  break;
                 case 'r':   uc = '\r';  break;
                 case 't':   uc = '\t';  break;
-                case 'f':   uc = '\f';  break;                    
+                case 'f':   uc = '\f';  break;
                     
                 case 'u':
                     c++;
@@ -356,7 +355,7 @@ static char ctrl[0x22];
     
     if (![self scanHexQuad:&hi]) {
         [self addErrorWithCode:EUNICODE description: @"Missing hex quad"];
-        return NO;        
+        return NO;
     }
     
     if (hi >= 0xd800) {     // high surrogate char?
@@ -415,7 +414,7 @@ static char ctrl[0x22];
     if ('-' == *c)
         c++;
     
-    if ('0' == *c && c++) {        
+    if ('0' == *c && c++) {
         if (isdigit(*c)) {
             [self addErrorWithCode:EPARSENUM description: @"Leading 0 disallowed in number"];
             return NO;
@@ -435,7 +434,7 @@ static char ctrl[0x22];
         if (!isdigit(*c)) {
             [self addErrorWithCode:EPARSENUM description: @"No digits after decimal point"];
             return NO;
-        }        
+        }
         skipDigits(c);
     }
     
@@ -457,7 +456,6 @@ static char ctrl[0x22];
                                             length:c - ns
                                           encoding:NSUTF8StringEncoding
                                       freeWhenDone:NO];
-    [str autorelease];
     if (str && (*o = [NSDecimalNumber decimalNumberWithString:str]))
         return YES;
     

@@ -13,10 +13,6 @@
     return self;
 }
 
-- (void)dealloc
-{
-    [super dealloc];
-}
 
 - (void)didReceiveMemoryWarning
 {
@@ -53,7 +49,6 @@
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
     [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm"];
     cell.textLabel.text = [dateFormat stringFromDate:rec.invitationDate];
-    [dateFormat release];
     
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%d invited %d clicked", rec.totalInvitee, rec.totalClickThrough];
     
